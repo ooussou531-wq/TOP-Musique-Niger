@@ -1,0 +1,874 @@
+ <!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e0530c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Commentaires – TOP Musique Niger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --bg:#09090b; --surface:#111116; --card:#16161c; --card-h:#1e1e26;
+  --border:rgba(255,255,255,.07); --border-md:rgba(255,255,255,.12);
+  --accent:#e0530c; --accent-d:rgba(224,83,12,.12); --accent-g:rgba(224,83,12,.3);
+  --gold:#c9a84c; --gold-d:rgba(201,168,76,.12); --gold-g:rgba(201,168,76,.3);
+  --green:#0c7e40; --green-d:rgba(12,126,64,.12);
+  --blue:#5b8dee; --blue-d:rgba(91,141,238,.12);
+  --red:#e05252; --red-d:rgba(224,82,82,.12);
+  --text:#f0ece4; --text-2:#8a8790; --text-3:#4a4850;
+  --nav-h:68px; --hdr-h:60px; --radius:12px; --radius-lg:18px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{min-height:100vh;background:var(--bg);font-family:'Instrument Sans',sans-serif;color:var(--text);
+  padding-top:var(--hdr-h);padding-bottom:calc(var(--nav-h)+2rem);overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.5;}
+body::after{content:'';position:fixed;top:-150px;right:-100px;width:500px;height:400px;
+  border-radius:50%;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse,rgba(201,168,76,.05),transparent 70%);}
+a{text-decoration:none;color:inherit;}
+button{border:none;background:none;cursor:pointer;font-family:inherit;color:inherit;}
+
+/* ══ HEADER ══ */
+.top-header{position:fixed;top:0;left:0;right:0;height:var(--hdr-h);z-index:200;
+  background:rgba(9,9,11,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 1.2rem;gap:.9rem;}
+.top-header::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;
+  background:linear-gradient(90deg,var(--accent) 0%,var(--accent) 33%,#f5f0e8 33%,#f5f0e8 66%,var(--green) 66%);}
+.hdr-back{width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;color:var(--text-2);font-size:.82rem;cursor:pointer;transition:all .2s;}
+.hdr-back:hover{color:var(--text);border-color:var(--border-md);}
+.hdr-title{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;flex:1;}
+.hdr-btn{width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;color:var(--text-2);font-size:.82rem;cursor:pointer;transition:all .2s;}
+.hdr-btn:hover{color:var(--text);border-color:var(--border-md);}
+
+/* ══ MAIN ══ */
+.main{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:1.4rem 1.2rem;}
+
+/* ══ SONG CONTEXT CARD ══ */
+.song-ctx{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:1.1rem 1.2rem;margin-bottom:1.4rem;display:flex;align-items:center;gap:1rem;
+  animation:fadeUp .35s ease both;position:relative;overflow:hidden;cursor:pointer;transition:border-color .2s;}
+.song-ctx:hover{border-color:var(--border-md);}
+.song-ctx::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(201,168,76,.04),transparent 50%);pointer-events:none;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.sc-cover{width:60px;height:60px;border-radius:13px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.sc-cover-bg{position:absolute;inset:0;font-size:3.5rem;display:flex;align-items:center;justify-content:center;filter:blur(10px);opacity:.35;transform:scale(1.4);}
+.sc-cover-em{position:relative;z-index:1;font-size:1.8rem;}
+.sc-info{flex:1;min-width:0;}
+.sc-label{font-size:.65rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.2rem;}
+.sc-title{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;margin-bottom:.15rem;}
+.sc-artist{font-size:.8rem;color:var(--text-2);}
+.sc-play{width:40px;height:40px;border-radius:50%;background:var(--accent-d);border:1px solid rgba(224,83,12,.25);
+  color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:.88rem;cursor:pointer;transition:all .22s;flex-shrink:0;}
+.sc-play:hover{background:var(--accent);color:#fff;box-shadow:0 4px 14px var(--accent-g);}
+
+/* ══ RATING OVERVIEW ══ */
+.rating-overview{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:1.2rem 1.3rem;margin-bottom:1.2rem;animation:fadeUp .35s ease .05s both;}
+.ro-top{display:flex;gap:1.5rem;margin-bottom:1rem;}
+.ro-big{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  flex-shrink:0;padding-right:1.5rem;border-right:1px solid var(--border);}
+.ro-num{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--gold);line-height:1;}
+.ro-stars{display:flex;gap:2px;margin:.25rem 0;}
+.ro-stars i{font-size:.85rem;color:var(--gold);}
+.ro-stars i.empty{color:var(--text-3);}
+.ro-count{font-size:.72rem;color:var(--text-3);}
+.ro-bars{flex:1;display:flex;flex-direction:column;gap:.45rem;justify-content:center;}
+.rb-row{display:flex;align-items:center;gap:.6rem;}
+.rb-star{font-size:.68rem;color:var(--text-3);min-width:28px;text-align:right;}
+.rb-track{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;}
+.rb-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),#e0be78);transition:width .8s cubic-bezier(.22,1,.36,1);}
+.rb-count{font-size:.68rem;color:var(--text-3);min-width:24px;}
+
+/* User own rating */
+.ro-user{border-top:1px solid var(--border);padding-top:.9rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+.rou-label{font-size:.8rem;color:var(--text-2);}
+.star-picker{display:flex;gap:.3rem;}
+.star-pick{font-size:1.3rem;color:var(--text-3);cursor:pointer;transition:all .2s;line-height:1;}
+.star-pick:hover,.star-pick.on{color:var(--gold);transform:scale(1.15);}
+.rou-submit{padding:.42rem .95rem;border-radius:8px;background:var(--gold-d);color:var(--gold);
+  border:1px solid rgba(201,168,76,.25);font-size:.76rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.rou-submit:hover{background:var(--gold);color:#09090b;}
+
+/* ══ TABS ══ */
+.tabs{display:flex;gap:.4rem;overflow-x:auto;margin-bottom:1.2rem;padding:.05rem 0;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex-shrink:0;display:flex;align-items:center;gap:.4rem;
+  padding:.42rem .9rem;border-radius:100px;font-size:.78rem;font-weight:600;
+  cursor:pointer;transition:all .2s;background:var(--card);border:1.5px solid var(--border);color:var(--text-3);}
+.tab.active{background:var(--accent-d);color:var(--accent);border-color:rgba(224,83,12,.4);}
+.tab:hover:not(.active){color:var(--text-2);border-color:var(--border-md);}
+.tab-badge{font-size:.6rem;font-weight:800;background:currentColor;
+  border-radius:100px;padding:.1rem .38rem;min-width:16px;text-align:center;}
+.tab.active .tab-badge{background:var(--accent);color:#fff;}
+
+/* ══ SORT + CONTROLS ══ */
+.controls{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem;}
+.ctrl-count{font-size:.78rem;color:var(--text-3);}<br>
+.ctrl-count span{color:var(--text-2);font-weight:600;}
+.ctrl-right{display:flex;gap:.4rem;}
+.sort-select{background:var(--card);border:1.5px solid var(--border);color:var(--text-2);
+  border-radius:100px;padding:.35rem .75rem;font-family:'Instrument Sans',sans-serif;
+  font-size:.76rem;outline:none;cursor:pointer;}
+.sort-select:focus{border-color:var(--accent);}
+
+/* ══ WRITE COMMENT BOX ══ */
+.write-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:1rem 1.1rem;margin-bottom:1.2rem;animation:fadeUp .35s ease .08s both;transition:border-color .2s;}
+.write-box:focus-within{border-color:var(--border-md);}
+.wb-top{display:flex;align-items:center;gap:.75rem;margin-bottom:.8rem;}
+.wb-avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),var(--gold));
+  display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;color:#09090b;}
+.wb-name{font-size:.84rem;font-weight:600;}
+.wb-role{font-size:.68rem;color:var(--text-3);}
+.wb-textarea{width:100%;background:var(--card-h);border:1.5px solid var(--border);border-radius:var(--radius);
+  color:var(--text);font-family:'Instrument Sans',sans-serif;font-size:.88rem;
+  padding:.75rem 1rem;outline:none;resize:none;min-height:90px;line-height:1.6;transition:all .22s;}
+.wb-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-d);}
+.wb-textarea::placeholder{color:var(--text-3);}
+.wb-footer{display:flex;align-items:center;justify-content:space-between;margin-top:.7rem;gap:.7rem;flex-wrap:wrap;}
+.wb-char{font-size:.7rem;color:var(--text-3);}
+.wb-char.warn{color:var(--red);}
+.wb-actions{display:flex;gap:.45rem;}
+.wb-emoji-btn{width:32px;height:32px;border-radius:8px;background:var(--card-h);border:1px solid var(--border);
+  color:var(--text-2);font-size:.8rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;}
+.wb-emoji-btn:hover{color:var(--text);}
+.wb-submit{padding:.5rem 1.1rem;border-radius:9px;background:var(--accent);color:#fff;
+  font-family:'Syne',sans-serif;font-size:.82rem;font-weight:800;cursor:pointer;
+  box-shadow:0 3px 12px var(--accent-g);transition:all .22s;display:flex;align-items:center;gap:.4rem;}
+.wb-submit:hover{transform:translateY(-1px);box-shadow:0 5px 16px var(--accent-g);}
+.wb-submit:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+/* ══ COMMENT ITEM ══ */
+.comment-section{display:flex;flex-direction:column;gap:.5rem;}
+.comment{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:1rem 1.1rem;transition:all .18s;animation:fadeUp .3s ease both;position:relative;}
+.comment:hover{border-color:var(--border-md);}
+.comment.pinned{border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.03);}
+.comment.pinned::before{content:'📌';position:absolute;top:.75rem;right:.9rem;font-size:.75rem;}
+.comment.highlighted{border-color:rgba(224,83,12,.3);background:rgba(224,83,12,.04);}
+
+.cm-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.65rem;}
+.cm-avatar{width:38px;height:38px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;position:relative;}
+.cm-avatar .verified-badge{position:absolute;bottom:-2px;right:-2px;width:14px;height:14px;
+  background:var(--blue);border-radius:50%;border:2px solid var(--bg);
+  display:flex;align-items:center;justify-content:center;font-size:.5rem;color:#fff;}
+.cm-info{flex:1;min-width:0;}
+.cm-name{font-size:.86rem;font-weight:700;display:flex;align-items:center;gap:.4rem;}
+.cm-badge{font-size:.58rem;font-weight:800;padding:.1rem .38rem;border-radius:100px;}
+.cm-badge.artist{background:var(--accent-d);color:var(--accent);}
+.cm-badge.verified{background:var(--blue-d);color:var(--blue);}
+.cm-badge.top{background:var(--gold-d);color:var(--gold);}
+.cm-meta{font-size:.7rem;color:var(--text-3);display:flex;align-items:center;gap:.4rem;}
+.cm-rating{display:flex;gap:1px;}
+.cm-rating i{font-size:.6rem;color:var(--gold);}
+.cm-rating i.e{color:var(--text-3);}
+.cm-more{color:var(--text-3);font-size:.75rem;cursor:pointer;padding:.2rem;transition:color .18s;}
+.cm-more:hover{color:var(--text-2);}
+
+.cm-text{font-size:.87rem;line-height:1.65;color:var(--text);margin-bottom:.75rem;word-break:break-word;}
+.cm-text .mention{color:var(--accent);font-weight:600;}
+.cm-text .hashtag{color:var(--gold);}
+
+/* Reactions */
+.cm-footer{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+.cm-reaction{display:flex;align-items:center;gap:.3rem;padding:.3rem .7rem;border-radius:100px;
+  font-size:.76rem;font-weight:600;cursor:pointer;transition:all .2s;
+  background:var(--card-h);border:1.5px solid var(--border);}
+.cm-reaction:hover{border-color:var(--border-md);}
+.cm-reaction.liked{background:var(--red-d);border-color:rgba(224,82,82,.3);color:var(--red);}
+.cm-reaction i{font-size:.7rem;}
+.cm-reaction.fire{--c:var(--accent);}
+.cm-reaction.fire.active{background:var(--accent-d);border-color:rgba(224,83,12,.3);color:var(--accent);}
+.cm-reaction.heart.active{background:var(--red-d);border-color:rgba(224,82,82,.3);color:var(--red);}
+.cm-reaction.clap.active{background:var(--gold-d);border-color:rgba(201,168,76,.3);color:var(--gold);}
+.cm-reply-btn{font-size:.75rem;color:var(--text-3);cursor:pointer;transition:color .18s;margin-left:auto;}
+.cm-reply-btn:hover{color:var(--accent);}
+
+/* ══ REPLIES ══ */
+.replies{margin-top:.7rem;padding-left:1rem;border-left:2px solid var(--border);display:flex;flex-direction:column;gap:.55rem;}
+.reply{background:rgba(255,255,255,.02);border-radius:10px;padding:.75rem .9rem;animation:fadeUp .25s ease both;}
+.reply .cm-text{font-size:.84rem;margin-bottom:.5rem;}
+.reply .cm-header{margin-bottom:.5rem;}
+.reply .cm-avatar{width:30px;height:30px;font-size:.75rem;}
+
+/* Reply box */
+.reply-box{margin-top:.6rem;display:none;}
+.reply-box.open{display:flex;gap:.6rem;align-items:flex-start;}
+.rb-avatar{width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),var(--gold));
+  display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:#09090b;}
+.rb-input{flex:1;background:var(--card-h);border:1.5px solid var(--border);border-radius:10px;
+  color:var(--text);font-family:'Instrument Sans',sans-serif;font-size:.84rem;
+  padding:.6rem .9rem;outline:none;resize:none;min-height:60px;line-height:1.5;transition:all .2s;}
+.rb-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-d);}
+.rb-input::placeholder{color:var(--text-3);}
+.rb-send{padding:.5rem .85rem;border-radius:9px;background:var(--accent-d);color:var(--accent);
+  border:1px solid rgba(224,83,12,.25);font-size:.76rem;font-weight:700;cursor:pointer;transition:all .2s;align-self:flex-end;}
+.rb-send:hover{background:var(--accent);color:#fff;}
+
+/* Load more */
+.load-more{text-align:center;padding:1.2rem 0 .4rem;}
+.load-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.4rem;
+  border-radius:100px;background:var(--card);border:1.5px solid var(--border);
+  color:var(--text-2);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;}
+.load-btn:hover{color:var(--text);border-color:var(--border-md);}
+
+/* ══ EMOJI PICKER ══ */
+.emoji-tray{display:none;flex-wrap:wrap;gap:.3rem;padding:.6rem;
+  background:var(--card-h);border:1px solid var(--border-md);border-radius:var(--radius);margin-top:.4rem;}
+.emoji-tray.open{display:flex;}
+.emoji-tray span{font-size:1.2rem;cursor:pointer;padding:.15rem;border-radius:6px;transition:transform .18s;}
+.emoji-tray span:hover{transform:scale(1.3);}
+
+/* ══ BOTTOM NAV ══ */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);
+  background:rgba(9,9,11,.97);backdrop-filter:blur(24px);border-top:1px solid var(--border);
+  display:flex;justify-content:space-around;align-items:center;padding:0 .5rem;z-index:200;}
+.bottom-nav::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--accent) 0%,var(--accent) 33%,rgba(245,240,232,.4) 33%,rgba(245,240,232,.4) 66%,var(--green) 66%);opacity:.6;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:.2rem;flex:1;padding:.5rem;
+  color:var(--text-3);font-size:.6rem;font-weight:500;text-decoration:none;border-radius:10px;transition:all .2s;}
+.nav-item i{font-size:1.18rem;}
+.nav-pub i{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),#a83800);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.98rem;color:#fff;box-shadow:0 4px 16px var(--accent-g);margin-bottom:.1rem;}
+.nav-pub{color:var(--text-2);margin-top:-10px;}
+
+/* ══ TOAST ══ */
+#toast{position:fixed;bottom:calc(var(--nav-h)+1rem);left:50%;transform:translateX(-50%) translateY(60px);opacity:0;
+  background:var(--card);border:1px solid var(--border-md);color:var(--text);
+  padding:.75rem 1.4rem;border-radius:100px;font-size:.84rem;
+  display:flex;align-items:center;gap:.55rem;box-shadow:0 8px 28px rgba(0,0,0,.5);
+  z-index:9999;transition:transform .35s cubic-bezier(.22,1,.36,1),opacity .3s;white-space:nowrap;}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+#toast.success i{color:#4caf7d;}
+#toast.info    i{color:var(--gold);}
+#toast.error   i{color:var(--red);}
+</style>
+</head>
+<body>
+<script src="app.js"></script>
+<script src="tmn-api.js"></script>
+
+<header class="top-header">
+  <div class="hdr-back" onclick="history.back()"><i class="fas fa-arrow-left"></i></div>
+  <div class="hdr-title">Commentaires & Avis</div>
+  <div class="hdr-btn" onclick="shareComments()"><i class="fas fa-share-nodes"></i></div>
+</header>
+
+<main class="main">
+
+  <!-- Song context -->
+  <div class="song-ctx" onclick="window.location.href='player.html'">
+    <div class="sc-cover" style="background:linear-gradient(135deg,rgba(201,168,76,.35),rgba(201,168,76,.08));">
+      <div class="sc-cover-bg">🎵</div>
+      <div class="sc-cover-em">🎵</div>
+    </div>
+    <div class="sc-info">
+      <div class="sc-label">Vous commentez</div>
+      <div class="sc-title">SARAOUNA</div>
+      <div class="sc-artist">FATOUMATA · Afrobeat · Niamey</div>
+    </div>
+    <div class="sc-play"><i class="fas fa-play" style="margin-left:2px;"></i></div>
+  </div>
+
+  <!-- Rating overview -->
+  <div class="rating-overview">
+    <div class="ro-top">
+      <div class="ro-big">
+        <div class="ro-num">4.9</div>
+        <div class="ro-stars">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <i class="fas fa-star"></i><i class="fas fa-star-half-stroke"></i>
+        </div>
+        <div class="ro-count">248 avis</div>
+      </div>
+      <div class="ro-bars" id="ratingBars"></div>
+    </div>
+    <div class="ro-user">
+      <div class="rou-label">Votre note pour ce morceau :</div>
+      <div style="display:flex;align-items:center;gap:.75rem;">
+        <div class="star-picker" id="starPicker">
+          <span class="star-pick" data-v="1">★</span>
+          <span class="star-pick" data-v="2">★</span>
+          <span class="star-pick" data-v="3">★</span>
+          <span class="star-pick" data-v="4">★</span>
+          <span class="star-pick" data-v="5">★</span>
+        </div>
+        <div class="rou-submit" onclick="submitRating()">Noter</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter tabs -->
+  <div class="tabs" id="filterTabs"></div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="ctrl-count">Affichage : <span id="commentCount">0</span> commentaires</div>
+    <div class="ctrl-right">
+      <select class="sort-select" onchange="sortComments(this.value)">
+        <option value="recent">Plus récents</option>
+        <option value="top">Plus appréciés</option>
+        <option value="rating">Meilleure note</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Write box -->
+  <div class="write-box">
+    <div class="wb-top">
+      <div class="wb-avatar" id="myAvatar">M</div>
+      <div>
+        <div class="wb-name" id="myName">Moi</div>
+        <div class="wb-role">Auditeur</div>
+      </div>
+    </div>
+    <textarea class="wb-textarea" id="commentInput" placeholder="Partagez votre avis sur ce morceau…" maxlength="500" oninput="onInputChange()"></textarea>
+    <div class="emoji-tray" id="emojiTray">
+      <span onclick="insertEmoji('🔥')">🔥</span>
+      <span onclick="insertEmoji('❤️')">❤️</span>
+      <span onclick="insertEmoji('👏')">👏</span>
+      <span onclick="insertEmoji('🎵')">🎵</span>
+      <span onclick="insertEmoji('🎤')">🎤</span>
+      <span onclick="insertEmoji('😍')">😍</span>
+      <span onclick="insertEmoji('💯')">💯</span>
+      <span onclick="insertEmoji('🙌')">🙌</span>
+      <span onclick="insertEmoji('✨')">✨</span>
+      <span onclick="insertEmoji('👑')">👑</span>
+      <span onclick="insertEmoji('🥁')">🥁</span>
+      <span onclick="insertEmoji('🎸')">🎸</span>
+    </div>
+    <div class="wb-footer">
+      <div class="wb-char" id="charCount">0/500</div>
+      <div class="wb-actions">
+        <div class="wb-emoji-btn" onclick="toggleEmoji()" title="Emojis"><i class="fas fa-face-smile"></i></div>
+        <div class="wb-emoji-btn" onclick="showToast('Mention @artiste bientôt disponible','info')" title="Mentionner"><i class="fas fa-at"></i></div>
+        <button class="wb-submit" id="submitBtn" onclick="postComment()" disabled>
+          <i class="fas fa-paper-plane"></i> Publier
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comments list -->
+  <div class="comment-section" id="commentSection"></div>
+
+  <div class="load-more" id="loadMoreWrap" style="display:none;">
+    <div class="load-btn" onclick="loadMore()"><i class="fas fa-chevron-down"></i> Voir plus</div>
+  </div>
+
+</main>
+
+<nav class="bottom-nav" id="bottomNav"></nav>
+
+<div id="toast"><i class="fas fa-circle-info"></i><span id="toastMsg"></span></div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+/* ══════ DATA ══════ */
+const now = Date.now();
+const m = 60000, h = 3600000, d = 86400000;
+
+const COLORS = ['#e0530c','#c9a84c','#0c7e40','#5b8dee','#9c27b0'];
+const AVATAR_COLORS = [
+  ['#e0530c','#c9a84c'],['#0c7e40','#5b8dee'],['#9c27b0','#e05252'],
+  ['#c9a84c','#0c7e40'],['#5b8dee','#9c27b0'],['#e05252','#e0530c'],
+];
+
+const COMMENTS_DB = [
+  {
+    id:1, author:'Aminatou_B', badge:'artist', verified:true, initials:'A',
+    text:'Ce morceau est absolument incroyable ! FATOUMATA a réussi à capturer l\'essence de la musique nigérienne tout en la modernisant. La production est impeccable et les paroles touchent l\'âme. 🔥🎵',
+    rating:5, ts: now-25*m, likes:142, fires:88, claps:56,
+    myLike:false, myFire:true, myClap:false,
+    pinned:true,
+    replies:[
+      {id:101, author:'FATOUMATA', badge:'artist', initials:'F', text:'Merci beaucoup ! 🙏 Ça me touche vraiment. Je suis contente que le message passe.', ts:now-18*m, likes:67, myLike:false},
+      {id:102, author:'Moussa_K', badge:null, initials:'M', text:'@Aminatou_B totalement d\'accord ! Ce refrain reste en tête toute la journée 👑', ts:now-12*m, likes:23, myLike:false},
+    ]
+  },
+  {
+    id:2, author:'Boubacar_ZND', badge:'top', verified:false, initials:'B',
+    text:'En tant que rappeur de Zinder, c\'est inspirant de voir le niveau monter partout au Niger. SARAOUNA va définitivement entrer dans l\'histoire. Respect à FATOUMATA ! 👏',
+    rating:5, ts: now-1.5*h, likes:98, fires:45, claps:71,
+    myLike:false, myFire:false, myClap:false,
+    replies:[
+      {id:201, author:'RabiatuG', badge:null, initials:'R', text:'Vrai ! La scène musicale nigérienne évolue vraiment vite ces derniers temps.', ts:now-1.2*h, likes:15, myLike:false},
+    ]
+  },
+  {
+    id:3, author:'Ibrahim_Maradi', badge:null, verified:false, initials:'I',
+    text:'J\'ai écouté ce morceau plus de 50 fois cette semaine sans exagérer. Le rythme afrobeat fusionne parfaitement avec les instruments traditionnels. C\'est exactement ce dont la musique nigérienne avait besoin. 💯',
+    rating:5, ts: now-3*h, likes:76, fires:34, claps:48,
+    myLike:true, myFire:false, myClap:false,
+    replies:[]
+  },
+  {
+    id:4, author:'MariamN', badge:null, verified:false, initials:'M',
+    text:'Le clip vidéo en complément de ce morceau serait parfait. La mélodie est envoûtante, les paroles ont du sens et la voix de FATOUMATA est juste… magique. ✨',
+    rating:4, ts: now-5*h, likes:54, fires:22, claps:38,
+    myLike:false, myFire:false, myClap:false,
+    replies:[]
+  },
+  {
+    id:5, author:'DiasporaFr', badge:null, verified:false, initials:'D',
+    text:'Depuis Paris, on vous suit ! Ce morceau tourne dans les soirées africaines ici. SARAOUNA est en train de devenir un hymne pour la diaspora nigérienne. Fière de nos artistes ! 🇳🇪❤️',
+    rating:5, ts: now-8*h, likes:112, fires:67, claps:89,
+    myLike:false, myFire:false, myClap:true,
+    replies:[
+      {id:501, author:'NiameyBoy', badge:null, initials:'N', text:'Représentation internationale ! On vous voit depuis Niamey 🙌', ts:now-7*h, likes:42, myLike:false},
+    ]
+  },
+  {
+    id:6, author:'SaniAgadez', badge:null, verified:false, initials:'S',
+    text:'La partie instrumentale vers 2:20 est sublime. On entend clairement les influences touareg mélangées à l\'afrobeat moderne. Un travail de compositeur remarquable.',
+    rating:5, ts: now-1*d, likes:87, fires:41, claps:63,
+    myLike:false, myFire:false, myClap:false,
+    replies:[]
+  },
+  {
+    id:7, author:'FatiDosso', badge:null, verified:false, initials:'F',
+    text:'Bonne prod, mais j\'aurais aimé un peu plus de diversité dans les arrangements. Sinon les vocals sont top et le flow est bien maîtrisé. 4 étoiles solides.',
+    rating:4, ts: now-1.5*d, likes:31, fires:8, claps:19,
+    myLike:false, myFire:false, myClap:false,
+    replies:[]
+  },
+  {
+    id:8, author:'ZarmaStar', badge:'artist', verified:true, initials:'Z',
+    text:'Collaboration éventuelle ? 👀 FATOUMATA, si tu lis ce commentaire, je serais honoré d\'avoir une feat avec toi sur le prochain projet. Le Niger sur la carte de l\'Afrique ! 🌍🔥',
+    rating:5, ts: now-2*d, likes:203, fires:156, claps:134,
+    myLike:false, myFire:false, myClap:false,
+    replies:[
+      {id:801, author:'FATOUMATA', badge:'artist', initials:'F', text:'🤝 On va en parler ! DM ouvert.', ts:now-1.8*d, likes:189, myLike:false},
+    ]
+  },
+];
+
+const RATING_DIST = [
+  {stars:5, count:188, pct:76},
+  {stars:4, count:42,  pct:17},
+  {stars:3, count:12,  pct:5},
+  {stars:2, count:4,   pct:2},
+  {stars:1, count:2,   pct:1},
+];
+
+const TABS = [
+  {key:'all',     label:'Tous',         count:8},
+  {key:'top',     label:'Top avis',     count:3},
+  {key:'artist',  label:'Artistes',     count:3},
+  {key:'recent',  label:'Récents',      count:5},
+];
+
+/* ══ STATE ══ */
+let comments = [...COMMENTS_DB];
+let activeTab = 'all';
+let sortMode = 'recent';
+let userRating = 0;
+let visibleCount = 5;
+let emojiOpen = false;
+
+/* ══ INIT ══ */
+/* ══ CURRENT SONG (from sessionStorage or URL) ══ */
+let currentSongId = null;
+
+document.addEventListener('DOMContentLoaded', async () => {
+  // Get song context
+  const stored = sessionStorage.getItem('tmn_current_song');
+  if (stored) {
+    try {
+      const s = JSON.parse(stored);
+      currentSongId = s.id || null;
+      // Update page header with real song info
+      const titleEl = document.querySelector('.sc-title');
+      const artistEl = document.querySelector('.sc-artist');
+      const emojiEl  = document.querySelector('.sc-cover-emoji');
+      if (titleEl)  titleEl.textContent  = s.title || 'SARAOUNA';
+      if (artistEl) artistEl.textContent = s.artist_name || s.artist || 'FATOUMATA';
+      if (emojiEl)  emojiEl.textContent  = s.emoji || '🎵';
+    } catch(e) {}
+  }
+
+  initUser();
+  buildRatingBars();
+  buildTabs();
+  initStarPicker();
+
+  // Load real comments from API
+  if (currentSongId) {
+    try {
+      const data = await TMNAPI.songs.comments(currentSongId, { limit: 20, sort: 'top' });
+      if (data.data && data.data.length > 0) {
+        // Merge API comments with mock (API first)
+        const apiComments = data.data.map(c => ({
+          id:       c.id,
+          author:   c.name || 'Utilisateur',
+          badge:    c.role === 'artist' ? 'artist' : null,
+          verified: !!c.is_verified,
+          initials: (c.name || 'U')[0].toUpperCase(),
+          text:     c.body,
+          rating:   5,
+          ts:       (c.created_at || 0) * 1000,
+          likes:    c.like_count || 0,
+          fires:    c.fire_count || 0,
+          claps:    c.clap_count || 0,
+          myLike: false, myFire: false, myClap: false,
+          replies: (c.replies || []).map(r => ({
+            id: r.id, author: r.name || 'Utilisateur', initials: (r.name||'U')[0],
+            text: r.body, ts: (r.created_at||0)*1000, badge: r.role==='artist'?'artist':null,
+          })),
+        }));
+        comments = [...apiComments, ...COMMENTS_DB.slice(0, 3)];
+      }
+    } catch(e) {}
+  }
+
+  render();
+});
+
+function initUser() {
+  const u = JSON.parse(localStorage.getItem('tmn_user') || 'null');
+  if (u) {
+    $('myName').textContent = u.name || 'Moi';
+    $('myAvatar').textContent = (u.name || 'M')[0].toUpperCase();
+  }
+}
+
+/* ══ RATING BARS ══ */
+function buildRatingBars() {
+  const el = $('ratingBars'); if (!el) return;
+  RATING_DIST.forEach(r => {
+    const row = document.createElement('div'); row.className = 'rb-row';
+    row.innerHTML = `
+      <div class="rb-star">${r.stars}★</div>
+      <div class="rb-track"><div class="rb-fill" style="width:0%" data-pct="${r.pct}"></div></div>
+      <div class="rb-count">${r.count}</div>`;
+    el.appendChild(row);
+  });
+  setTimeout(() => {
+    el.querySelectorAll('.rb-fill').forEach(b => b.style.width = b.dataset.pct + '%');
+  }, 200);
+}
+
+/* ══ STAR PICKER ══ */
+function initStarPicker() {
+  const stars = document.querySelectorAll('.star-pick');
+  stars.forEach(s => {
+    s.addEventListener('mouseenter', () => highlightStars(+s.dataset.v));
+    s.addEventListener('mouseleave', () => highlightStars(userRating));
+    s.addEventListener('click', () => { userRating = +s.dataset.v; highlightStars(userRating); });
+  });
+}
+function highlightStars(n) {
+  document.querySelectorAll('.star-pick').forEach((s, i) => s.classList.toggle('on', i < n));
+}
+function submitRating() {
+  if (!userRating) { showToast('Sélectionnez une note d\'abord', 'info'); return; }
+  showToast(`Note ${userRating}★ enregistrée — merci !`, 'success');
+}
+
+/* ══ TABS ══ */
+function buildTabs() {
+  const bar = $('filterTabs');
+  TABS.forEach(t => {
+    const btn = document.createElement('div');
+    btn.className = 'tab' + (t.key === 'all' ? ' active' : '');
+    btn.innerHTML = `${t.label}<span class="tab-badge">${t.count}</span>`;
+    btn.onclick = () => {
+      activeTab = t.key; visibleCount = 5;
+      bar.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      render();
+    };
+    bar.appendChild(btn);
+  });
+}
+
+/* ══ FILTER + SORT ══ */
+function getFiltered() {
+  let data = [...comments];
+  if (activeTab === 'top')    data = data.filter(c => c.likes >= 50);
+  if (activeTab === 'artist') data = data.filter(c => c.badge === 'artist');
+  if (activeTab === 'recent') data = data.sort((a,b) => b.ts - a.ts).slice(0,5);
+
+  if (sortMode === 'top')    data.sort((a,b) => (b.likes+b.fires+b.claps) - (a.likes+a.fires+a.claps));
+  else if (sortMode === 'rating') data.sort((a,b) => b.rating - a.rating);
+  else data.sort((a,b) => b.ts - a.ts);
+
+  // pinned first
+  data.sort((a,b) => (b.pinned?1:0) - (a.pinned?1:0));
+  return data;
+}
+
+function sortComments(mode) {
+  sortMode = mode; visibleCount = 5;
+  render();
+}
+
+/* ══ RENDER ══ */
+function render() {
+  const filtered = getFiltered();
+  $('commentCount').textContent = filtered.length;
+  const section = $('commentSection'); section.innerHTML = '';
+  const visible = filtered.slice(0, visibleCount);
+  visible.forEach((c, i) => section.appendChild(buildComment(c, i)));
+  $('loadMoreWrap').style.display = filtered.length > visibleCount ? 'block' : 'none';
+}
+
+function loadMore() { visibleCount += 4; render(); }
+
+/* ══ BUILD COMMENT ══ */
+function buildComment(c, delay) {
+  const colorPair = AVATAR_COLORS[c.id % AVATAR_COLORS.length];
+  const stars = Array.from({length:5}, (_,i) => `<i class="fas fa-star${i < c.rating ? '' : ' e'}"></i>`).join('');
+  const badgeHtml = c.badge ? `<span class="cm-badge ${c.badge}">${c.badge === 'artist' ? '🎤 Artiste' : c.badge === 'top' ? '🏆 Top listener' : c.badge}</span>` : '';
+  const verHtml = c.verified ? '<div class="verified-badge"><i class="fas fa-check"></i></div>' : '';
+  const time = relTime(c.ts);
+
+  const el = document.createElement('div');
+  el.className = 'comment' + (c.pinned ? ' pinned' : '');
+  el.style.animationDelay = (delay * 0.05) + 's';
+  el.dataset.id = c.id;
+
+  el.innerHTML = `
+    <div class="cm-header">
+      <div class="cm-avatar" style="background:linear-gradient(135deg,${colorPair[0]},${colorPair[1]});color:#09090b;">
+        ${c.initials}${verHtml}
+      </div>
+      <div class="cm-info">
+        <div class="cm-name">${c.author}${badgeHtml}</div>
+        <div class="cm-meta">
+          <div class="cm-rating">${stars}</div>
+          <span>·</span><span>${time}</span>
+        </div>
+      </div>
+      <div class="cm-more" onclick="showContextMenu(${c.id})"><i class="fas fa-ellipsis"></i></div>
+    </div>
+    <div class="cm-text">${formatText(c.text)}</div>
+    <div class="cm-footer">
+      <div class="cm-reaction fire ${c.myFire?'active':''}" onclick="react(${c.id},'fire',this)">
+        <i class="fas fa-fire"></i> <span class="rcnt">${c.fires}</span>
+      </div>
+      <div class="cm-reaction heart ${c.myLike?'active':''}" onclick="react(${c.id},'like',this)">
+        <i class="fas fa-heart"></i> <span class="rcnt">${c.likes}</span>
+      </div>
+      <div class="cm-reaction clap ${c.myClap?'active':''}" onclick="react(${c.id},'clap',this)">
+        👏 <span class="rcnt">${c.claps}</span>
+      </div>
+      <div class="cm-reply-btn" onclick="toggleReply(${c.id})"><i class="fas fa-reply"></i> Répondre</div>
+    </div>
+
+    <div class="reply-box" id="rbox-${c.id}">
+      <div class="rb-avatar">M</div>
+      <textarea class="rb-input" placeholder="Répondre à ${c.author}…" rows="2"></textarea>
+      <div class="rb-send" onclick="postReply(${c.id})">Envoyer</div>
+    </div>
+
+    ${c.replies.length ? buildReplies(c) : ''}`;
+
+  return el;
+}
+
+function buildReplies(c) {
+  const colors = {
+    'FATOUMATA':['#e0530c','#c9a84c'],
+    'Moussa_K': ['#5b8dee','#9c27b0'],
+    'RabiatuG': ['#0c7e40','#5b8dee'],
+    'NiameyBoy':['#c9a84c','#0c7e40'],
+  };
+  return `<div class="replies">${c.replies.map((r, i) => {
+    const cp = colors[r.author] || AVATAR_COLORS[r.id % AVATAR_COLORS.length];
+    const badgeHtml = r.badge === 'artist' ? '<span class="cm-badge artist">🎤 Artiste</span>' : '';
+    return `<div class="reply" style="animation-delay:${i*.04}s">
+      <div class="cm-header">
+        <div class="cm-avatar" style="width:30px;height:30px;font-size:.75rem;background:linear-gradient(135deg,${cp[0]},${cp[1]});color:#09090b;">${r.initials}</div>
+        <div class="cm-info">
+          <div class="cm-name">${r.author}${badgeHtml}</div>
+          <div class="cm-meta">${relTime(r.ts)}</div>
+        </div>
+      </div>
+      <div class="cm-text">${formatText(r.text)}</div>
+      <div class="cm-footer">
+        <div class="cm-reaction heart ${r.myLike?'active':''}" onclick="reactReply(${r.id},'like',this)">
+          <i class="fas fa-heart"></i> <span class="rcnt">${r.likes}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+/* ══ TEXT FORMATTING ══ */
+function formatText(txt) {
+  return txt
+    .replace(/@(\w+)/g, '<span class="mention">@$1</span>')
+    .replace(/#(\w+)/g, '<span class="hashtag">#$1</span>');
+}
+
+/* ══ TIME ══ */
+function relTime(ts) {
+  const diff = now - ts;
+  if (diff < 60000)    return "À l'instant";
+  if (diff < 3600000)  return Math.floor(diff/60000) + ' min';
+  if (diff < 86400000) return Math.floor(diff/3600000) + 'h';
+  if (diff < 604800000)return Math.floor(diff/86400000) + 'j';
+  return new Date(ts).toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
+}
+
+/* ══ REACTIONS ══ */
+function react(id, type, btn) {
+  const c = comments.find(c => c.id === id); if (!c) return;
+  const keyMap = {fire:'myFire', like:'myLike', clap:'myClap'};
+  const cntKey = {fire:'fires', like:'likes', clap:'claps'};
+  const k = keyMap[type], ck = cntKey[type];
+  c[k] = !c[k];
+  c[ck] += c[k] ? 1 : -1;
+  btn.classList.toggle('active', c[k]);
+  btn.querySelector('.rcnt').textContent = c[ck];
+}
+
+function reactReply(id, type, btn) {
+  btn.classList.toggle('active');
+  const span = btn.querySelector('.rcnt');
+  span.textContent = +span.textContent + (btn.classList.contains('active') ? 1 : -1);
+}
+
+/* ══ REPLY ══ */
+function toggleReply(id) {
+  const box = $('rbox-' + id);
+  box.classList.toggle('open');
+  if (box.classList.contains('open')) box.querySelector('.rb-input').focus();
+}
+
+function postReply(id) {
+  const box = $('rbox-' + id);
+  const inp = box.querySelector('.rb-input');
+  if (!inp.value.trim()) return;
+  const u = JSON.parse(localStorage.getItem('tmn_user') || '{}');
+  const name = u.name || 'Moi';
+  const c = comments.find(c => c.id === id);
+  if (c) c.replies.push({id: Date.now(), author: name, initials: name[0].toUpperCase(), badge: null, text: inp.value.trim(), ts: Date.now(), likes: 0, myLike: false});
+  inp.value = '';
+  box.classList.remove('open');
+  render();
+  showToast('Réponse publiée ✓', 'success');
+}
+
+/* ══ POST COMMENT ══ */
+async function postComment() {
+  const txt = $('commentInput').value.trim(); if (!txt) return;
+  const u = JSON.parse(localStorage.getItem('tmn_user') || '{}');
+  const name = u.name || 'Moi';
+
+  // Optimistic UI
+  const newComment = {
+    id: Date.now(), author: name, badge: null, verified: false,
+    initials: name[0].toUpperCase(),
+    text: txt, rating: userRating || 5,
+    ts: Date.now(), likes: 0, fires: 0, claps: 0,
+    myLike: false, myFire: false, myClap: false,
+    replies: []
+  };
+  comments.unshift(newComment);
+  $('commentInput').value = '';
+  $('submitBtn').disabled = true;
+  $('charCount').textContent = '0/500';
+  emojiOpen = false; $('emojiTray').classList.remove('open');
+  render();
+
+  // Enregistre la note si renseignée
+  if (userRating && currentSongId) {
+    await TMNAPI.songs.rate(currentSongId, userRating);
+  }
+
+  // Envoie le commentaire à l'API
+  if (currentSongId) {
+    try {
+      const saved = await TMNAPI.songs.addComment(currentSongId, txt);
+      if (saved && !saved._demo) newComment.id = saved.id;
+    } catch(e) {}
+  }
+
+  showToast('Commentaire publié ✓', 'success');
+  document.getElementById('commentSection').scrollIntoView({behavior:'smooth'});
+}
+
+/* ══ WRITE BOX ══ */
+function onInputChange() {
+  const v = $('commentInput').value;
+  $('charCount').textContent = v.length + '/500';
+  $('charCount').classList.toggle('warn', v.length > 450);
+  $('submitBtn').disabled = v.trim().length === 0;
+}
+
+function toggleEmoji() {
+  emojiOpen = !emojiOpen;
+  $('emojiTray').classList.toggle('open', emojiOpen);
+}
+
+function insertEmoji(e) {
+  const ta = $('commentInput');
+  const pos = ta.selectionStart;
+  ta.value = ta.value.slice(0, pos) + e + ta.value.slice(pos);
+  ta.setSelectionRange(pos + e.length, pos + e.length);
+  ta.focus();
+  onInputChange();
+}
+
+/* ══ CONTEXT MENU ══ */
+function showContextMenu(id) {
+  const u = JSON.parse(localStorage.getItem('tmn_user') || '{}');
+  const c = comments.find(c => c.id === id);
+  if (c && c.author === (u.name || '')) {
+    if (confirm('Supprimer votre commentaire ?')) {
+      comments = comments.filter(c => c.id !== id);
+      render();
+      showToast('Commentaire supprimé', 'info');
+    }
+  } else {
+    showToast('Commentaire signalé à la modération', 'info');
+  }
+}
+
+function shareComments() {
+  const txt = '💬 Rejoignez la discussion sur "SARAOUNA" de FATOUMATA — TOP Musique Niger';
+  if (navigator.share) navigator.share({title:'TOP Musique Niger', text:txt});
+  else { navigator.clipboard?.writeText(txt); showToast('Lien copié !', 'success'); }
+}
+
+function goProfile(e) {
+  e.preventDefault();
+  const u = JSON.parse(localStorage.getItem('tmn_user') || 'null');
+  window.location.href = u?.musicType ? 'profil-artiste.html' : 'profil-auditeur.html';
+}
+
+/* ══ TOAST ══ */
+function showToast(msg, type='info') {
+  const t=$('toast'); $('toastMsg').textContent=msg;
+  t.querySelector('i').className=type==='success'?'fas fa-circle-check':type==='error'?'fas fa-circle-xmark':'fas fa-circle-info';
+  t.className=`show ${type}`; clearTimeout(t._t);
+  t._t=setTimeout(()=>t.className='',3200);
+}
+
+TMN.init({ requireAuth: false, activeNav: 'home' });
+</script>
+</body>
+</html>

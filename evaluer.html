@@ -1,0 +1,473 @@
+getItemDOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e0530c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Évaluer – TOP Musique Niger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --bg:#09090b;--card:#16161c;--card-h:#1e1e26;
+  --border:rgba(255,255,255,.07);--border-md:rgba(255,255,255,.12);
+  --accent:#e0530c;--ag:rgba(224,83,12,.3);--ad:rgba(224,83,12,.12);
+  --gold:#c9a84c;--gg:rgba(201,168,76,.3);--gd:rgba(201,168,76,.12);
+  --green:#0c7e40;--blue:#5b8dee;--bd:rgba(91,141,238,.12);
+  --text:#f0ece4;--t2:#8a8790;--t3:#4a4850;
+  --nav:68px;--hdr:58px;--radius:12px;--rlg:18px;
+  --star:#f5a623;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{min-height:100vh;background:var(--bg);font-family:'Instrument Sans',sans-serif;color:var(--text);
+  padding-top:var(--hdr);padding-bottom:calc(var(--nav)+1.5rem);overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 70% 35% at 50% 0%,rgba(201,168,76,.07),transparent 60%);}
+a{text-decoration:none;color:inherit;}
+button{border:none;background:none;cursor:pointer;font-family:inherit;color:inherit;}
+
+/* ── HEADER ── */
+.hdr{position:fixed;top:0;left:0;right:0;height:var(--hdr);z-index:200;
+  background:rgba(9,9,11,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 1.2rem;gap:.8rem;}
+.hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;
+  background:linear-gradient(90deg,var(--accent) 33%,#f5f0e8 33%,#f5f0e8 66%,var(--green) 66%);}
+.hdr-title{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;flex:1;}
+.hdr-title span{color:var(--gold);}
+.hdr-btn{width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;color:var(--t2);font-size:.82rem;
+  cursor:pointer;transition:all .2s;text-decoration:none;}
+.hdr-btn:hover{color:var(--text);}
+.hdr-notif-pip{position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;
+  background:var(--accent);border:1.5px solid var(--bg);display:none;}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:.4rem;overflow-x:auto;scrollbar-width:none;padding:.9rem 1.2rem .2rem;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex-shrink:0;padding:.35rem .9rem;border-radius:100px;font-size:.75rem;font-weight:600;
+  cursor:pointer;border:1.5px solid var(--border);background:var(--card);color:var(--t2);transition:all .2s;}
+.tab:hover{color:var(--text);}
+.tab.active{background:var(--gd);border-color:rgba(201,168,76,.4);color:var(--gold);}
+
+/* ── SECTION ── */
+.section{padding:1rem 1.2rem .4rem;}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem;}
+.sec-title{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--t2);}
+.sec-count{font-size:.72rem;color:var(--t3);}
+
+/* ── SONG CARD ── */
+.song-list{display:flex;flex-direction:column;gap:.65rem;}
+.song-card{display:flex;align-items:center;gap:.85rem;background:var(--card);
+  border:1px solid var(--border);border-radius:14px;padding:.8rem .9rem;
+  transition:border-color .2s,background .2s;cursor:pointer;position:relative;}
+.song-card:hover{border-color:var(--border-md);background:var(--card-h);}
+.song-card.rated{border-color:rgba(201,168,76,.25);background:rgba(201,168,76,.04);}
+
+.song-emoji{width:46px;height:46px;border-radius:11px;background:linear-gradient(135deg,var(--card-h),var(--bg));
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;flex-shrink:0;}
+.song-info{flex:1;min-width:0;}
+.song-title{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.song-artist{font-size:.74rem;color:var(--t2);margin-top:.18rem;}
+.song-genre-tag{display:inline-block;padding:.12rem .45rem;border-radius:4px;
+  background:var(--ad);color:var(--accent);font-size:.62rem;font-weight:700;margin-top:.3rem;}
+
+/* ── STARS INLINE ── */
+.stars-inline{display:flex;gap:.15rem;flex-shrink:0;}
+.stars-inline i{font-size:1.1rem;color:var(--t3);cursor:pointer;transition:color .12s,transform .12s;}
+.stars-inline i.lit{color:var(--star);}
+.stars-inline i:hover{transform:scale(1.15);}
+
+/* ── RATED BADGE ── */
+.rated-badge{position:absolute;top:.55rem;right:.7rem;font-size:.65rem;font-weight:700;
+  color:var(--gold);background:var(--gd);border:1px solid rgba(201,168,76,.25);
+  border-radius:6px;padding:.1rem .38rem;display:none;}
+.song-card.rated .rated-badge{display:block;}
+
+/* ── REVIEW PANEL ── */
+.review-panel{background:var(--card);border:1px solid var(--border-md);
+  border-radius:16px;margin:.5rem 1.2rem;padding:1.1rem 1rem;
+  display:none;animation:slideIn .25s cubic-bezier(.22,1,.36,1);}
+.review-panel.open{display:block;}
+@keyframes slideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.rp-top{display:flex;align-items:center;gap:.8rem;margin-bottom:.9rem;}
+.rp-emoji{width:40px;height:40px;border-radius:10px;background:var(--card-h);
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.3rem;}
+.rp-name{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;}
+.rp-artist{font-size:.72rem;color:var(--t2);}
+
+.rp-stars{display:flex;gap:.35rem;margin-bottom:.9rem;}
+.rp-stars i{font-size:1.7rem;color:var(--border-md);cursor:pointer;transition:all .15s;}
+.rp-stars i.lit{color:var(--star);}
+.rp-stars i:hover{transform:scale(1.1);}
+.rp-score-lbl{font-size:.72rem;color:var(--t2);margin-top:.15rem;margin-bottom:.9rem;min-height:1em;}
+
+.rp-textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);
+  border-radius:10px;padding:.65rem .8rem;color:var(--text);font-family:'Instrument Sans',sans-serif;
+  font-size:.83rem;resize:none;outline:none;transition:border-color .2s;min-height:72px;}
+.rp-textarea:focus{border-color:var(--border-md);}
+.rp-textarea::placeholder{color:var(--t3);}
+
+.rp-actions{display:flex;gap:.6rem;margin-top:.75rem;}
+.rp-cancel{flex:1;padding:.65rem;border-radius:10px;background:rgba(255,255,255,.05);
+  border:1px solid var(--border);color:var(--t2);font-size:.82rem;font-weight:600;transition:all .2s;}
+.rp-cancel:hover{color:var(--text);}
+.rp-submit{flex:2;padding:.65rem;border-radius:10px;
+  background:linear-gradient(135deg,var(--gold),#b8922a);color:#09090b;
+  font-family:'Syne',sans-serif;font-size:.82rem;font-weight:800;
+  box-shadow:0 3px 12px var(--gg);transition:all .22s;}
+.rp-submit:hover{transform:translateY(-1px);box-shadow:0 5px 18px var(--gg);}
+.rp-submit:disabled{opacity:.45;pointer-events:none;}
+
+/* ── MY REVIEWS ── */
+.review-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:.85rem .95rem;transition:border-color .2s;}
+.review-card:hover{border-color:var(--border-md);}
+.rc-top{display:flex;align-items:center;gap:.75rem;margin-bottom:.55rem;}
+.rc-emoji{width:38px;height:38px;border-radius:9px;background:var(--card-h);
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.rc-meta{flex:1;min-width:0;}
+.rc-title{font-weight:700;font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rc-artist{font-size:.72rem;color:var(--t2);}
+.rc-stars{display:flex;gap:.12rem;margin-bottom:.4rem;}
+.rc-stars i{font-size:.82rem;color:var(--t3);}
+.rc-stars i.lit{color:var(--star);}
+.rc-body{font-size:.8rem;color:var(--t2);line-height:1.5;}
+.rc-date{font-size:.68rem;color:var(--t3);margin-top:.35rem;}
+.rc-delete{width:28px;height:28px;border-radius:7px;background:rgba(224,82,82,.1);
+  border:1px solid rgba(224,82,82,.2);color:#e05252;display:flex;align-items:center;
+  justify-content:center;font-size:.72rem;cursor:pointer;transition:all .2s;flex-shrink:0;}
+.rc-delete:hover{background:rgba(224,82,82,.2);}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:2.5rem 1.2rem;}
+.empty-icon{font-size:2.8rem;margin-bottom:.8rem;opacity:.35;}
+.empty-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:.4rem;}
+.empty-desc{font-size:.82rem;color:var(--t2);max-width:260px;margin:0 auto;}
+.empty-btn{display:inline-flex;align-items:center;gap:.5rem;margin-top:1.1rem;
+  padding:.65rem 1.4rem;border-radius:100px;background:var(--gd);border:1px solid rgba(201,168,76,.3);
+  color:var(--gold);font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.empty-btn:hover{background:rgba(201,168,76,.18);}
+
+/* ── SKELETON ── */
+.skel{background:linear-gradient(90deg,var(--card) 25%,var(--card-h) 50%,var(--card) 75%);
+  background-size:300% 100%;animation:shimmer 1.4s infinite;border-radius:8px;}
+@keyframes shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
+
+/* ── NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav);
+  background:rgba(9,9,11,.97);backdrop-filter:blur(24px);border-top:1px solid var(--border);
+  display:flex;justify-content:space-around;align-items:center;padding:0 .5rem;z-index:200;}
+.bottom-nav::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--accent) 33%,rgba(245,240,232,.4) 33%,rgba(245,240,232,.4) 66%,var(--green) 66%);opacity:.6;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:.2rem;flex:1;padding:.5rem;
+  color:var(--t3);font-size:.6rem;font-weight:500;text-decoration:none;transition:all .2s;position:relative;}
+.nav-item i{font-size:1.18rem;}
+.nav-item.active{color:var(--gold);}
+.nav-pub i{width:44px;height:44px;background:linear-gradient(135deg,var(--gold),#b8922a);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.98rem;color:#09090b;box-shadow:0 4px 16px var(--gg);margin-bottom:.1rem;}
+.nav-pub{color:var(--t2);margin-top:-10px;}
+.nav-pip{position:absolute;top:.38rem;right:calc(50% - 14px);width:7px;height:7px;
+  border-radius:50%;background:var(--accent);border:1.5px solid var(--bg);}
+/* TOAST */
+#toast{position:fixed;bottom:calc(var(--nav)+1rem);left:50%;transform:translateX(-50%) translateY(60px);
+  opacity:0;background:var(--card);border:1px solid var(--border-md);padding:.6rem 1.2rem;
+  border-radius:100px;font-size:.82rem;z-index:9999;display:flex;align-items:center;gap:.5rem;
+  box-shadow:0 8px 28px rgba(0,0,0,.5);transition:all .32s cubic-bezier(.22,1,.36,1);white-space:nowrap;}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-title">⭐ <span>Évaluer</span></div>
+  <a href="search.html" class="hdr-btn"><i class="fas fa-magnifying-glass"></i></a>
+  <a href="notifications.html" class="hdr-btn" style="position:relative;">
+    <i class="fas fa-bell"></i>
+    <span class="hdr-notif-pip" id="notifPip"></span>
+  </a>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" data-tab="toRate" onclick="switchTab('toRate',this)">À évaluer</div>
+  <div class="tab" data-tab="myRatings" onclick="switchTab('myRatings',this)">Mes avis</div>
+  <div class="tab" data-tab="recent" onclick="switchTab('recent',this)">Récents</div>
+  <div class="tab" data-tab="top" onclick="switchTab('top',this)">Top noté</div>
+</div>
+
+<!-- CONTENU PRINCIPAL -->
+<div id="mainContent"></div>
+
+<!-- REVIEW PANEL -->
+<div class="review-panel" id="reviewPanel">
+  <div class="rp-top">
+    <div class="rp-emoji" id="rpEmoji">🎵</div>
+    <div>
+      <div class="rp-name" id="rpName">—</div>
+      <div class="rp-artist" id="rpArtist">—</div>
+    </div>
+  </div>
+  <div class="rp-stars" id="rpStars">
+    <i class="fas fa-star" data-v="1"></i>
+    <i class="fas fa-star" data-v="2"></i>
+    <i class="fas fa-star" data-v="3"></i>
+    <i class="fas fa-star" data-v="4"></i>
+    <i class="fas fa-star" data-v="5"></i>
+  </div>
+  <div class="rp-score-lbl" id="rpScoreLbl">Appuyez sur une étoile pour noter</div>
+  <textarea class="rp-textarea" id="rpComment" placeholder="Commentaire facultatif — partagez votre ressenti…" maxlength="500" rows="3"></textarea>
+  <div class="rp-actions">
+    <button class="rp-cancel" onclick="closeReview()">Annuler</button>
+    <button class="rp-submit" id="rpSubmit" onclick="submitRating()" disabled>Publier mon avis</button>
+  </div>
+</div>
+
+<nav class="bottom-nav" id="bottomNav"></nav>
+<div id="toast"><i class="fas fa-circle-info" id="toastIcon"></i><span id="toastMsg"></span></div>
+
+<script src="tmn-api.js"></script>
+<script src="app.js"></script>
+<script>
+TMN.init({ requireAuth: true, activeNav: 'evaluer' });
+
+const SCORE_LABELS = ['','😕 Décevant','😐 Passable','🙂 Correct','😊 Bon','🤩 Excellent !'];
+let currentTab   = 'toRate';
+let activeSongId = null;
+let chosenScore  = 0;
+
+/* ── TABS ── */
+function switchTab(tab, el) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  closeReview();
+  renderTab();
+}
+
+async function renderTab() {
+  const el = document.getElementById('mainContent');
+  el.innerHTML = buildSkeleton(4);
+
+  if (currentTab === 'toRate') {
+    const data = await TMNAPI.songs.list({ sort: 'plays', limit: 20 }).catch(() => null);
+    const songs = data?.data || [];
+    renderSongList(songs, true);
+  } else if (currentTab === 'myRatings') {
+    // Pas d'API directe → on lit du localStorage pour l'instant
+    const saved = getLocalRatings();
+    renderMyRatings(saved);
+  } else if (currentTab === 'recent') {
+    const data = await TMNAPI.songs.list({ sort: 'recent', limit: 20 }).catch(() => null);
+    const songs = data?.data || [];
+    renderSongList(songs, false);
+  } else if (currentTab === 'top') {
+    const data = await TMNAPI.songs.list({ sort: 'rating', limit: 20 }).catch(() => null);
+    const songs = data?.data || [];
+    renderSongList(songs, false);
+  }
+}
+
+/* ── RENDER SONG LIST ── */
+function renderSongList(songs, showUnrated) {
+  const el = document.getElementById('mainContent');
+  if (!songs.length) {
+    el.innerHTML = emptyState('🎵', 'Aucun morceau', 'Les morceaux apparaîtront ici.');
+    return;
+  }
+  const saved = getLocalRatings();
+  const ratedIds = new Set(saved.map(r => r.id));
+
+  const html = `
+    <div class="section">
+      <div class="sec-hdr">
+        <div class="sec-title">${currentTab==='toRate'?'À évaluer':currentTab==='recent'?'Récemment ajoutés':'Top notés'}</div>
+        <div class="sec-count">${songs.length} morceaux</div>
+      </div>
+      <div class="song-list" id="songList">
+        ${songs.map(s => {
+          const rated  = ratedIds.has(s.id);
+          const rating = saved.find(r=>r.id===s.id);
+          const stars  = rating ? starHTML(rating.score, 'inline') : `
+            <div class="stars-inline" data-id="${s.id}" onclick="event.stopPropagation();openReview(event,'${s.id}','${escQ(s.title)}','${escQ(s.artist_name||'')}','${s.emoji||'🎵'}')">
+              ${[1,2,3,4,5].map(v=>`<i class="fas fa-star" data-v="${v}" style="font-size:1rem;color:${v<=Math.round(s.avg_rating||0)?'var(--star)':'var(--t3)'};"></i>`).join('')}
+            </div>`;
+          return `<div class="song-card${rated?' rated':''}" onclick="openReview(event,'${s.id}','${escQ(s.title)}','${escQ(s.artist_name||'')}','${s.emoji||'🎵'}')">
+            <div class="song-emoji">${s.emoji||'🎵'}</div>
+            <div class="song-info">
+              <div class="song-title">${s.title}</div>
+              <div class="song-artist">${s.artist_name||'Artiste inconnu'}</div>
+              <span class="song-genre-tag">${s.genre||''}</span>
+            </div>
+            ${stars}
+            <div class="rated-badge">✓ Noté</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  el.innerHTML = html;
+}
+
+/* ── RENDER MY RATINGS ── */
+function renderMyRatings(saved) {
+  const el = document.getElementById('mainContent');
+  if (!saved.length) {
+    el.innerHTML = emptyState('⭐', 'Aucun avis encore', 'Évaluez des morceaux pour les retrouver ici.', 'toRate', 'Commencer à évaluer');
+    return;
+  }
+  const html = `
+    <div class="section">
+      <div class="sec-hdr">
+        <div class="sec-title">Mes avis</div>
+        <div class="sec-count">${saved.length} évaluation${saved.length>1?'s':''}</div>
+      </div>
+      <div class="song-list">
+        ${saved.slice().reverse().map(r => `
+          <div class="review-card">
+            <div class="rc-top">
+              <div class="rc-emoji">${r.emoji||'🎵'}</div>
+              <div class="rc-meta">
+                <div class="rc-title">${r.title}</div>
+                <div class="rc-artist">${r.artist}</div>
+              </div>
+              <button class="rc-delete" onclick="deleteRating('${r.id}')" title="Supprimer"><i class="fas fa-trash-can"></i></button>
+            </div>
+            <div class="rc-stars">${[1,2,3,4,5].map(v=>`<i class="fas fa-star${v<=r.score?' lit':''}"></i>`).join('')}</div>
+            ${r.comment ? `<div class="rc-body">"${r.comment}"</div>` : ''}
+            <div class="rc-date">${new Date(r.date).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  el.innerHTML = html;
+}
+
+/* ── REVIEW PANEL ── */
+function openReview(e, id, title, artist, emoji) {
+  e?.stopPropagation();
+  activeSongId = id;
+  chosenScore  = 0;
+  // Check if already rated
+  const saved  = getLocalRatings();
+  const prev   = saved.find(r=>r.id===id);
+
+  document.getElementById('rpEmoji').textContent  = emoji;
+  document.getElementById('rpName').textContent   = title;
+  document.getElementById('rpArtist').textContent = artist;
+  document.getElementById('rpComment').value      = prev?.comment||'';
+
+  setStars(prev?.score||0);
+  if (prev) chosenScore = prev.score;
+
+  const panel = document.getElementById('reviewPanel');
+  panel.classList.add('open');
+  panel.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+function closeReview() {
+  document.getElementById('reviewPanel').classList.remove('open');
+  activeSongId = null;
+  chosenScore  = 0;
+}
+
+/* ── STARS ── */
+document.querySelectorAll('#rpStars i').forEach(star => {
+  star.addEventListener('mouseenter', () => highlightStars(+star.dataset.v));
+  star.addEventListener('mouseleave', () => setStars(chosenScore));
+  star.addEventListener('click', () => {
+    chosenScore = +star.dataset.v;
+    setStars(chosenScore);
+    document.getElementById('rpScoreLbl').textContent = SCORE_LABELS[chosenScore];
+    document.getElementById('rpSubmit').disabled = false;
+  });
+});
+
+function setStars(n) {
+  document.querySelectorAll('#rpStars i').forEach(s => s.classList.toggle('lit', +s.dataset.v <= n));
+  document.getElementById('rpScoreLbl').textContent = n ? SCORE_LABELS[n] : 'Appuyez sur une étoile pour noter';
+  document.getElementById('rpSubmit').disabled = !n;
+}
+function highlightStars(n) {
+  document.querySelectorAll('#rpStars i').forEach(s => s.classList.toggle('lit', +s.dataset.v <= n));
+}
+
+/* ── SUBMIT ── */
+async function submitRating() {
+  if (!activeSongId || !chosenScore) return;
+  const comment = document.getElementById('rpComment').value.trim();
+
+  try {
+    await TMNAPI.songs.rate(activeSongId, chosenScore);
+  } catch(e) { /* hors ligne → on sauvegarde quand même en local */ }
+
+  // Sauvegarde locale toujours
+  saveRating(activeSongId, document.getElementById('rpName').textContent, document.getElementById('rpArtist').textContent, document.getElementById('rpEmoji').textContent, chosenScore, comment);
+
+  closeReview();
+  showToast('⭐ Avis publié !', 'success');
+  setTimeout(() => renderTab(), 300);
+}
+
+/* ── LOCAL RATINGS ── */
+function getLocalRatings() {
+  try { return JSON.parse(localStorage.getItem('tmn_ratings')||'[]'); } catch(e){ return []; }
+}
+function saveRating(id, title, artist, emoji, score, comment) {
+  const saved  = getLocalRatings().filter(r=>r.id!==id);
+  saved.push({ id, title, artist, emoji, score, comment, date: new Date().toISOString() });
+  localStorage.setItem('tmn_ratings', JSON.stringify(saved));
+}
+function deleteRating(id) {
+  const saved = getLocalRatings().filter(r=>r.id!==id);
+  localStorage.setItem('tmn_ratings', JSON.stringify(saved));
+  showToast('Avis supprimé', 'info');
+  renderMyRatings(saved);
+}
+
+/* ── HELPERS ── */
+function starHTML(score, cls) {
+  return `<div class="stars-inline">${[1,2,3,4,5].map(v=>`<i class="fas fa-star${v<=score?' lit':''}" style="font-size:1rem;color:${v<=score?'var(--star)':'var(--t3)'};"></i>`).join('')}</div>`;
+}
+function escQ(s) { return (s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+function buildSkeleton(n) {
+  return `<div class="section"><div class="song-list">${Array(n).fill(`<div class="song-card"><div class="song-emoji skel" style="min-width:46px;height:46px;"></div><div style="flex:1;"><div class="skel" style="height:14px;width:70%;margin-bottom:6px;"></div><div class="skel" style="height:11px;width:45%;"></div></div></div>`).join('')}</div></div>`;
+}
+function emptyState(icon, title, desc, tabTarget, btnLabel) {
+  return `<div class="empty"><div class="empty-icon">${icon}</div><div class="empty-title">${title}</div><div class="empty-desc">${desc}</div>${btnLabel?`<div class="empty-btn" onclick="document.querySelector('[data-tab=${tabTarget}]').click()">${btnLabel}</div>`:''}</div>`;
+}
+
+/* ── TOAST ── */
+function showToast(msg, type='info') {
+  const t=document.getElementById('toast'), i=document.getElementById('toastIcon'), m=document.getElementById('toastMsg');
+  const icons={success:'fa-circle-check',error:'fa-circle-exclamation',info:'fa-circle-info'};
+  const colors={success:'#10b981',error:'#ef4444',info:''};
+  i.className='fas '+icons[type]; i.style.color=colors[type]||'var(--t2)'; m.textContent=msg;
+  t.classList.add('show'); clearTimeout(t._t);
+  t._t=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+/* ── NOTIFS ── */
+async function checkNotifs() {
+  try {
+    const n = await TMNAPI.notifications.count();
+    if (n>0) document.getElementById('notifPip').style.display='block';
+  } catch(e){}
+}
+
+/* ── INIT ── */
+renderTab();
+checkNotifs();
+</script>
+</body>
+</html>
