@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e0530c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Bienvenue – TOP Musique Niger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#07070a; --card:#14141a;
+  --accent:#e0530c; --accent-g:rgba(224,83,12,.35);
+  --gold:#c9a84c; --gold-d:rgba(201,168,76,.15); --gold-g:rgba(201,168,76,.4);
+  --green:#0c7e40; --green-g:rgba(12,126,64,.3);
+  --text:#f0ece4; --text-2:#8a8790; --text-3:#3d3c43;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);font-family:'Instrument Sans',sans-serif;color:var(--text);
+  position:relative;user-select:none;}
+
+/* ══ BACKGROUND CANVAS ══ */
+#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* ══ GRAIN ══ */
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.55;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
+
+/* ══ SKIP ══ */
+.skip-btn{position:fixed;top:1.4rem;right:1.4rem;z-index:100;
+  padding:.42rem 1rem;border-radius:100px;background:rgba(255,255,255,.07);
+  backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.1);
+  color:var(--text-2);font-size:.78rem;font-weight:600;cursor:pointer;
+  transition:all .2s;font-family:'Instrument Sans',sans-serif;}
+.skip-btn:hover{color:var(--text);background:rgba(255,255,255,.12);}
+
+/* ══ SLIDE WRAPPER ══ */
+.slides{position:fixed;inset:0;z-index:10;}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:2rem 1.5rem;
+  opacity:0;pointer-events:none;transition:none;}
+.slide.active{opacity:1;pointer-events:all;}
+.slide.entering{animation:slideEnter .65s cubic-bezier(.22,1,.36,1) both;}
+.slide.exiting{animation:slideExit .4s cubic-bezier(.55,0,1,.45) both;}
+@keyframes slideEnter{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes slideExit{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(-20px) scale(1.02)}}
+
+/* ══ SLIDE 1 – SPLASH ══ */
+.s1-logo{display:flex;flex-direction:column;align-items:center;gap:.8rem;margin-bottom:2.5rem;}
+.s1-icon{width:90px;height:90px;border-radius:22px;
+  background:linear-gradient(135deg,var(--gold) 0%,#7a4f0a 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:2.8rem;font-weight:800;color:#07070a;
+  box-shadow:0 0 0 0 var(--gold-g);animation:iconPulse 2.5s ease-in-out infinite;}
+@keyframes iconPulse{0%,100%{box-shadow:0 0 0 0 var(--gold-g)}50%{box-shadow:0 0 0 20px transparent}}
+.s1-brand{font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:800;
+  background:linear-gradient(135deg,var(--gold),#f0e8d0);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.s1-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;
+  color:var(--text-2);text-align:center;max-width:300px;line-height:1.6;}
+.s1-flag{display:flex;align-items:center;gap:0;overflow:hidden;border-radius:4px;
+  width:52px;height:8px;margin-top:.4rem;}
+.s1-flag-s{flex:1;height:100%;}
+
+/* ══ FLOATING MUSIC CARDS (slide 2) ══ */
+.float-cards{position:relative;width:320px;height:220px;margin-bottom:2rem;flex-shrink:0;}
+.float-card{position:absolute;background:var(--card);border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;padding:.8rem 1rem;display:flex;align-items:center;gap:.75rem;
+  box-shadow:0 12px 40px rgba(0,0,0,.6);transition:all .3s;}
+.fc-cover{width:44px;height:44px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;position:relative;overflow:hidden;}
+.fc-bg{position:absolute;inset:0;font-size:2.5rem;filter:blur(8px);opacity:.35;transform:scale(1.4);display:flex;align-items:center;justify-content:center;}
+.fc-em{position:relative;z-index:1;}
+.fc-info{}
+.fc-title{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;}
+.fc-sub{font-size:.68rem;color:var(--text-2);}
+.fc-stat{font-size:.62rem;color:var(--gold);margin-top:.1rem;}
+
+.float-card.c1{top:0;left:10px;animation:floatA 4s ease-in-out infinite;}
+.float-card.c2{top:70px;right:0;animation:floatB 4.5s ease-in-out infinite .5s;}
+.float-card.c3{bottom:0;left:30px;animation:floatA 3.8s ease-in-out infinite 1s;}
+@keyframes floatA{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-8px) rotate(1deg)}}
+@keyframes floatB{0%,100%{transform:translateY(0) rotate(1deg)}50%{transform:translateY(-10px) rotate(-1deg)}}
+
+/* ══ ANIMATED CHART (slide 3) ══ */
+.chart-vis{width:100%;max-width:340px;margin-bottom:1.8rem;}
+.cv-bars{display:flex;align-items:flex-end;gap:8px;height:110px;padding-bottom:0;}
+.cv-bar{flex:1;border-radius:6px 6px 0 0;position:relative;
+  display:flex;align-items:flex-start;justify-content:center;transition:height 1s cubic-bezier(.22,1,.36,1);}
+.cv-bar-inner{position:absolute;inset:0;border-radius:inherit;}
+.cv-bar-label{position:absolute;bottom:-22px;font-size:.62rem;color:var(--text-3);white-space:nowrap;}
+.cv-bar-val{position:absolute;top:-20px;font-size:.62rem;font-weight:700;}
+.badge-row{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;margin-top:2rem;}
+.badge-item{display:flex;align-items:center;gap:.35rem;padding:.38rem .8rem;
+  border-radius:100px;font-size:.72rem;font-weight:600;border:1px solid;}
+
+/* ══ PUBLISH VISUAL (slide 4) ══ */
+.publish-vis{position:relative;width:280px;height:200px;margin-bottom:1.8rem;flex-shrink:0;}
+.pub-phone{width:140px;height:200px;background:var(--card);border:1.5px solid rgba(255,255,255,.1);
+  border-radius:22px;position:absolute;left:50%;top:0;transform:translateX(-50%);
+  overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.7);}
+.pub-phone-bar{height:24px;background:rgba(255,255,255,.04);display:flex;align-items:center;
+  justify-content:center;font-size:.5rem;color:var(--text-3);letter-spacing:.05em;flex-shrink:0;}
+.pub-phone-content{flex:1;padding:.7rem .65rem;display:flex;flex-direction:column;gap:.5rem;}
+.pub-row{height:8px;border-radius:4px;background:rgba(255,255,255,.07);}
+.pub-row.accent{background:linear-gradient(90deg,var(--accent),var(--gold));animation:shimmer 2s ease-in-out infinite;}
+.pub-row.gold{background:linear-gradient(90deg,var(--gold),#f0e8d0);width:60%;animation:shimmer 2s ease-in-out infinite .3s;}
+@keyframes shimmer{0%,100%{opacity:.7}50%{opacity:1}}
+.pub-btn{margin-top:auto;height:26px;background:linear-gradient(90deg,var(--accent),#c04008);
+  border-radius:7px;display:flex;align-items:center;justify-content:center;
+  font-size:.58rem;font-weight:700;color:#fff;}
+/* orbiting elements */
+.pub-orb{position:absolute;display:flex;align-items:center;gap:.3rem;
+  background:var(--card);border:1px solid rgba(255,255,255,.1);border-radius:100px;
+  padding:.3rem .65rem;font-size:.65rem;font-weight:600;white-space:nowrap;
+  box-shadow:0 4px 16px rgba(0,0,0,.5);}
+.pub-orb.o1{top:10px;left:-20px;animation:orbFloat 3.5s ease-in-out infinite;color:var(--gold);}
+.pub-orb.o2{top:80px;right:-15px;animation:orbFloat 4s ease-in-out infinite .7s;color:var(--green);}
+.pub-orb.o3{bottom:20px;left:-10px;animation:orbFloat 3.2s ease-in-out infinite 1.2s;color:var(--accent);}
+@keyframes orbFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* ══ PROFILE CHOICE (slide 5) ══ */
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;width:100%;max-width:360px;margin-bottom:1.4rem;}
+.profile-card{background:var(--card);border:2px solid rgba(255,255,255,.07);border-radius:20px;
+  padding:1.6rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.7rem;
+  cursor:pointer;transition:all .25s;text-align:center;}
+.profile-card:hover{transform:translateY(-4px);}
+.profile-card.selected.listener{border-color:var(--blue);background:rgba(91,141,238,.08);box-shadow:0 8px 28px rgba(91,141,238,.2);}
+.profile-card.selected.artist{border-color:var(--accent);background:var(--accent-d);box-shadow:0 8px 28px var(--accent-g);}
+.pc-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;}
+.pc-icon.listener{background:rgba(91,141,238,.15);}
+.pc-icon.artist{background:var(--accent-d);}
+.pc-title{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:800;}
+.pc-desc{font-size:.72rem;color:var(--text-2);line-height:1.5;}
+.pc-check{width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;font-size:.6rem;color:transparent;transition:all .25s;}
+.profile-card.selected.listener .pc-check{background:#5b8dee;border-color:#5b8dee;color:#fff;}
+.profile-card.selected.artist  .pc-check{background:var(--accent);border-color:var(--accent);color:#fff;}
+
+/* ══ SLIDE 6 – FINALE ══ */
+.finale-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,168,76,.18) 0%,transparent 70%);
+  animation:glowPulse 2.5s ease-in-out infinite;pointer-events:none;}
+@keyframes glowPulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.6}50%{transform:translate(-50%,-50%) scale(1.2);opacity:1}}
+.finale-icon{font-size:4rem;margin-bottom:.8rem;animation:iconBounce .6s cubic-bezier(.22,1,.36,1) .3s both;}
+@keyframes iconBounce{from{opacity:0;transform:scale(0) rotate(-20deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+.confetti-wrap{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.confetti{position:absolute;width:8px;height:8px;opacity:0;}
+
+/* ══ SHARED TEXT STYLES ══ */
+.slide-eyebrow{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;
+  color:var(--text-3);margin-bottom:.7rem;font-weight:600;}
+.slide-eyebrow span{color:var(--gold);}
+.slide-title{font-family:'Syne',sans-serif;font-weight:800;text-align:center;line-height:1.15;margin-bottom:.8rem;}
+.slide-title em{font-style:normal;
+  background:linear-gradient(135deg,var(--gold),#f0e8d0);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.slide-title .accent{
+  background:linear-gradient(135deg,var(--accent),#ff8850);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.slide-sub{font-size:.9rem;color:var(--text-2);text-align:center;line-height:1.7;
+  max-width:320px;margin-bottom:0;}
+.highlight-pill{display:inline-flex;align-items:center;gap:.35rem;
+  padding:.3rem .75rem;border-radius:100px;font-size:.72rem;font-weight:700;
+  border:1px solid;margin:.25rem .15rem;}
+
+/* ══ BOTTOM CONTROLS ══ */
+.bottom-controls{position:fixed;bottom:0;left:0;right:0;z-index:20;
+  padding:1.4rem 1.5rem 2rem;
+  background:linear-gradient(0deg,rgba(7,7,10,.95) 60%,transparent);}
+.dots{display:flex;justify-content:center;gap:.45rem;margin-bottom:1.1rem;}
+.dot{width:6px;height:6px;border-radius:3px;background:var(--text-3);
+  transition:all .35s cubic-bezier(.22,1,.36,1);cursor:pointer;}
+.dot.active{width:22px;background:var(--gold);}
+.next-btn{width:100%;height:52px;border-radius:100px;
+  background:linear-gradient(135deg,var(--gold) 0%,#a87a20 100%);
+  color:#07070a;font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;
+  cursor:pointer;border:none;transition:all .25s;
+  display:flex;align-items:center;justify-content:center;gap:.6rem;
+  box-shadow:0 6px 24px var(--gold-g);letter-spacing:.02em;}
+.next-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px var(--gold-g);}
+.next-btn:active{transform:translateY(0);}
+.next-btn.final{background:linear-gradient(135deg,var(--accent) 0%,#c04008 100%);
+  box-shadow:0 6px 24px var(--accent-g);}
+.next-btn.final:hover{box-shadow:0 10px 32px var(--accent-g);}
+.next-btn i{font-size:.88rem;}
+
+/* ══ PROGRESS LINE ══ */
+.progress-line{position:fixed;top:0;left:0;height:2.5px;background:var(--gold);
+  transition:width .5s cubic-bezier(.22,1,.36,1);z-index:100;}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:380px){
+  .float-cards{width:280px;height:200px;}
+  .float-card{padding:.65rem .85rem;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+<div class="grain"></div>
+<div class="progress-line" id="progressLine"></div>
+<div class="skip-btn" onclick="finish()">Passer →</div>
+
+<!-- ══════════ SLIDES ══════════ -->
+<div class="slides" id="slides">
+
+  <!-- SLIDE 1 – SPLASH -->
+  <div class="slide active entering" id="slide-0">
+    <div class="s1-logo">
+      <div class="s1-icon">T</div>
+      <div style="text-align:center;">
+        <div class="s1-brand">TOP Musique Niger</div>
+        <div style="display:flex;justify-content:center;margin:.5rem 0;">
+          <div class="s1-flag">
+            <div class="s1-flag-s" style="background:#e05252;"></div>
+            <div class="s1-flag-s" style="background:#f5f0e8;"></div>
+            <div class="s1-flag-s" style="background:#0c7e40;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-title" style="font-size:1.9rem;">Bienvenue sur<br><em>la scène musicale</em><br>du Niger</div>
+    <div class="slide-sub" style="margin-top:.8rem;">La première plateforme dédiée aux artistes et à la musique nigérienne. Découvrez, écoutez, soutenez.</div>
+  </div>
+
+  <!-- SLIDE 2 – DÉCOUVRIR -->
+  <div class="slide" id="slide-1">
+    <div class="float-cards" id="floatCards"></div>
+    <div class="slide-eyebrow">Étape 1 · <span>Découvrir</span></div>
+    <div class="slide-title" style="font-size:1.65rem;">Des centaines de morceaux<br><em>made in Niger</em></div>
+    <div class="slide-sub">Afrobeat, Rap, Gospel, R&B, Mandé… Tous les genres nigériens réunis en un seul endroit.</div>
+    <div class="badge-row" style="margin-top:.9rem;">
+      <div class="highlight-pill" style="color:#c9a84c;border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.08);">🎵 2 400+ morceaux</div>
+      <div class="highlight-pill" style="color:#0c7e40;border-color:rgba(12,126,64,.3);background:rgba(12,126,64,.08);">🎤 380+ artistes</div>
+      <div class="highlight-pill" style="color:#5b8dee;border-color:rgba(91,141,238,.3);background:rgba(91,141,238,.08);">🗺 8 régions</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3 – CLASSEMENTS -->
+  <div class="slide" id="slide-2">
+    <div class="slide-eyebrow">Étape 2 · <span>Classements</span></div>
+    <div class="slide-title" style="font-size:1.65rem;">Le <em>Top Niger</em><br>mis à jour chaque semaine</div>
+    <div class="chart-vis">
+      <div class="cv-bars" id="cvBars"></div>
+    </div>
+    <div class="slide-sub">Suivez en temps réel les morceaux les plus écoutés par région, par genre, par artiste.</div>
+  </div>
+
+  <!-- SLIDE 4 – PUBLIER -->
+  <div class="slide" id="slide-3">
+    <div class="publish-vis">
+      <div class="pub-phone">
+        <div class="pub-phone-bar">TOP MUSIQUE NIGER</div>
+        <div class="pub-phone-content">
+          <div class="pub-row accent" style="width:80%;"></div>
+          <div class="pub-row" style="width:55%;"></div>
+          <div class="pub-row gold"></div>
+          <div class="pub-row" style="width:45%;"></div>
+          <div class="pub-row" style="width:70%;"></div>
+          <div class="pub-row" style="width:50%;"></div>
+          <div class="pub-btn"><i class="fas fa-music" style="margin-right:.3rem;font-size:.55rem;"></i>PUBLIER</div>
+        </div>
+      </div>
+      <div class="pub-orb o1">🔥 +2.4k écoutes</div>
+      <div class="pub-orb o2">📈 Top 10</div>
+      <div class="pub-orb o3">⭐ 4.9/5</div>
+    </div>
+    <div class="slide-eyebrow">Étape 3 · <span>Artistes</span></div>
+    <div class="slide-title" style="font-size:1.65rem;">Publiez votre musique,<br>faites-vous <span class="accent">entendre</span></div>
+    <div class="slide-sub">Upload en quelques secondes. Touchez des milliers d'auditeurs à travers tout le Niger et la diaspora.</div>
+  </div>
+
+  <!-- SLIDE 5 – PROFIL -->
+  <div class="slide" id="slide-4">
+    <div class="slide-eyebrow" style="margin-bottom:1rem;">Étape 4 · <span>Personnaliser</span></div>
+    <div class="slide-title" style="font-size:1.55rem;margin-bottom:1.1rem;">Vous êtes plutôt…</div>
+    <div class="profile-grid" id="profileGrid">
+      <div class="profile-card listener" id="cardListener" onclick="selectProfile('listener')">
+        <div class="pc-icon listener">🎧</div>
+        <div class="pc-title">Auditeur</div>
+        <div class="pc-desc">Découvrez et soutenez la musique nigérienne</div>
+        <div class="pc-check" id="chkListener"><i class="fas fa-check"></i></div>
+      </div>
+      <div class="profile-card artist" id="cardArtist" onclick="selectProfile('artist')">
+        <div class="pc-icon artist">🎤</div>
+        <div class="pc-title">Artiste</div>
+        <div class="pc-desc">Publiez vos morceaux et développez votre audience</div>
+        <div class="pc-check" id="chkArtist"><i class="fas fa-check"></i></div>
+      </div>
+    </div>
+    <div class="slide-sub" style="font-size:.82rem;">Vous pourrez changer cela à tout moment dans vos paramètres.</div>
+  </div>
+
+  <!-- SLIDE 6 – FINALE -->
+  <div class="slide" id="slide-5">
+    <div class="finale-glow"></div>
+    <div class="confetti-wrap" id="confettiWrap"></div>
+    <div class="finale-icon">🎉</div>
+    <div class="slide-title" style="font-size:2rem;margin-bottom:.6rem;">C'est parti !<br><em>Bienvenue dans la famille</em></div>
+    <div class="slide-sub" style="margin-bottom:1.2rem;">Votre aventure musicale nigérienne commence maintenant. Explorez, écoutez, partagez.</div>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;">
+      <div class="highlight-pill" style="color:#c9a84c;border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.08);">🏆 Classements live</div>
+      <div class="highlight-pill" style="color:#0c7e40;border-color:rgba(12,126,64,.3);background:rgba(12,126,64,.08);">❤️ Favoris</div>
+      <div class="highlight-pill" style="color:#5b8dee;border-color:rgba(91,141,238,.3);background:rgba(91,141,238,.08);">🔔 Notifs</div>
+    </div>
+  </div>
+
+</div><!-- /slides -->
+
+<!-- ══ BOTTOM CONTROLS ══ -->
+<div class="bottom-controls">
+  <div class="dots" id="dots"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextSlide()">
+    <span id="nextLabel">Commencer</span>
+    <i class="fas fa-arrow-right" id="nextIcon"></i>
+  </button>
+</div>
+
+<!-- FA -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<script>
+/* ══ STATE ══ */
+const TOTAL = 6;
+let current = 0;
+let selectedProfile = null;
+let chartAnimated = false;
+let confettiDone = false;
+
+/* ══ BACKGROUND CANVAS ══ */
+(function initCanvas(){
+  const canvas = document.getElementById('bgCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+  window.addEventListener('resize', resize); resize();
+
+  const COLORS = ['rgba(201,168,76,', 'rgba(224,83,12,', 'rgba(12,126,64,', 'rgba(91,141,238,'];
+  for(let i=0;i<28;i++) particles.push({
+    x:Math.random()*1000,y:Math.random()*1000,
+    vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,
+    r:Math.random()*2+.5, c:COLORS[i%COLORS.length], a:Math.random()*.3+.05
+  });
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>W) p.vx*=-1;
+      if(p.y<0||p.y>H) p.vy*=-1;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.c+p.a+')';ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══ DOTS ══ */
+function buildDots(){
+  const bar = document.getElementById('dots');
+  for(let i=0;i<TOTAL;i++){
+    const d = document.createElement('div');
+    d.className='dot'+(i===0?' active':'');
+    d.onclick=()=>goTo(i);
+    bar.appendChild(d);
+  }
+}
+
+function updateDots(){
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===current));
+  document.getElementById('progressLine').style.width = ((current+1)/TOTAL*100)+'%';
+  // Update button
+  const btn=document.getElementById('nextBtn');
+  const lbl=document.getElementById('nextLabel');
+  const ico=document.getElementById('nextIcon');
+  if(current===TOTAL-1){
+    btn.className='next-btn final';
+    lbl.textContent='Explorer l\'application';
+    ico.className='fas fa-rocket';
+  } else if(current===TOTAL-2){
+    btn.className='next-btn';
+    lbl.textContent=selectedProfile?'Continuer':'Choisir et continuer';
+    ico.className='fas fa-arrow-right';
+  } else {
+    btn.className='next-btn';
+    lbl.textContent=current===0?'Commencer':'Suivant';
+    ico.className='fas fa-arrow-right';
+  }
+}
+
+/* ══ NAVIGATION ══ */
+function nextSlide(){
+  if(current===TOTAL-1){ finish(); return; }
+  if(current===4 && !selectedProfile){
+    document.getElementById('profileGrid').style.animation='shake .4s ease';
+    setTimeout(()=>document.getElementById('profileGrid').style.animation='',400);
+    showHint('Choisissez un profil pour continuer'); return;
+  }
+  goTo(current+1);
+}
+
+function goTo(n){
+  if(n===current||n<0||n>=TOTAL) return;
+  const old=document.getElementById('slide-'+current);
+  old.classList.add('exiting');
+  old.classList.remove('active','entering');
+  setTimeout(()=>{ old.classList.remove('exiting'); },420);
+
+  current=n;
+  const neo=document.getElementById('slide-'+current);
+  neo.classList.add('active','entering');
+  setTimeout(()=>neo.classList.remove('entering'),700);
+
+  updateDots();
+  onSlideEnter(current);
+}
+
+function onSlideEnter(idx){
+  if(idx===1) buildFloatCards();
+  if(idx===2 && !chartAnimated){ chartAnimated=true; animateChart(); }
+  if(idx===5 && !confettiDone){ confettiDone=true; launchConfetti(); }
+}
+
+/* ══ FLOAT CARDS ══ */
+const FCARDS=[
+  {emoji:'🎵',title:'SARAOUNA',sub:'FATOUMATA',stat:'12.4k écoutes',color:'#c9a84c'},
+  {emoji:'🎤',title:'ZINDER RISE',sub:'BOUBACAR',stat:'#2 cette semaine',color:'#e0530c'},
+  {emoji:'🥁',title:'AGADEZ SOUL',sub:'RABIATOU',stat:'⭐ 4.9/5',color:'#0c7e40'},
+];
+function buildFloatCards(){
+  const wrap=document.getElementById('floatCards'); if(wrap.children.length) return;
+  FCARDS.forEach((c,i)=>{
+    const el=document.createElement('div');
+    el.className=`float-card c${i+1}`;
+    el.innerHTML=`
+      <div class="fc-cover" style="background:${c.color}20;">
+        <div class="fc-bg">${c.emoji}</div><div class="fc-em">${c.emoji}</div>
+      </div>
+      <div class="fc-info">
+        <div class="fc-title">${c.title}</div>
+        <div class="fc-sub">${c.sub}</div>
+        <div class="fc-stat">${c.stat}</div>
+      </div>`;
+    wrap.appendChild(el);
+  });
+}
+
+/* ══ CHART ══ */
+const CHART_DATA=[
+  {label:'Niamey',  val:84,  color:'#e0530c'},
+  {label:'Zinder',  val:62,  color:'#c9a84c'},
+  {label:'Maradi',  val:51,  color:'#0c7e40'},
+  {label:'Agadez',  val:38,  color:'#5b8dee'},
+  {label:'Tahoua',  val:29,  color:'#9c27b0'},
+  {label:'Dosso',   val:20,  color:'#e05252'},
+  {label:'Diffa',   val:14,  color:'#00838f'},
+];
+function animateChart(){
+  const wrap=document.getElementById('cvBars'); wrap.innerHTML='';
+  const max=Math.max(...CHART_DATA.map(d=>d.val));
+  CHART_DATA.forEach((d,i)=>{
+    const col=document.createElement('div'); col.className='cv-bar';
+    col.style.height='0px';
+    col.innerHTML=`
+      <div class="cv-bar-inner" style="background:linear-gradient(180deg,${d.color},${d.color}55);"></div>
+      <div class="cv-bar-label">${d.label}</div>
+      <div class="cv-bar-val" style="color:${d.color};">${d.val}</div>`;
+    wrap.appendChild(col);
+    setTimeout(()=>{ col.style.height=((d.val/max)*95)+'px'; col.style.transition='height .8s cubic-bezier(.22,1,.36,1)'; },(i*80)+100);
+  });
+}
+
+/* ══ PROFILE SELECT ══ */
+function selectProfile(type){
+  selectedProfile=type;
+  document.getElementById('cardListener').classList.toggle('selected',type==='listener');
+  document.getElementById('cardArtist').classList.toggle('selected',type==='artist');
+  updateDots();
+  // save
+  const u=JSON.parse(localStorage.getItem('tmn_user')||'{}');
+  u.musicType=type==='artist'?'artist':'';
+  localStorage.setItem('tmn_user',JSON.stringify(u));
+}
+
+/* ══ CONFETTI ══ */
+function launchConfetti(){
+  const wrap=document.getElementById('confettiWrap');
+  const COLS=['#c9a84c','#e0530c','#0c7e40','#5b8dee','#e05252','#f0e8d0'];
+  for(let i=0;i<60;i++){
+    const p=document.createElement('div'); p.className='confetti';
+    p.style.cssText=`
+      left:${Math.random()*100}%;top:-10px;
+      background:${COLS[Math.floor(Math.random()*COLS.length)]};
+      border-radius:${Math.random()>.5?'50%':'2px'};
+      transform:rotate(${Math.random()*360}deg);
+      animation:confettiFall ${1.5+Math.random()*2}s ease-in ${Math.random()*1.2}s forwards;`;
+    wrap.appendChild(p);
+  }
+  const style=document.createElement('style');
+  style.textContent=`@keyframes confettiFall{0%{opacity:1;top:-10px;transform:rotate(0) translateX(0)}100%{opacity:0;top:110%;transform:rotate(${360+Math.floor(Math.random()*360)}deg) translateX(${(Math.random()-.5)*80}px)}}`;
+  document.head.appendChild(style);
+}
+
+/* ══ FINISH ══ */
+function finish(){
+  const u=JSON.parse(localStorage.getItem('tmn_user')||'{}');
+  u.onboarded=true;
+  localStorage.setItem('tmn_user',JSON.stringify(u));
+  // Animate out
+  document.getElementById('slides').style.transition='opacity .5s,transform .5s';
+  document.getElementById('slides').style.opacity='0';
+  document.getElementById('slides').style.transform='scale(1.04)';
+  document.querySelector('.bottom-controls').style.opacity='0';
+  document.querySelector('.bottom-controls').style.transition='opacity .4s';
+  setTimeout(()=>{
+    const dest=selectedProfile==='artist'?'profil-artiste.html':'home.html';
+    window.location.href=dest;
+  },550);
+}
+
+/* ══ HINT ══ */
+function showHint(msg){
+  let h=document.getElementById('hint');
+  if(!h){ h=document.createElement('div');h.id='hint';
+    h.style.cssText='position:fixed;bottom:140px;left:50%;transform:translateX(-50%);background:rgba(224,82,82,.15);border:1px solid rgba(224,82,82,.3);color:#e05252;padding:.5rem 1.1rem;border-radius:100px;font-size:.78rem;font-weight:600;z-index:50;white-space:nowrap;transition:opacity .3s;font-family:\'Instrument Sans\',sans-serif;';
+    document.body.appendChild(h);}
+  h.textContent=msg; h.style.opacity='1';
+  clearTimeout(h._t); h._t=setTimeout(()=>h.style.opacity='0',2200);
+}
+
+/* ══ SWIPE (mobile) ══ */
+let touchStartX=0,touchStartY=0;
+document.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;touchStartY=e.touches[0].clientY;},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-touchStartX;
+  const dy=e.changedTouches[0].clientY-touchStartY;
+  if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>50){
+    if(dx<0) nextSlide();
+    else if(current>0) goTo(current-1);
+  }
+},{passive:true});
+
+/* ══ SHAKE ANIMATION ══ */
+const shakeStyle=document.createElement('style');
+shakeStyle.textContent='@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}';
+document.head.appendChild(shakeStyle);
+
+/* ══ KEYBOARD ══ */
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ') nextSlide();
+  else if(e.key==='ArrowLeft'&&current>0) goTo(current-1);
+  else if(e.key==='Escape') finish();
+});
+
+/* ══ INIT ══ */
+buildDots();
+updateDots();
+
+// Check already onboarded
+const u=JSON.parse(localStorage.getItem('tmn_user')||'{}');
+if(u.onboarded){ window.location.href='home.html'; }
+</script>
+</body>
+</html>

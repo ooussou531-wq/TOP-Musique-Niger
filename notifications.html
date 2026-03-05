@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e0530c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Notifications – TOP Musique Niger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --bg:#09090b;--card:#16161c;--card-h:#1e1e26;
+  --border:rgba(255,255,255,.07);--border-md:rgba(255,255,255,.13);
+  --accent:#e0530c;--ad:rgba(224,83,12,.12);
+  --gold:#c9a84c;--gd:rgba(201,168,76,.12);
+  --green:#0c7e40;--grd:rgba(12,126,64,.12);
+  --blue:#5b8dee;--bd:rgba(91,141,238,.12);
+  --purple:#9c27b0;--pd:rgba(156,39,176,.12);
+  --red:#e05252;--rd:rgba(224,82,82,.12);
+  --text:#f0ece4;--t2:#8a8790;--t3:#4a4850;
+  --nav:68px;--hdr:56px;--radius:12px;--rlg:18px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{min-height:100vh;background:var(--bg);font-family:'Instrument Sans',sans-serif;color:var(--text);
+  padding-top:var(--hdr);padding-bottom:calc(var(--nav)+1rem);}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% -10%,rgba(201,168,76,.05),transparent 55%);}
+.hdr{position:fixed;top:0;left:0;right:0;height:var(--hdr);z-index:200;
+  background:rgba(9,9,11,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 1.2rem;gap:.8rem;}
+.hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;
+  background:linear-gradient(90deg,var(--accent) 33%,#f5f0e8 33%,#f5f0e8 66%,var(--green) 66%);}
+.hdr-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;flex:1;}
+.hdr-btn{height:32px;padding:0 .8rem;border-radius:100px;background:var(--card);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;color:var(--t2);font-size:.74rem;font-weight:600;cursor:pointer;transition:all .2s;gap:.35rem;}
+.hdr-btn:hover{color:var(--text);border-color:var(--border-md);}
+.main{max-width:680px;margin:0 auto;padding:1rem 1.1rem 0;}
+.filter-row{display:flex;gap:.4rem;margin-bottom:.9rem;overflow-x:auto;scrollbar-width:none;}
+.filter-row::-webkit-scrollbar{display:none;}
+.fc{flex-shrink:0;padding:.35rem .8rem;border-radius:100px;font-size:.74rem;font-weight:600;
+  cursor:pointer;border:1.5px solid var(--border);background:var(--card);color:var(--t2);transition:all .2s;}
+.fc:hover{border-color:var(--border-md);}
+.fc.active{background:var(--gd);border-color:rgba(201,168,76,.4);color:var(--gold);}
+.n-list{display:flex;flex-direction:column;gap:.4rem;}
+.ni{display:flex;align-items:flex-start;gap:.85rem;padding:.8rem;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rlg);
+  cursor:pointer;transition:all .18s;animation:fadeUp .25s ease both;position:relative;}
+.ni:hover{background:var(--card-h);}
+.ni.unread{border-color:rgba(201,168,76,.18);background:rgba(201,168,76,.04);}
+.ni.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  border-radius:3px 0 0 3px;background:var(--gold);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.ni-ico{width:40px;height:40px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.ni-body{flex:1;min-width:0;}
+.ni-title{font-size:.86rem;font-weight:600;margin-bottom:.18rem;}
+.ni-text{font-size:.77rem;color:var(--t2);line-height:1.5;}
+.ni-time{font-size:.65rem;color:var(--t3);margin-top:.3rem;}
+.ni-del{width:30px;height:30px;border-radius:50%;background:none;display:flex;align-items:center;
+  justify-content:center;color:var(--t3);font-size:.72rem;cursor:pointer;flex-shrink:0;
+  border:1px solid transparent;transition:all .2s;opacity:0;}
+.ni:hover .ni-del{opacity:1;}
+.ni-del:hover{border-color:rgba(224,82,82,.3);color:var(--red);}
+.sk{background:linear-gradient(90deg,var(--card) 0%,var(--card-h) 50%,var(--card) 100%);
+  background-size:200%;animation:shimmer 1.4s ease-in-out infinite;border-radius:8px;}
+@keyframes shimmer{0%{background-position:200%}100%{background-position:-200%}}
+.empty{text-align:center;padding:3.5rem 1rem;animation:fadeUp .3s ease;}
+.empty-icon{font-size:3rem;margin-bottom:.8rem;display:block;}
+.empty-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;margin-bottom:.4rem;}
+.empty-sub{font-size:.82rem;color:var(--t2);}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav);
+  background:rgba(9,9,11,.97);backdrop-filter:blur(24px);border-top:1px solid var(--border);
+  display:flex;justify-content:space-around;align-items:center;padding:0 .5rem;z-index:200;}
+.bottom-nav::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--accent) 33%,rgba(245,240,232,.4) 33%,rgba(245,240,232,.4) 66%,var(--green) 66%);opacity:.6;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:.2rem;flex:1;padding:.5rem;
+  color:var(--t3);font-size:.6rem;font-weight:500;text-decoration:none;transition:all .2s;}
+.nav-item i{font-size:1.18rem;}
+.nav-item.active{color:var(--accent);}
+.nav-pub i,.nav-exp i{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),#a83800);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.98rem;color:#fff;box-shadow:0 4px 16px var(--ag);margin-bottom:.1rem;}
+.nav-pub,.nav-exp{color:var(--t2);margin-top:-10px;}
+#toast{position:fixed;bottom:calc(var(--nav)+1rem);left:50%;transform:translateX(-50%) translateY(60px);
+  opacity:0;background:var(--card);border:1px solid var(--border-md);padding:.6rem 1.2rem;
+  border-radius:100px;font-size:.82rem;z-index:9999;display:flex;align-items:center;gap:.5rem;
+  box-shadow:0 8px 28px rgba(0,0,0,.5);transition:all .32s cubic-bezier(.22,1,.36,1);white-space:nowrap;}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-title">🔔 Notifications</div>
+  <div class="hdr-btn" onclick="markAll()"><i class="fas fa-check-double"></i> Tout lire</div>
+  <div class="hdr-btn" style="padding:0;width:36px;" onclick="history.back()"><i class="fas fa-arrow-left"></i></div>
+</header>
+
+<div class="main">
+  <div class="filter-row" id="filterRow">
+    <div class="fc active" id="fc-all"      onclick="setFilter('all')">Toutes</div>
+    <div class="fc"        id="fc-unread"   onclick="setFilter('unread')">Non lues</div>
+    <div class="fc"        id="fc-top"      onclick="setFilter('top')">🏆 Classements</div>
+    <div class="fc"        id="fc-release"  onclick="setFilter('release')">🎵 Nouveautés</div>
+    <div class="fc"        id="fc-social"   onclick="setFilter('social')">👥 Social</div>
+    <div class="fc"        id="fc-system"   onclick="setFilter('system')">⚙️ Système</div>
+  </div>
+  <div class="n-list" id="nList"></div>
+  <div id="emptyState" style="display:none;" class="empty">
+    <span class="empty-icon">🔕</span>
+    <div class="empty-title">Aucune notification</div>
+    <div class="empty-sub">Vous êtes à jour !</div>
+  </div>
+</div>
+
+<nav class="bottom-nav" id="bottomNav"></nav>
+<div id="toast"><i class="fas fa-circle-info"></i><span id="toastMsg"></span></div>
+
+<script src="app.js"></script>
+<script src="tmn-api.js"></script>
+<script>
+TMN.init({requireAuth: true, activeNav: 'profile' });
+
+const ICONS={
+  top:    {icon:'🏆',bg:'rgba(201,168,76,.15)'},
+  release:{icon:'🎵',bg:'rgba(91,141,238,.15)'},
+  social: {icon:'👥',bg:'rgba(12,126,64,.15)'},
+  rating: {icon:'⭐',bg:'rgba(201,168,76,.15)'},
+  promo:  {icon:'🎁',bg:'rgba(156,39,176,.15)'},
+  system: {icon:'⚙️',bg:'rgba(100,100,120,.15)'},
+};
+
+let activeFilter='all';
+let allNotifs=[];
+
+// Build nav
+const nav=document.getElementById('bottomNav');
+const isA=TMN.isArtist();
+const navItems=isA?[
+  {icon:'fa-house',lbl:'Accueil',url:'home.html'},
+  {icon:'fa-trophy',lbl:'Top',url:'top.html'},
+  {icon:'fa-plus',lbl:'Publier',url:'publish.html',center:true},
+  {icon:'fa-chart-line',lbl:'Stats',url:'stats.html'},
+  {icon:'fa-microphone',lbl:'Profil',url:'profil-artiste.html'},
+]:[
+  {icon:'fa-house',lbl:'Accueil',url:'home.html'},
+  {icon:'fa-trophy',lbl:'Top',url:'top.html'},
+  {icon:'fa-compass',lbl:'Explorer',url:'explore.html',center:true},
+  {icon:'fa-heart',lbl:'Favoris',url:'favorites.html'},
+  {icon:'fa-user',lbl:'Profil',url:'profil-auditeur.html'},
+];
+navItems.forEach(item=>{
+  const a=document.createElement('a');a.href=item.url;
+  a.className='nav-item'+(item.center?' nav-'+(isA?'pub':'exp'):'');
+  a.innerHTML=`<i class="fas ${item.icon}"></i><span>${item.lbl}</span>`;
+  nav.appendChild(a);
+});
+
+function setFilter(f){
+  activeFilter=f;
+  document.querySelectorAll('.fc').forEach(b=>b.classList.remove('active'));
+  document.getElementById('fc-'+f)?.classList.add('active');
+  renderList();
+}
+
+function renderList(){
+  const list=document.getElementById('nList');list.innerHTML='';
+  let filtered=allNotifs;
+  if(activeFilter==='unread') filtered=allNotifs.filter(n=>!n.is_read);
+  else if(activeFilter!=='all') filtered=allNotifs.filter(n=>n.type===activeFilter);
+
+  document.getElementById('emptyState').style.display=filtered.length?'none':'block';
+  filtered.forEach((n,i)=>{
+    const ic=ICONS[n.type]||ICONS.system;
+    const d=document.createElement('div');
+    d.className='ni'+(n.is_read?'':' unread');
+    d.style.animationDelay=(i*.03)+'s';
+    d.innerHTML=`
+      <div class="ni-ico" style="background:${ic.bg};">${ic.icon}</div>
+      <div class="ni-body">
+        <div class="ni-title">${n.title}</div>
+        <div class="ni-text">${n.body}</div>
+        <div class="ni-time">${TMNAPI.timeAgo(n.created_at)}</div>
+      </div>
+      <div class="ni-del" onclick="delNotif('${n.id}',event)" title="Supprimer"><i class="fas fa-xmark"></i></div>`;
+    d.addEventListener('click',async(e)=>{
+      if(e.target.closest('.ni-del'))return;
+      if(!n.is_read){ n.is_read=1; d.classList.remove('unread'); await TMNAPI.notifications.markRead(n.id); }
+      if(n.action_url) location.href=n.action_url;
+    });
+    list.appendChild(d);
+  });
+}
+
+async function markAll(){
+  await TMNAPI.notifications.markAllRead();
+  allNotifs.forEach(n=>n.is_read=1);
+  renderList();
+  showToast('✅ Tout marqué comme lu');
+}
+
+async function delNotif(id,e){
+  e.stopPropagation();
+  await TMNAPI.notifications.delete(id);
+  allNotifs=allNotifs.filter(n=>n.id!==id);
+  renderList();
+}
+
+function showSkeleton(){
+  const list=document.getElementById('nList');list.innerHTML='';
+  for(let i=0;i<6;i++){
+    const d=document.createElement('div');d.className='sk-row';d.style.cssText='display:flex;align-items:center;gap:.85rem;padding:.8rem;background:var(--card);border:1px solid var(--border);border-radius:18px;margin-bottom:.4rem;';
+    d.innerHTML=`<div class="sk" style="width:40px;height:40px;border-radius:12px;flex-shrink:0;"></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:.35rem;">
+        <div class="sk" style="height:11px;width:55%;border-radius:4px;"></div>
+        <div class="sk" style="height:9px;width:75%;border-radius:4px;"></div>
+        <div class="sk" style="height:8px;width:30%;border-radius:4px;"></div>
+      </div>`;
+    list.appendChild(d);
+  }
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;
+  t.className='show';clearTimeout(t._t);t._t=setTimeout(()=>t.className='',2500);
+}
+
+async function init(){
+  showSkeleton();
+  const data=await TMNAPI.notifications.list();
+  allNotifs=data.data||[];
+  renderList();
+}
+init();
+</script>
+</body>
+</html>

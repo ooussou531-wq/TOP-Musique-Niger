@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>Hors-ligne — TOP Musique Niger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#09090b; --card:#111118; --accent:#e0530c; --gold:#c9a84c;
+  --text:#f0ece4; --muted:#6a6870; --border:rgba(255,255,255,.07);
+  --green:#10b981; --amber:#f59e0b;
+}
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+html,body { height:100%; }
+body {
+  font-family:'Instrument Sans',sans-serif; background:var(--bg); color:var(--text);
+  display:flex; flex-direction:column; align-items:center;
+  padding:env(safe-area-inset-top,0) 1.2rem env(safe-area-inset-bottom,1.5rem);
+  min-height:100vh; max-width:480px; margin:0 auto;
+  background-image:radial-gradient(ellipse 60% 40% at 50% 0%, rgba(224,83,12,.08) 0%, transparent 70%);
+}
+
+/* ── Header ── */
+.page-header {
+  width:100%; display:flex; align-items:center; gap:.7rem;
+  padding:1.2rem .4rem .8rem; font-family:'Syne',sans-serif; font-weight:800; font-size:1rem;
+}
+.page-header .logo-icon { font-size:1.3rem; }
+
+/* ── Hero ── */
+.hero {
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:1rem 0 2rem; gap:1.2rem;
+}
+.offline-icon {
+  width:88px; height:88px; border-radius:24px;
+  background:linear-gradient(135deg,rgba(224,83,12,.15),rgba(201,168,76,.1));
+  border:1px solid rgba(224,83,12,.2); display:flex; align-items:center; justify-content:center;
+  font-size:2.8rem;
+  animation:pulse 3s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(.96);opacity:.85} }
+
+.hero h1 { font-family:'Syne',sans-serif; font-weight:800; font-size:1.5rem; }
+.hero p  { color:var(--muted); font-size:.9rem; line-height:1.6; max-width:300px; }
+
+/* Connection status */
+.status-row {
+  display:flex; align-items:center; gap:.5rem; font-size:.78rem; font-weight:700;
+  padding:.35rem .8rem; border-radius:100px;
+}
+.status-row.offline { background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.2); color:#ef4444; }
+.status-row.online  { background:rgba(16,185,129,.1); border:1px solid rgba(16,185,129,.2); color:var(--green); }
+.status-dot { width:8px; height:8px; border-radius:50%; background:currentColor; animation:blink 1.2s ease infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+/* ── Actions ── */
+.actions { display:flex; flex-direction:column; gap:.7rem; width:100%; }
+.btn {
+  width:100%; padding:.85rem; border-radius:14px; font-family:'Syne',sans-serif;
+  font-weight:700; font-size:.9rem; cursor:pointer; border:none; transition:all .2s;
+  display:flex; align-items:center; justify-content:center; gap:.6rem;
+}
+.btn-primary {
+  background:linear-gradient(135deg,var(--accent),#c9420a);
+  color:#fff; box-shadow:0 4px 20px rgba(224,83,12,.3);
+}
+.btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 24px rgba(224,83,12,.4); }
+.btn-secondary {
+  background:rgba(255,255,255,.05); border:1px solid var(--border); color:var(--text);
+}
+.btn-secondary:hover { background:rgba(255,255,255,.09); }
+
+/* ── Cached pages ── */
+.cached-section { width:100%; margin-top:1.5rem; }
+.section-title {
+  font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+  color:var(--muted); margin-bottom:.7rem; padding:0 .2rem;
+}
+.pages-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:.5rem;
+}
+.page-chip {
+  display:flex; align-items:center; gap:.5rem;
+  background:var(--card); border:1px solid var(--border); border-radius:10px;
+  padding:.5rem .7rem; font-size:.78rem; cursor:pointer; text-decoration:none; color:var(--text);
+  transition:all .2s;
+}
+.page-chip:hover { border-color:rgba(224,83,12,.3); background:rgba(224,83,12,.06); }
+.page-chip .icon { font-size:.9rem; }
+
+/* ── Queue ── */
+.queue-card {
+  background:var(--card); border:1px solid rgba(201,168,76,.2);
+  border-radius:14px; padding:1rem 1.1rem; width:100%; margin-top:.8rem;
+}
+.queue-title { font-size:.82rem; font-weight:700; color:var(--gold); margin-bottom:.5rem; }
+.queue-item { font-size:.78rem; color:var(--muted); display:flex; gap:.5rem; padding:.3rem 0;
+  border-bottom:1px solid var(--border); }
+.queue-item:last-child { border-bottom:none; }
+.queue-method { font-family:monospace; font-size:.72rem; background:rgba(201,168,76,.1);
+  color:var(--gold); padding:.1rem .35rem; border-radius:4px; flex-shrink:0; }
+
+/* Sync animation */
+.syncing { animation:spin .8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <span class="logo-icon">🎵</span>
+  TOP Musique Niger
+</header>
+
+<div class="hero">
+  <div class="offline-icon">📡</div>
+
+  <div id="statusBadge" class="status-row offline">
+    <div class="status-dot"></div>
+    <span id="statusText">Hors-ligne</span>
+  </div>
+
+  <h1>Pas de connexion</h1>
+  <p>Certaines pages restent disponibles grâce au cache. Vos actions seront synchronisées automatiquement au retour en ligne.</p>
+</div>
+
+<div class="actions">
+  <button class="btn btn-primary" onclick="retryConnection()">
+    <span id="retryIcon">🔄</span> Réessayer
+  </button>
+  <button class="btn btn-secondary" onclick="history.back()">
+    ← Retour
+  </button>
+</div>
+
+<!-- Pages en cache -->
+<div class="cached-section">
+  <div class="section-title">📱 Pages disponibles hors-ligne</div>
+  <div class="pages-grid" id="cachedPagesList">
+    <div style="color:var(--muted);font-size:.78rem;grid-column:1/-1;padding:.5rem;">Chargement…</div>
+  </div>
+</div>
+
+<!-- File d'attente -->
+<div id="queueSection" style="display:none;width:100%;">
+  <div class="queue-card">
+    <div class="queue-title">⏳ Actions en attente de synchronisation</div>
+    <div id="queueList"></div>
+  </div>
+</div>
+
+<script>
+const PAGE_LABELS = {
+  '/home.html':           { icon:'🏠', label:'Accueil' },
+  '/top.html':            { icon:'🏆', label:'Top Niger' },
+  '/player.html':         { icon:'🎧', label:'Lecteur' },
+  '/explore.html':        { icon:'🔍', label:'Explorer' },
+  '/favorites.html':      { icon:'❤️', label:'Favoris' },
+  '/historique.html':     { icon:'🕐', label:'Historique' },
+  '/search.html':         { icon:'🔎', label:'Recherche' },
+  '/playlist.html':       { icon:'🎵', label:'Playlists' },
+  '/notifications.html':  { icon:'🔔', label:'Notifs' },
+  '/settings.html':       { icon:'⚙️', label:'Réglages' },
+  '/stats.html':          { icon:'📊', label:'Statistiques' },
+  '/profil-artiste.html': { icon:'🎤', label:'Mon profil' },
+  '/profil-auditeur.html':{ icon:'👤', label:'Mon profil' },
+  '/publish.html':        { icon:'📤', label:'Publier' },
+  '/comments.html':       { icon:'💬', label:'Commentaires' },
+  '/admin.html':          { icon:'🛡', label:'Admin' },
+  '/login.html':          { icon:'🔑', label:'Connexion' },
+  '/register.html':       { icon:'✏️', label:'Inscription' },
+};
+
+/* ── Statut connexion ── */
+function updateStatus() {
+  const badge = document.getElementById('statusBadge');
+  const text  = document.getElementById('statusText');
+  if (navigator.onLine) {
+    badge.className = 'status-row online';
+    text.textContent = 'Connexion rétablie !';
+    setTimeout(() => { window.location.reload(); }, 1500);
+  } else {
+    badge.className = 'status-row offline';
+    text.textContent = 'Hors-ligne';
+  }
+}
+
+window.addEventListener('online',  updateStatus);
+window.addEventListener('offline', updateStatus);
+updateStatus();
+
+/* ── Retry ── */
+function retryConnection() {
+  const icon = document.getElementById('retryIcon');
+  icon.classList.add('syncing');
+  setTimeout(() => {
+    icon.classList.remove('syncing');
+    if (navigator.onLine) location.reload();
+    else updateStatus();
+  }, 1200);
+}
+
+/* ── Charger les pages en cache via SW ── */
+function loadCachedPages() {
+  if (!('serviceWorker' in navigator)) return;
+  const mc = new MessageChannel();
+  mc.port1.onmessage = e => {
+    const pages = e.data.pages || [];
+    const grid  = document.getElementById('cachedPagesList');
+    if (!pages.length) {
+      grid.innerHTML = '<div style="color:var(--muted);font-size:.78rem;grid-column:1/-1;padding:.5rem;">Aucune page en cache — rechargez quand vous êtes en ligne.</div>';
+      return;
+    }
+    grid.innerHTML = '';
+    pages.forEach(path => {
+      const info = PAGE_LABELS[path] || { icon:'📄', label: path.replace(/\.html$/, '').replace(/\//,'') };
+      const chip = document.createElement('a');
+      chip.className = 'page-chip';
+      chip.href      = path;
+      chip.innerHTML = `<span class="icon">${info.icon}</span>${info.label}`;
+      grid.appendChild(chip);
+    });
+  };
+  navigator.serviceWorker.controller?.postMessage({ type: 'GET_CACHED_PAGES' }, [mc.port2]);
+}
+
+/* ── File d'attente (IDB) ── */
+function loadQueue() {
+  const req = indexedDB.open('tmn-sw-store', 1);
+  req.onsuccess = () => {
+    try {
+      const tx  = req.result.transaction('kv', 'readonly');
+      const get = tx.objectStore('kv').get('tmn_offline_queue');
+      get.onsuccess = () => {
+        const queue = get.result || [];
+        if (!queue.length) return;
+        const section = document.getElementById('queueSection');
+        const list    = document.getElementById('queueList');
+        section.style.display = 'block';
+        list.innerHTML = queue.slice(0, 5).map(item => `
+          <div class="queue-item">
+            <span class="queue-method">${item.method}</span>
+            <span>${new URL(item.url).pathname.replace('/api','')}</span>
+          </div>
+        `).join('');
+        if (queue.length > 5) {
+          list.innerHTML += `<div class="queue-item" style="color:var(--gold);">+ ${queue.length-5} autres…</div>`;
+        }
+      };
+    } catch(e) {}
+  };
+}
+
+/* ── Écouter les messages du SW ── */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('message', e => {
+    if (e.data.type === 'OFFLINE_QUEUE_EMPTY') {
+      document.getElementById('queueSection').style.display = 'none';
+    }
+  });
+}
+
+loadCachedPages();
+loadQueue();
+</script>
+</body>
+</html>
