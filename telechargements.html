@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e0530c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Téléchargements – TOP Musique Niger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --bg:#09090b;--card:#16161c;--card-h:#1e1e26;
+  --border:rgba(255,255,255,.07);--border-md:rgba(255,255,255,.12);
+  --accent:#e0530c;--ag:rgba(224,83,12,.3);--ad:rgba(224,83,12,.12);
+  --gold:#c9a84c;--gg:rgba(201,168,76,.3);--gd:rgba(201,168,76,.12);
+  --green:#0c7e40;--grd:rgba(12,126,64,.12);--grg:rgba(12,126,64,.3);
+  --blue:#5b8dee;--bd:rgba(91,141,238,.12);
+  --text:#f0ece4;--t2:#8a8790;--t3:#4a4850;
+  --nav:68px;--hdr:58px;--radius:12px;--rlg:18px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{min-height:100vh;background:var(--bg);font-family:'Instrument Sans',sans-serif;color:var(--text);
+  padding-top:var(--hdr);padding-bottom:calc(var(--nav)+1.5rem);overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 70% 35% at 50% 0%,rgba(12,126,64,.06),transparent 60%);}
+a{text-decoration:none;color:inherit;}
+button{border:none;background:none;cursor:pointer;font-family:inherit;color:inherit;}
+
+/* ── HEADER ── */
+.hdr{position:fixed;top:0;left:0;right:0;height:var(--hdr);z-index:200;
+  background:rgba(9,9,11,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 1.2rem;gap:.8rem;}
+.hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;
+  background:linear-gradient(90deg,var(--accent) 33%,#f5f0e8 33%,#f5f0e8 66%,var(--green) 66%);}
+.hdr-title{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;flex:1;}
+.hdr-title span{color:var(--green);}
+.hdr-btn{width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;color:var(--t2);font-size:.82rem;
+  cursor:pointer;transition:all .2s;text-decoration:none;}
+.hdr-btn:hover{color:var(--text);}
+
+/* ── STORAGE BAR ── */
+.storage-hero{margin:1rem 1.2rem;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--rlg);padding:1.1rem 1.1rem .95rem;position:relative;overflow:hidden;}
+.storage-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--grd),transparent 60%);pointer-events:none;}
+.sh-top{display:flex;align-items:center;gap:.7rem;margin-bottom:.9rem;}
+.sh-icon{width:40px;height:40px;border-radius:11px;background:var(--grd);border:1px solid var(--grg);
+  display:flex;align-items:center;justify-content:center;color:var(--green);font-size:1.1rem;}
+.sh-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:800;}
+.sh-sub{font-size:.75rem;color:var(--t2);}
+.storage-bar{height:8px;border-radius:100px;background:rgba(255,255,255,.06);overflow:hidden;margin-bottom:.6rem;}
+.sb-fill{height:100%;border-radius:100px;
+  background:linear-gradient(90deg,var(--green),#1ca855);transition:width .6s cubic-bezier(.22,1,.36,1);}
+.storage-legend{display:flex;gap:1.2rem;flex-wrap:wrap;}
+.sl-item{display:flex;align-items:center;gap:.35rem;font-size:.7rem;color:var(--t2);}
+.sl-dot{width:8px;height:8px;border-radius:50%;}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:.4rem;overflow-x:auto;scrollbar-width:none;padding:.8rem 1.2rem .2rem;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex-shrink:0;padding:.35rem .9rem;border-radius:100px;font-size:.75rem;font-weight:600;
+  cursor:pointer;border:1.5px solid var(--border);background:var(--card);color:var(--t2);transition:all .2s;}
+.tab:hover{color:var(--text);}
+.tab.active{background:var(--grd);border-color:rgba(12,126,64,.4);color:var(--green);}
+
+/* ── ACTIONS ROW ── */
+.actions-row{display:flex;gap:.6rem;padding:.8rem 1.2rem .3rem;}
+.act-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:.4rem;
+  padding:.6rem;border-radius:10px;font-size:.76rem;font-weight:700;cursor:pointer;
+  border:1px solid var(--border);background:var(--card);color:var(--t2);transition:all .2s;}
+.act-btn:hover{border-color:var(--border-md);color:var(--text);}
+.act-btn.danger{border-color:rgba(224,82,82,.2);color:#e05252;}
+.act-btn.danger:hover{background:rgba(224,82,82,.06);}
+
+/* ── SECTION ── */
+.section{padding:1rem 1.2rem .4rem;}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem;}
+.sec-title{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--t2);}
+.sec-more{font-size:.74rem;color:var(--t2);cursor:pointer;}
+.sec-more:hover{color:var(--text);}
+
+/* ── DOWNLOAD CARD ── */
+.dl-list{display:flex;flex-direction:column;gap:.6rem;}
+.dl-card{display:flex;align-items:center;gap:.85rem;background:var(--card);
+  border:1px solid var(--border);border-radius:14px;padding:.8rem .9rem;
+  transition:border-color .2s,background .2s;}
+.dl-card:hover{border-color:var(--border-md);background:var(--card-h);}
+.dl-card.downloading{border-color:rgba(12,126,64,.3);}
+
+.dl-emoji{width:46px;height:46px;border-radius:11px;background:var(--card-h);
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;flex-shrink:0;position:relative;}
+.dl-progress-ring{position:absolute;inset:0;border-radius:11px;
+  border:2px solid var(--green);opacity:0;transition:opacity .3s;}
+.dl-card.downloading .dl-progress-ring{opacity:1;}
+
+.dl-info{flex:1;min-width:0;}
+.dl-title{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dl-meta{font-size:.72rem;color:var(--t2);margin-top:.18rem;}
+.dl-size{font-size:.7rem;color:var(--t3);}
+
+.dl-actions{display:flex;gap:.4rem;flex-shrink:0;}
+.dl-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);
+  background:var(--card-h);display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;color:var(--t2);cursor:pointer;transition:all .2s;}
+.dl-btn:hover{color:var(--text);border-color:var(--border-md);}
+.dl-btn.play:hover{color:var(--accent);border-color:var(--ag);}
+.dl-btn.delete:hover{color:#e05252;border-color:rgba(224,82,82,.3);}
+
+/* ── PROGRESS BAR ── */
+.dl-prog-wrap{height:3px;background:rgba(255,255,255,.06);border-radius:100px;margin-top:.5rem;display:none;}
+.dl-card.downloading .dl-prog-wrap{display:block;}
+.dl-prog-bar{height:100%;border-radius:100px;background:var(--green);width:0%;transition:width .3s linear;}
+
+/* ── DISCOVER ── */
+.discover-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+.disc-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:.85rem;cursor:pointer;transition:all .2s;}
+.disc-card:hover{border-color:var(--border-md);background:var(--card-h);}
+.disc-emoji{font-size:1.6rem;margin-bottom:.45rem;}
+.disc-title{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;}
+.disc-meta{font-size:.72rem;color:var(--t2);margin-top:.2rem;}
+.disc-dl-btn{display:flex;align-items:center;gap:.35rem;margin-top:.7rem;padding:.38rem .7rem;
+  border-radius:8px;background:var(--grd);border:1px solid rgba(12,126,64,.25);
+  color:var(--green);font-size:.72rem;font-weight:700;width:fit-content;transition:all .2s;}
+.disc-dl-btn:hover{background:rgba(12,126,64,.18);}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:2.5rem 1.2rem;}
+.empty-icon{font-size:2.8rem;margin-bottom:.8rem;opacity:.35;}
+.empty-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:.4rem;}
+.empty-desc{font-size:.82rem;color:var(--t2);max-width:260px;margin:0 auto;}
+.empty-btn{display:inline-flex;align-items:center;gap:.5rem;margin-top:1.1rem;
+  padding:.65rem 1.4rem;border-radius:100px;background:var(--grd);border:1px solid rgba(12,126,64,.3);
+  color:var(--green);font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.empty-btn:hover{background:rgba(12,126,64,.18);}
+
+/* ── SKEL ── */
+.skel{background:linear-gradient(90deg,var(--card) 25%,var(--card-h) 50%,var(--card) 75%);
+  background-size:300% 100%;animation:shimmer 1.4s infinite;border-radius:8px;}
+@keyframes shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;
+  display:flex;align-items:center;justify-content:center;padding:1.2rem;
+  opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal-bg.open{opacity:1;pointer-events:all;}
+.modal{background:var(--card);border:1px solid var(--border-md);border-radius:20px;
+  padding:1.5rem;max-width:320px;width:100%;text-align:center;
+  transform:scale(.95);transition:transform .2s;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.modal-bg.open .modal{transform:scale(1);}
+.modal-icon{font-size:2rem;margin-bottom:.6rem;}
+.modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;margin-bottom:.4rem;}
+.modal-desc{font-size:.8rem;color:var(--t2);margin-bottom:1.2rem;}
+.modal-actions{display:flex;gap:.6rem;}
+.modal-cancel{flex:1;padding:.65rem;border-radius:10px;background:rgba(255,255,255,.06);
+  border:1px solid var(--border);font-size:.82rem;font-weight:600;color:var(--t2);cursor:pointer;}
+.modal-confirm{flex:1;padding:.65rem;border-radius:10px;background:#e05252;
+  color:#fff;font-family:'Syne',sans-serif;font-size:.82rem;font-weight:800;cursor:pointer;
+  transition:all .2s;}
+.modal-confirm:hover{background:#c84444;}
+
+/* ── NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav);
+  background:rgba(9,9,11,.97);backdrop-filter:blur(24px);border-top:1px solid var(--border);
+  display:flex;justify-content:space-around;align-items:center;padding:0 .5rem;z-index:200;}
+.bottom-nav::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--accent) 33%,rgba(245,240,232,.4) 33%,rgba(245,240,232,.4) 66%,var(--green) 66%);opacity:.6;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:.2rem;flex:1;padding:.5rem;
+  color:var(--t3);font-size:.6rem;font-weight:500;text-decoration:none;transition:all .2s;position:relative;}
+.nav-item i{font-size:1.18rem;}
+.nav-item.active{color:var(--green);}
+.nav-pub i{width:44px;height:44px;background:linear-gradient(135deg,var(--gold),#b8922a);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.98rem;color:#09090b;box-shadow:0 4px 16px var(--gg);margin-bottom:.1rem;}
+.nav-pub{color:var(--t2);margin-top:-10px;}
+.nav-pip{position:absolute;top:.38rem;right:calc(50% - 14px);width:7px;height:7px;
+  border-radius:50%;background:var(--accent);border:1.5px solid var(--bg);}
+/* TOAST */
+#toast{position:fixed;bottom:calc(var(--nav)+1rem);left:50%;transform:translateX(-50%) translateY(60px);
+  opacity:0;background:var(--card);border:1px solid var(--border-md);padding:.6rem 1.2rem;
+  border-radius:100px;font-size:.82rem;z-index:9999;display:flex;align-items:center;gap:.5rem;
+  box-shadow:0 8px 28px rgba(0,0,0,.5);transition:all .32s cubic-bezier(.22,1,.36,1);white-space:nowrap;}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-title">📥 <span>Téléchargements</span></div>
+  <a href="settings.html" class="hdr-btn"><i class="fas fa-sliders"></i></a>
+</header>
+
+<!-- STORAGE HERO -->
+<div class="storage-hero">
+  <div class="sh-top">
+    <div class="sh-icon"><i class="fas fa-hard-drive"></i></div>
+    <div>
+      <div class="sh-title" id="storageTitle">Chargement…</div>
+      <div class="sh-sub" id="storageSub">Espace de stockage</div>
+    </div>
+  </div>
+  <div class="storage-bar">
+    <div class="sb-fill" id="storageFill" style="width:0%"></div>
+  </div>
+  <div class="storage-legend">
+    <div class="sl-item"><div class="sl-dot" style="background:var(--green)"></div><span id="legDownloads">0 téléchargements</span></div>
+    <div class="sl-item"><div class="sl-dot" style="background:var(--gold)"></div>Cache navigateur</div>
+    <div class="sl-item"><div class="sl-dot" style="background:var(--border-md)"></div>Espace disponible</div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" data-tab="downloaded" onclick="switchTab('downloaded',this)">Téléchargés</div>
+  <div class="tab" data-tab="discover" onclick="switchTab('discover',this)">Découvrir</div>
+</div>
+
+<!-- ACTIONS ROW -->
+<div class="actions-row" id="actionsRow">
+  <button class="act-btn" onclick="playAll()"><i class="fas fa-play"></i> Tout écouter</button>
+  <button class="act-btn" onclick="sortDownloads()"><i class="fas fa-sort"></i> Trier</button>
+  <button class="act-btn danger" onclick="openDeleteAll()"><i class="fas fa-trash-can"></i> Tout vider</button>
+</div>
+
+<!-- CONTENU -->
+<div id="mainContent"></div>
+
+<!-- MODAL CONFIRMATION -->
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-icon">🗑️</div>
+    <div class="modal-title">Supprimer tous les téléchargements ?</div>
+    <div class="modal-desc">Vous libérerez de l'espace sur votre appareil. Cette action est irréversible.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()">Annuler</button>
+      <button class="modal-confirm" onclick="deleteAll()">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav" id="bottomNav"></nav>
+<div id="toast"><i class="fas fa-circle-info" id="toastIcon"></i><span id="toastMsg"></span></div>
+
+<script src="tmn-api.js"></script>
+<script src="app.js"></script>
+<script>
+TMN.init({ requireAuth: true, activeNav: 'download' });
+
+let currentTab  = 'downloaded';
+let sortOrder   = 'recent';
+let songToDelete = null;
+
+/* ── DEMO DOWNLOADS (localStorage) ── */
+function getDownloads() {
+  const raw = localStorage.getItem('tmn_downloads');
+  if (raw) try { return JSON.parse(raw); } catch(e){}
+  // Données de démo au premier chargement
+  const demo = [
+    { id:'demo-1', title:'SARAOUNA',     artist:'FATOUMATA', emoji:'🎵', genre:'Afrobeat', region:'Niamey', size:4.2, date: Date.now()-3600000,   plays:12 },
+    { id:'demo-2', title:'ZINDER RISE',  artist:'BOUBACAR',  emoji:'🎤', genre:'Rap',      region:'Zinder', size:3.8, date: Date.now()-86400000,   plays:7  },
+    { id:'demo-3', title:'AGADEZ SOUL',  artist:'RABIATOU',  emoji:'🥁', genre:'Gospel',   region:'Agadez', size:5.1, date: Date.now()-172800000,  plays:3  },
+    { id:'demo-4', title:'NIGHT FLOW',   artist:'MAMANE',    emoji:'🎸', genre:'Rap',      region:'Maradi', size:3.5, date: Date.now()-259200000,  plays:9  },
+  ];
+  localStorage.setItem('tmn_downloads', JSON.stringify(demo));
+  return demo;
+}
+function saveDownloads(dl) { localStorage.setItem('tmn_downloads', JSON.stringify(dl)); }
+
+/* ── STORAGE UI ── */
+function updateStorage() {
+  const dl     = getDownloads();
+  const total  = dl.reduce((s,d) => s+d.size, 0);
+  const pct    = Math.min(100, (total/128)*100).toFixed(1);
+  const count  = dl.length;
+  document.getElementById('storageTitle').textContent = `${total.toFixed(1)} Mo utilisés`;
+  document.getElementById('storageSub').textContent   = `${count} morceau${count!==1?'x':''} téléchargé${count!==1?'s':''}`;
+  document.getElementById('legDownloads').textContent = `${total.toFixed(1)} Mo (${count} fichier${count!==1?'s':''})`;
+  document.getElementById('storageFill').style.width  = pct + '%';
+}
+
+/* ── TABS ── */
+function switchTab(tab, el) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('actionsRow').style.display = tab==='downloaded' ? 'flex' : 'none';
+  renderTab();
+}
+
+function renderTab() {
+  if (currentTab === 'downloaded') renderDownloads();
+  else renderDiscover();
+}
+
+/* ── RENDER DOWNLOADS ── */
+function renderDownloads() {
+  const el = document.getElementById('mainContent');
+  const dl = getDownloads();
+
+  if (!dl.length) {
+    el.innerHTML = `<div class="empty">
+      <div class="empty-icon">📥</div>
+      <div class="empty-title">Aucun téléchargement</div>
+      <div class="empty-desc">Téléchargez des morceaux pour les écouter sans connexion.</div>
+      <div class="empty-btn" onclick="document.querySelector('[data-tab=discover]').click()">
+        <i class="fas fa-magnifying-glass"></i> Découvrir des morceaux
+      </div>
+    </div>`;
+    return;
+  }
+
+  const sorted = [...dl].sort((a,b) => sortOrder==='alpha' ? a.title.localeCompare(b.title) : b.date-a.date);
+  el.innerHTML = `<div class="section">
+    <div class="sec-hdr">
+      <div class="sec-title">Téléchargés</div>
+      <div class="sec-count">${dl.length} morceau${dl.length>1?'x':''} · ${dl.reduce((s,d)=>s+d.size,0).toFixed(1)} Mo</div>
+    </div>
+    <div class="dl-list">
+      ${sorted.map(s => `
+        <div class="dl-card" id="dlcard-${s.id}">
+          <div class="dl-emoji">${s.emoji||'🎵'}<div class="dl-progress-ring"></div></div>
+          <div class="dl-info">
+            <div class="dl-title">${s.title}</div>
+            <div class="dl-meta">${s.artist} · ${s.genre}</div>
+            <div class="dl-size">${s.size} Mo · ${s.plays||0} écoute${(s.plays||0)!==1?'s':''}</div>
+            <div class="dl-prog-wrap"><div class="dl-prog-bar" id="prog-${s.id}"></div></div>
+          </div>
+          <div class="dl-actions">
+            <button class="dl-btn play" onclick="playTrack('${s.id}','${esc(s.title)}')" title="Écouter"><i class="fas fa-play"></i></button>
+            <button class="dl-btn delete" onclick="confirmDelete('${s.id}')" title="Supprimer"><i class="fas fa-trash-can"></i></button>
+          </div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+/* ── RENDER DISCOVER ── */
+async function renderDiscover() {
+  const el = document.getElementById('mainContent');
+  el.innerHTML = buildSkeleton(4);
+  const data = await TMNAPI.songs.list({ sort:'plays', limit:12 }).catch(()=>null);
+  const songs = data?.data || [];
+  const downloaded = new Set(getDownloads().map(d=>d.id));
+
+  el.innerHTML = `<div class="section">
+    <div class="sec-hdr">
+      <div class="sec-title">Disponibles au téléchargement</div>
+      <div class="sec-count">${songs.length} morceaux</div>
+    </div>
+    <div class="discover-grid">
+      ${songs.map(s => {
+        const already = downloaded.has(s.id);
+        return `<div class="disc-card" onclick="goPlayer('${s.id}')">
+          <div class="disc-emoji">${s.emoji||'🎵'}</div>
+          <div class="disc-title">${s.title}</div>
+          <div class="disc-meta">${s.artist_name||'Artiste'}</div>
+          <div class="disc-dl-btn" onclick="event.stopPropagation();${already?'showToast(\'Déjà téléchargé ✓\',\'info\')':'downloadSong(\''+s.id+'\',\''+esc(s.title)+'\',\''+esc(s.artist_name||'')+'\',\''+s.emoji+'\',\''+s.genre+'\')'}">
+            <i class="fas ${already?'fa-check':'fa-download'}"></i>
+            ${already ? 'Téléchargé' : 'Télécharger'}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+/* ── ACTIONS ── */
+function playTrack(id, title) {
+  const dl = getDownloads();
+  const d  = dl.find(x=>x.id===id);
+  if (d) { d.plays=(d.plays||0)+1; saveDownloads(dl); renderDownloads(); updateStorage(); }
+  showToast('▶ ' + title, 'success');
+  setTimeout(()=>location.href='player.html', 400);
+}
+
+function playAll() {
+  showToast('▶ Lecture de tous les téléchargements', 'success');
+  setTimeout(()=>location.href='player.html', 400);
+}
+
+function sortDownloads() {
+  sortOrder = sortOrder==='recent' ? 'alpha' : 'recent';
+  showToast('Trié par ' + (sortOrder==='alpha'?'ordre alphabétique':'date'), 'info');
+  renderDownloads();
+}
+
+function confirmDelete(id) {
+  const dl   = getDownloads();
+  const song = dl.find(d=>d.id===id);
+  if (!song) return;
+  if (confirm(`Supprimer "${song.title}" des téléchargements ?`)) {
+    deleteSong(id);
+  }
+}
+
+function deleteSong(id) {
+  const dl = getDownloads().filter(d=>d.id!==id);
+  saveDownloads(dl);
+  updateStorage();
+  renderDownloads();
+  showToast('Téléchargement supprimé', 'info');
+}
+
+function openDeleteAll() { document.getElementById('modalBg').classList.add('open'); }
+function closeModal()    { document.getElementById('modalBg').classList.remove('open'); }
+function deleteAll() {
+  saveDownloads([]);
+  closeModal();
+  updateStorage();
+  renderDownloads();
+  showToast('Tous les téléchargements supprimés', 'info');
+}
+
+function downloadSong(id, title, artist, emoji, genre) {
+  const dl = getDownloads();
+  if (dl.find(d=>d.id===id)) { showToast('Déjà téléchargé ✓', 'info'); return; }
+
+  showToast('⬇ Téléchargement de "' + title + '"…', 'info');
+
+  // Simulation téléchargement progressif
+  setTimeout(() => {
+    dl.push({
+      id, title, artist, emoji: emoji||'🎵', genre: genre||'',
+      size: (2.5 + Math.random()*3).toFixed(1)*1,
+      date: Date.now(), plays: 0,
+    });
+    saveDownloads(dl);
+    updateStorage();
+    showToast('✅ "' + title + '" téléchargé !', 'success');
+    renderDiscover();
+  }, 1500);
+}
+
+function goPlayer(id) { location.href = 'player.html'; }
+
+/* ── HELPERS ── */
+function esc(s) { return (s||'').replace(/'/g,"\\'"); }
+function buildSkeleton(n) {
+  return `<div class="section"><div class="dl-list">${Array(n).fill(`<div class="dl-card"><div class="dl-emoji skel" style="min-width:46px;height:46px;"></div><div style="flex:1;"><div class="skel" style="height:14px;width:65%;margin-bottom:6px;"></div><div class="skel" style="height:11px;width:45%;"></div></div></div>`).join('')}</div></div>`;
+}
+
+/* ── TOAST ── */
+function showToast(msg, type='info') {
+  const t=document.getElementById('toast'), i=document.getElementById('toastIcon'), m=document.getElementById('toastMsg');
+  const icons={success:'fa-circle-check',error:'fa-circle-exclamation',info:'fa-circle-info'};
+  const colors={success:'#10b981',error:'#ef4444',info:''};
+  i.className='fas '+icons[type]; i.style.color=colors[type]||'var(--t2)'; m.textContent=msg;
+  t.classList.add('show'); clearTimeout(t._t);
+  t._t=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+/* ── INIT ── */
+updateStorage();
+renderTab();
+</script>
+</body>
+</html>

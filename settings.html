@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e0530c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Paramètres – TOP Musique Niger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --bg:#09090b; --surface:#111116; --card:#16161c; --card-h:#1e1e26;
+  --border:rgba(255,255,255,.07); --border-md:rgba(255,255,255,.12);
+  --accent:#e0530c; --accent-d:rgba(224,83,12,.12); --accent-g:rgba(224,83,12,.3);
+  --gold:#c9a84c; --gold-d:rgba(201,168,76,.12); --gold-g:rgba(201,168,76,.3);
+  --green:#0c7e40; --green-d:rgba(12,126,64,.12); --green-g:rgba(12,126,64,.3);
+  --blue:#5b8dee; --blue-d:rgba(91,141,238,.12);
+  --red:#e05252; --red-d:rgba(224,82,82,.12);
+  --text:#f0ece4; --text-2:#8a8790; --text-3:#4a4850;
+  --sidebar-w:240px; --hdr-h:60px; --radius:12px; --radius-lg:18px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{height:100%;}
+body{min-height:100vh;background:var(--bg);font-family:'Instrument Sans',sans-serif;color:var(--text);overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.5;}
+a{text-decoration:none;color:inherit;}
+button{border:none;background:none;cursor:pointer;font-family:inherit;color:inherit;}
+
+/* ══ HEADER ══ */
+.top-header{position:fixed;top:0;left:0;right:0;height:var(--hdr-h);z-index:200;
+  background:rgba(9,9,11,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 1.4rem;gap:1rem;}
+.top-header::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;
+  background:linear-gradient(90deg,var(--accent) 0%,var(--accent) 33%,#f5f0e8 33%,#f5f0e8 66%,var(--green) 66%);}
+.hdr-back{width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;color:var(--text-2);font-size:.82rem;cursor:pointer;transition:all .2s;flex-shrink:0;}
+.hdr-back:hover{color:var(--text);border-color:var(--border-md);}
+.hdr-title{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;flex:1;}
+.hdr-save{padding:.48rem 1.1rem;border-radius:100px;
+  background:var(--gold);color:#09090b;
+  font-family:'Syne',sans-serif;font-size:.8rem;font-weight:800;
+  cursor:pointer;transition:all .22s;
+  box-shadow:0 3px 12px var(--gold-g);display:flex;align-items:center;gap:.4rem;
+  opacity:0;pointer-events:none;transition:opacity .3s,transform .3s,box-shadow .2s;}
+.hdr-save.show{opacity:1;pointer-events:all;}
+.hdr-save:hover{transform:translateY(-1px);box-shadow:0 5px 16px var(--gold-g);}
+
+/* ══ LAYOUT ══ */
+.layout{display:flex;min-height:100vh;padding-top:var(--hdr-h);}
+
+/* ══ SIDEBAR ══ */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;position:sticky;top:var(--hdr-h);
+  height:calc(100vh - var(--hdr-h));overflow-y:auto;
+  border-right:1px solid var(--border);padding:1.4rem .9rem;
+  background:rgba(11,11,14,.6);backdrop-filter:blur(12px);scrollbar-width:none;}
+.sidebar::-webkit-scrollbar{display:none;}
+
+.sb-section{margin-bottom:1.6rem;}
+.sb-section-label{font-size:.65rem;font-weight:700;color:var(--text-3);
+  text-transform:uppercase;letter-spacing:.1em;padding:.2rem .6rem;margin-bottom:.3rem;}
+.sb-item{display:flex;align-items:center;gap:.65rem;padding:.65rem .75rem;
+  border-radius:var(--radius);cursor:pointer;transition:all .18s;
+  font-size:.875rem;font-weight:500;color:var(--text-2);position:relative;}
+.sb-item i{width:16px;text-align:center;font-size:.82rem;flex-shrink:0;}
+.sb-item:hover{background:var(--card);color:var(--text);}
+.sb-item.active{background:var(--accent-d);color:var(--accent);}
+.sb-item.active i{color:var(--accent);}
+.sb-item.danger:hover{background:var(--red-d);color:var(--red);}
+.sb-item.danger.active{background:var(--red-d);color:var(--red);}
+.sb-badge{margin-left:auto;font-size:.6rem;font-weight:700;padding:.15rem .45rem;
+  border-radius:100px;background:var(--accent);color:#fff;}
+
+/* ══ MAIN CONTENT ══ */
+.main{flex:1;overflow-y:auto;padding:1.8rem 2rem 4rem;max-width:700px;}
+
+/* ══ SECTION PANEL ══ */
+.section-panel{display:none;animation:fadeIn .25s ease both;}
+.section-panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.panel-heading{margin-bottom:1.8rem;}
+.panel-title{font-family:'Syne',sans-serif;font-size:1.35rem;font-weight:800;margin-bottom:.3rem;}
+.panel-desc{font-size:.86rem;color:var(--text-2);line-height:1.55;}
+
+/* ══ SETTING CARD ══ */
+.setting-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.1rem;}
+.setting-card-header{padding:.9rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.6rem;}
+.sch-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.82rem;flex-shrink:0;}
+.sch-icon.orange{background:var(--accent-d);color:var(--accent);}
+.sch-icon.gold{background:var(--gold-d);color:var(--gold);}
+.sch-icon.green{background:var(--green-d);color:var(--green);}
+.sch-icon.blue{background:var(--blue-d);color:var(--blue);}
+.sch-icon.red{background:var(--red-d);color:var(--red);}
+.sch-title{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:700;}
+
+/* ══ SETTING ROW ══ */
+.setting-row{display:flex;align-items:center;justify-content:space-between;
+  padding:.9rem 1.2rem;gap:1rem;transition:background .15s;border-bottom:1px solid var(--border);}
+.setting-row:last-child{border-bottom:none;}
+.setting-row:hover{background:rgba(255,255,255,.02);}
+.sr-info{flex:1;min-width:0;}
+.sr-label{font-size:.88rem;font-weight:600;margin-bottom:.12rem;}
+.sr-desc{font-size:.75rem;color:var(--text-3);line-height:1.45;}
+.sr-right{flex-shrink:0;display:flex;align-items:center;gap:.6rem;}
+
+/* ══ TOGGLE ══ */
+.toggle{width:44px;height:24px;border-radius:12px;background:var(--text-3);
+  position:relative;cursor:pointer;transition:background .25s;flex-shrink:0;border:none;}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;
+  width:18px;height:18px;border-radius:50%;background:#fff;
+  transition:transform .25s cubic-bezier(.22,1,.36,1);
+  box-shadow:0 1px 4px rgba(0,0,0,.35);}
+.toggle.on{background:var(--green);}
+.toggle.on.gold-toggle{background:var(--gold);}
+.toggle.on.accent-toggle{background:var(--accent);}
+.toggle.on::after{transform:translateX(20px);}
+
+/* ══ SELECT ══ */
+.setting-select{background:var(--card-h);border:1px solid var(--border-md);
+  color:var(--text);border-radius:8px;padding:.42rem .75rem;
+  font-family:'Instrument Sans',sans-serif;font-size:.82rem;
+  outline:none;cursor:pointer;}
+.setting-select:focus{border-color:var(--gold);}
+.setting-select option{background:#1c1c24;}
+
+/* ══ AVATAR SECTION ══ */
+.avatar-section{display:flex;align-items:center;gap:1.4rem;padding:1.3rem 1.2rem;border-bottom:1px solid var(--border);}
+.avatar-wrap{position:relative;flex-shrink:0;}
+.avatar-img{width:74px;height:74px;border-radius:50%;object-fit:cover;
+  border:2.5px solid var(--gold);box-shadow:0 0 0 5px rgba(201,168,76,.12);}
+.avatar-placeholder{width:74px;height:74px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),#7a5010);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:#09090b;
+  border:2.5px solid var(--gold);box-shadow:0 0 0 5px rgba(201,168,76,.12);}
+.avatar-edit-btn{position:absolute;bottom:0;right:0;
+  width:26px;height:26px;border-radius:50%;
+  background:var(--accent);color:#fff;font-size:.62rem;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;border:2px solid var(--bg);transition:transform .18s;}
+.avatar-edit-btn:hover{transform:scale(1.1);}
+.avatar-info{flex:1;min-width:0;}
+.avatar-name{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:.1rem;}
+.avatar-role{font-size:.76rem;color:var(--text-2);margin-bottom:.55rem;}
+.avatar-btns{display:flex;gap:.45rem;flex-wrap:wrap;}
+.av-btn{padding:.38rem .8rem;border-radius:8px;font-size:.76rem;font-weight:600;cursor:pointer;transition:all .2s;}
+.av-btn.primary{background:var(--accent-d);color:var(--accent);border:1px solid rgba(224,83,12,.25);}
+.av-btn.primary:hover{background:var(--accent);color:#fff;}
+.av-btn.secondary{background:var(--card-h);border:1px solid var(--border-md);color:var(--text-2);}
+.av-btn.secondary:hover{color:var(--text);}
+
+/* ══ INPUT FIELD ══ */
+.setting-input-wrap{padding:1rem 1.2rem;border-bottom:1px solid var(--border);}
+.setting-input-wrap:last-child{border-bottom:none;}
+.si-label{font-size:.72rem;font-weight:600;color:var(--text-2);text-transform:uppercase;
+  letter-spacing:.05em;margin-bottom:.45rem;display:flex;justify-content:space-between;align-items:center;}
+.si-label span{font-weight:400;color:var(--text-3);text-transform:none;letter-spacing:0;font-size:.68rem;}
+.setting-input{width:100%;padding:.72rem 1rem;background:var(--card-h);
+  border:1.5px solid var(--border);border-radius:var(--radius);
+  color:var(--text);font-family:'Instrument Sans',sans-serif;font-size:.9rem;outline:none;transition:all .2s;}
+.setting-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-d);}
+.setting-input::placeholder{color:var(--text-3);}
+.setting-textarea{resize:vertical;min-height:80px;line-height:1.5;}
+
+/* ══ COLOR THEME PICKER ══ */
+.theme-grid{display:flex;gap:.55rem;flex-wrap:wrap;padding:1rem 1.2rem;}
+.theme-opt{width:36px;height:36px;border-radius:50%;cursor:pointer;
+  border:2.5px solid transparent;transition:all .2s;position:relative;}
+.theme-opt:hover{transform:scale(1.12);}
+.theme-opt.selected{border-color:#fff;box-shadow:0 0 0 3px var(--border-md);}
+.theme-opt.selected::after{content:'\f00c';font-family:'Font Awesome 6 Free';font-weight:900;
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:.6rem;color:#fff;}
+
+/* ══ CONNECTED ACCOUNTS ══ */
+.connected-row{display:flex;align-items:center;gap:.85rem;padding:.9rem 1.2rem;border-bottom:1px solid var(--border);}
+.connected-row:last-child{border-bottom:none;}
+.ca-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.ca-icon.google{background:rgba(66,133,244,.1);}
+.ca-icon.facebook{background:rgba(24,119,242,.1);color:#1877f2;}
+.ca-info{flex:1;min-width:0;}
+.ca-name{font-size:.86rem;font-weight:600;}
+.ca-status{font-size:.72rem;color:var(--text-3);margin-top:.05rem;}
+.ca-status.connected{color:var(--green);}
+.ca-btn{padding:.38rem .8rem;border-radius:8px;font-size:.74rem;font-weight:600;cursor:pointer;transition:all .2s;}
+.ca-btn.disconnect{background:var(--red-d);color:var(--red);border:1px solid rgba(224,82,82,.2);}
+.ca-btn.disconnect:hover{background:var(--red);color:#fff;}
+.ca-btn.connect{background:var(--green-d);color:var(--green);border:1px solid rgba(12,126,64,.25);}
+.ca-btn.connect:hover{background:var(--green);color:#fff;}
+
+/* ══ NOTIF CATEGORY ══ */
+.notif-category{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.2rem;border-bottom:1px solid var(--border);}
+.notif-category:last-child{border-bottom:none;}
+.nc-left{display:flex;align-items:center;gap:.7rem;}
+.nc-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;}
+.nc-info{flex:1;}
+.nc-label{font-size:.86rem;font-weight:600;}
+.nc-desc{font-size:.72rem;color:var(--text-3);}
+.nc-toggles{display:flex;gap:.5rem;}
+.nc-toggle-label{display:flex;flex-direction:column;align-items:center;gap:.25rem;font-size:.6rem;color:var(--text-3);}
+.nc-toggle-label .toggle{width:36px;height:20px;}
+.nc-toggle-label .toggle::after{width:14px;height:14px;top:3px;left:3px;}
+.nc-toggle-label .toggle.on::after{transform:translateX(16px);}
+
+/* ══ STORAGE BAR ══ */
+.storage-bar-wrap{padding:1rem 1.2rem;}
+.sb-info{display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-2);margin-bottom:.55rem;}
+.sb-track{height:6px;border-radius:3px;background:rgba(255,255,255,.08);}
+.sb-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--gold));transition:width .6s ease;}
+.sb-legend{display:flex;gap:1.2rem;margin-top:.65rem;flex-wrap:wrap;}
+.sb-leg-item{display:flex;align-items:center;gap:.35rem;font-size:.72rem;color:var(--text-3);}
+.sb-leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+
+/* ══ DANGER ZONE ══ */
+.danger-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.2rem;border-bottom:1px solid var(--border);}
+.danger-row:last-child{border-bottom:none;}
+.dr-info{}
+.dr-label{font-size:.88rem;font-weight:600;color:var(--text);}
+.dr-desc{font-size:.74rem;color:var(--text-3);margin-top:.1rem;}
+.danger-btn{padding:.48rem 1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;transition:all .2s;flex-shrink:0;}
+.danger-btn.warn{background:var(--red-d);color:var(--red);border:1px solid rgba(224,82,82,.2);}
+.danger-btn.warn:hover{background:var(--red);color:#fff;box-shadow:0 3px 12px rgba(224,82,82,.3);}
+.danger-btn.logout{background:var(--accent-d);color:var(--accent);border:1px solid rgba(224,83,12,.2);}
+.danger-btn.logout:hover{background:var(--accent);color:#fff;}
+
+/* ══ CONFIRM MODAL ══ */
+.modal-bg{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;padding:1rem;
+  opacity:0;pointer-events:none;transition:opacity .3s;}
+.modal-bg.open{opacity:1;pointer-events:all;}
+.modal{background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);
+  width:100%;max-width:360px;padding:1.8rem 1.5rem;
+  transform:scale(.95);transition:transform .3s cubic-bezier(.22,1,.36,1);}
+.modal-bg.open .modal{transform:scale(1);}
+.modal-icon{width:52px;height:52px;border-radius:14px;background:var(--red-d);
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:var(--red);margin-bottom:1rem;}
+.modal-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:.4rem;}
+.modal-desc{font-size:.84rem;color:var(--text-2);line-height:1.6;margin-bottom:1.4rem;}
+.modal-confirm-input{width:100%;padding:.72rem 1rem;background:var(--card);border:1.5px solid var(--border);
+  border-radius:var(--radius);color:var(--text);font-family:'Instrument Sans',sans-serif;font-size:.88rem;
+  outline:none;transition:all .2s;margin-bottom:1rem;}
+.modal-confirm-input:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-d);}
+.modal-confirm-input::placeholder{color:var(--text-3);}
+.modal-actions{display:flex;gap:.65rem;}
+.modal-cancel{flex:1;padding:.78rem;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);
+  color:var(--text-2);font-weight:600;cursor:pointer;transition:all .2s;font-size:.88rem;}
+.modal-cancel:hover{color:var(--text);}
+.modal-confirm-btn{flex:1;padding:.78rem;border-radius:var(--radius);background:var(--red);color:#fff;
+  font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;transition:all .2s;
+  box-shadow:0 3px 12px rgba(224,82,82,.3);}
+.modal-confirm-btn:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(224,82,82,.4);}
+.modal-confirm-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+
+/* ══ MINI BOTTOM NAV ══ */
+.bottom-nav{display:none;}
+
+/* ══ TOAST ══ */
+#toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(60px);opacity:0;
+  background:var(--card);border:1px solid var(--border-md);color:var(--text);
+  padding:.75rem 1.4rem;border-radius:100px;font-size:.84rem;
+  display:flex;align-items:center;gap:.55rem;box-shadow:0 8px 28px rgba(0,0,0,.5);
+  z-index:9999;transition:transform .35s cubic-bezier(.22,1,.36,1),opacity .3s;white-space:nowrap;}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+#toast.success i{color:#4caf7d;}
+#toast.info    i{color:var(--gold);}
+#toast.error   i{color:var(--red);}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:680px){
+  .sidebar{display:none;}
+  .main{padding:1.2rem 1rem 5rem;}
+  .bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;
+    background:rgba(9,9,11,.97);backdrop-filter:blur(20px);
+    border-top:1px solid var(--border);z-index:100;overflow-x:auto;
+    scrollbar-width:none;padding:.4rem;}
+  .bottom-nav::-webkit-scrollbar{display:none;}
+  .bn-item{display:flex;flex-direction:column;align-items:center;gap:.15rem;
+    flex-shrink:0;padding:.4rem .7rem;border-radius:10px;cursor:pointer;
+    font-size:.58rem;color:var(--text-3);white-space:nowrap;transition:all .2s;}
+  .bn-item i{font-size:1rem;}
+  .bn-item.active{color:var(--accent);background:var(--accent-d);}
+}
+
+/* ══ ACCÈS RAPIDE ══ */
+.qa-section { margin-bottom: 1.8rem; }
+.qa-title {
+  font-family:'Syne',sans-serif; font-size:.72rem; font-weight:800;
+  text-transform:uppercase; letter-spacing:.08em; color:var(--text-2);
+  margin-bottom:.8rem; padding:0 .2rem;
+}
+.qa-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.55rem;
+}
+.qa-item {
+  display:flex; flex-direction:column; align-items:center; gap:.45rem;
+  padding:.85rem .5rem;
+  background:var(--card); border:1px solid var(--border);
+  border-radius:14px; cursor:pointer; text-decoration:none; color:var(--text);
+  transition:all .2s;
+  text-align:center;
+}
+.qa-item:hover {
+  border-color:var(--border-md); background:var(--card-h);
+  transform:translateY(-1px);
+}
+.qa-icon {
+  width:38px; height:38px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1rem;
+}
+.qa-label { font-size:.68rem; font-weight:600; color:var(--text-2); line-height:1.2; }
+
+</style>
+</head>
+<body>
+<script src="app.js"></script>
+<script src="tmn-api.js"></script>
+
+<!-- ══ HEADER ══ -->
+<header class="top-header">
+  <div class="hdr-back" onclick="history.back()"><i class="fas fa-arrow-left"></i></div>
+  <div class="hdr-title">Paramètres</div>
+  <button class="hdr-save" id="hdrSave" onclick="saveChanges()">
+    <i class="fas fa-check"></i> Enregistrer
+  </button>
+</header>
+
+<!-- ══ LAYOUT ══ -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-section">
+      <div class="sb-section-label">Compte</div>
+      <div class="sb-item active" data-section="quickaccess" onclick="goSection('quickaccess',this)"><i class="fas fa-grid-2"></i> Mes pages</div>
+      <div class="sb-item"        data-section="profil"       onclick="goSection('profil',this)"><i class="fas fa-user"></i> Profil</div>
+      <div class="sb-item"        data-section="compte"    onclick="goSection('compte',this)"><i class="fas fa-shield-halved"></i> Sécurité</div>
+      <div class="sb-item"        data-section="comptes"   onclick="goSection('comptes',this)"><i class="fas fa-link"></i> Comptes liés</div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-label">Application</div>
+      <div class="sb-item" data-section="notifs"    onclick="goSection('notifs',this)"><i class="fas fa-bell"></i> Notifications<span class="sb-badge">3</span></div>
+      <div class="sb-item" data-section="apparence" onclick="goSection('apparence',this)"><i class="fas fa-palette"></i> Apparence</div>
+      <div class="sb-item" data-section="audio"     onclick="goSection('audio',this)"><i class="fas fa-headphones"></i> Audio</div>
+      <div class="sb-item" data-section="stockage"  onclick="goSection('stockage',this)"><i class="fas fa-hard-drive"></i> Stockage</div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-label">Autre</div>
+      <div class="sb-item"        data-section="confidentialite" onclick="goSection('confidentialite',this)"><i class="fas fa-eye-slash"></i> Confidentialité</div>
+      <div class="sb-item"        data-section="aide"            onclick="goSection('aide',this)"><i class="fas fa-circle-question"></i> Aide</div>
+      <div class="sb-item danger" data-section="danger"          onclick="goSection('danger',this)"><i class="fas fa-triangle-exclamation"></i> Zone danger</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main" id="mainContent">
+
+    <!-- ══ ACCÈS RAPIDE ══ -->
+    <div class="section-panel" id="sec-quickaccess">
+
+      <!-- Auditeur : pages secondaires -->
+      <div class="qa-section" id="listenerQuickAccess">
+        <div class="qa-title">🎧 Pages de l'auditeur</div>
+        <div class="qa-grid">
+          <a href="player.html"          class="qa-item"><div class="qa-icon" style="background:var(--ad);color:var(--accent);"><i class="fas fa-headphones"></i></div><span class="qa-label">Lecteur</span></a>
+          <a href="evaluer.html"         class="qa-item"><div class="qa-icon" style="background:rgba(245,166,35,.12);color:#f5a623;"><i class="fas fa-star"></i></div><span class="qa-label">Évaluer</span></a>
+          <a href="telechargements.html" class="qa-item"><div class="qa-icon" style="background:var(--grd);color:var(--green);"><i class="fas fa-download"></i></div><span class="qa-label">Télécharger</span></a>
+          <a href="playlist.html"        class="qa-item"><div class="qa-icon" style="background:var(--gd);color:var(--gold);"><i class="fas fa-list-music"></i></div><span class="qa-label">Playlists</span></a>
+          <a href="favorites.html"       class="qa-item"><div class="qa-icon" style="background:rgba(239,68,68,.1);color:#ef4444;"><i class="fas fa-heart"></i></div><span class="qa-label">Favoris</span></a>
+          <a href="historique.html"      class="qa-item"><div class="qa-icon" style="background:var(--bd);color:var(--blue);"><i class="fas fa-clock-rotate-left"></i></div><span class="qa-label">Historique</span></a>
+          <a href="explore.html"         class="qa-item"><div class="qa-icon" style="background:rgba(139,92,246,.1);color:#a78bfa;"><i class="fas fa-compass"></i></div><span class="qa-label">Explorer</span></a>
+          <a href="notifications.html"   class="qa-item"><div class="qa-icon" style="background:var(--gd);color:var(--gold);"><i class="fas fa-bell"></i></div><span class="qa-label">Notifications</span></a>
+          <a href="comments.html"        class="qa-item"><div class="qa-icon" style="background:var(--bd);color:var(--blue);"><i class="fas fa-comments"></i></div><span class="qa-label">Commentaires</span></a>
+          <a href="search.html"          class="qa-item"><div class="qa-icon" style="background:rgba(255,255,255,.05);color:var(--text-2);"><i class="fas fa-magnifying-glass"></i></div><span class="qa-label">Recherche</span></a>
+          <a href="profil-auditeur.html" class="qa-item"><div class="qa-icon" style="background:rgba(91,141,238,.12);color:var(--blue);"><i class="fas fa-user"></i></div><span class="qa-label">Mon profil</span></a>
+        </div>
+      </div>
+
+      <!-- Artiste : pages secondaires -->
+      <div class="qa-section" id="artistQuickAccess" style="display:none;">
+        <div class="qa-title">🎤 Pages de l'artiste</div>
+        <div class="qa-grid">
+          <a href="player.html"         class="qa-item"><div class="qa-icon" style="background:var(--ad);color:var(--accent);"><i class="fas fa-headphones"></i></div><span class="qa-label">Lecteur</span></a>
+          <a href="explore.html"        class="qa-item"><div class="qa-icon" style="background:rgba(139,92,246,.1);color:#a78bfa;"><i class="fas fa-compass"></i></div><span class="qa-label">Explorer</span></a>
+          <a href="notifications.html"  class="qa-item"><div class="qa-icon" style="background:var(--gd);color:var(--gold);"><i class="fas fa-bell"></i></div><span class="qa-label">Notifications</span></a>
+          <a href="comments.html"       class="qa-item"><div class="qa-icon" style="background:var(--bd);color:var(--blue);"><i class="fas fa-comments"></i></div><span class="qa-label">Commentaires</span></a>
+          <a href="favorites.html"      class="qa-item"><div class="qa-icon" style="background:rgba(239,68,68,.1);color:#ef4444;"><i class="fas fa-heart"></i></div><span class="qa-label">Favoris</span></a>
+          <a href="search.html"         class="qa-item"><div class="qa-icon" style="background:rgba(255,255,255,.05);color:var(--text-2);"><i class="fas fa-magnifying-glass"></i></div><span class="qa-label">Recherche</span></a>
+          <a href="historique.html"     class="qa-item"><div class="qa-icon" style="background:var(--bd);color:var(--blue);"><i class="fas fa-clock-rotate-left"></i></div><span class="qa-label">Historique</span></a>
+          <a href="playlist.html"       class="qa-item"><div class="qa-icon" style="background:var(--gd);color:var(--gold);"><i class="fas fa-list-music"></i></div><span class="qa-label">Playlists</span></a>
+          <a href="profil-artiste.html" class="qa-item"><div class="qa-icon" style="background:var(--grd);color:var(--green);"><i class="fas fa-microphone"></i></div><span class="qa-label">Mon profil</span></a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══ PROFIL ══ -->
+    <div class="section-panel active" id="sec-profil">
+      <div class="panel-heading">
+        <div class="panel-title">Mon profil</div>
+        <div class="panel-desc">Informations visibles par les autres utilisateurs de la plateforme.</div>
+      </div>
+
+      <div class="setting-card">
+        <div class="avatar-section">
+          <div class="avatar-wrap">
+            <div class="avatar-placeholder" id="avatarDisplay">T</div>
+            <div class="avatar-edit-btn" onclick="triggerAvatarUpload()"><i class="fas fa-camera"></i></div>
+            <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="onAvatarChange(event)">
+          </div>
+          <div class="avatar-info">
+            <div class="avatar-name" id="avatarName">Utilisateur</div>
+            <div class="avatar-role" id="avatarRole">Auditeur · TOP Musique Niger</div>
+            <div class="avatar-btns">
+              <div class="av-btn primary" onclick="triggerAvatarUpload()"><i class="fas fa-upload" style="margin-right:.3rem;font-size:.7rem;"></i> Changer la photo</div>
+              <div class="av-btn secondary" onclick="removeAvatar()">Supprimer</div>
+            </div>
+          </div>
+        </div>
+        <div class="setting-input-wrap">
+          <div class="si-label">Nom d'affichage <span id="nameCount">0/40</span></div>
+          <input class="setting-input" id="displayName" type="text" placeholder="Votre nom…" maxlength="40" oninput="onFieldChange();updateCount('displayName','nameCount',40)">
+        </div>
+        <div class="setting-input-wrap">
+          <div class="si-label">Adresse email</div>
+          <input class="setting-input" id="emailField" type="email" placeholder="vous@exemple.com" oninput="onFieldChange()">
+        </div>
+        <div class="setting-input-wrap">
+          <div class="si-label">Région <span style="color:var(--text-3);">Optionnel</span></div>
+          <select class="setting-input setting-select" id="regionField" onchange="onFieldChange()">
+            <option value="">Sélectionner une région…</option>
+            <option>Niamey</option><option>Zinder</option><option>Maradi</option>
+            <option>Agadez</option><option>Tahoua</option><option>Dosso</option>
+            <option>Tillabéri</option><option>Diffa</option>
+          </select>
+        </div>
+        <div class="setting-input-wrap">
+          <div class="si-label">Bio <span id="bioCount">0/160</span></div>
+          <textarea class="setting-input setting-textarea" id="bioField" placeholder="Parlez-nous de vous…" maxlength="160" oninput="onFieldChange();updateCount('bioField','bioCount',160)"></textarea>
+        </div>
+      </div>
+
+      <div class="setting-card">
+        <div class="setting-card-header"><div class="sch-icon gold"><i class="fas fa-music"></i></div><div class="sch-title">Préférences musicales</div></div>
+        <div class="setting-input-wrap">
+          <div class="si-label">Genre préféré</div>
+          <select class="setting-input setting-select" id="genreField" onchange="onFieldChange()">
+            <option value="">Tous les genres</option>
+            <option>Rap</option><option>Afrobeat</option><option>Gospel</option>
+            <option>R&B</option><option>Zouk</option><option>Mandé</option><option>Haoussa</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Profil public</div><div class="sr-desc">Permettre aux autres de voir votre profil et vos playlists</div></div>
+          <div class="sr-right"><button class="toggle on" id="tgl-public" onclick="toggleSetting(this,'public')"></button></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Afficher mes écoutes</div><div class="sr-desc">Montrer l'historique d'écoute sur votre profil</div></div>
+          <div class="sr-right"><button class="toggle" id="tgl-history" onclick="toggleSetting(this,'history')"></button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SÉCURITÉ ══ -->
+    <div class="section-panel" id="sec-compte">
+      <div class="panel-heading">
+        <div class="panel-title">Sécurité du compte</div>
+        <div class="panel-desc">Gérez votre mot de passe et la sécurité de votre connexion.</div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-card-header"><div class="sch-icon orange"><i class="fas fa-lock"></i></div><div class="sch-title">Mot de passe</div></div>
+        <div class="setting-input-wrap">
+          <div class="si-label">Mot de passe actuel</div>
+          <input class="setting-input" type="password" placeholder="••••••••">
+        </div>
+        <div class="setting-input-wrap">
+          <div class="si-label">Nouveau mot de passe</div>
+          <input class="setting-input" type="password" id="newPwd" placeholder="Min. 8 caractères" oninput="checkPwdStrength()">
+          <div id="pwdStrength" style="margin-top:.5rem;display:none;">
+            <div style="display:flex;gap:3px;margin-bottom:.3rem;">
+              <div class="pwd-seg" style="height:3px;flex:1;border-radius:2px;background:var(--border);transition:background .3s;"></div>
+              <div class="pwd-seg" style="height:3px;flex:1;border-radius:2px;background:var(--border);transition:background .3s;"></div>
+              <div class="pwd-seg" style="height:3px;flex:1;border-radius:2px;background:var(--border);transition:background .3s;"></div>
+              <div class="pwd-seg" style="height:3px;flex:1;border-radius:2px;background:var(--border);transition:background .3s;"></div>
+            </div>
+            <div id="pwdStrengthLabel" style="font-size:.72rem;color:var(--text-3);"></div>
+          </div>
+        </div>
+        <div class="setting-input-wrap">
+          <div class="si-label">Confirmer le nouveau mot de passe</div>
+          <input class="setting-input" type="password" placeholder="••••••••">
+        </div>
+        <div class="setting-row" style="border-top:1px solid var(--border);">
+          <div class="sr-info"><div class="sr-label">Mettre à jour le mot de passe</div></div>
+          <div class="sr-right"><button onclick="showToast('Mot de passe mis à jour ✓','success')" style="padding:.48rem 1rem;border-radius:8px;background:var(--accent-d);color:var(--accent);border:1px solid rgba(224,83,12,.25);font-size:.78rem;font-weight:700;cursor:pointer;">Enregistrer</button></div>
+        </div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-card-header"><div class="sch-icon green"><i class="fas fa-shield-halved"></i></div><div class="sch-title">Sécurité avancée</div></div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Double authentification (2FA)</div><div class="sr-desc">Sécurité supplémentaire par SMS ou application</div></div>
+          <div class="sr-right"><button class="toggle" id="tgl-2fa" onclick="toggleSetting(this,'2fa')"></button></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Alertes de connexion</div><div class="sr-desc">Recevoir un email à chaque nouvelle connexion</div></div>
+          <div class="sr-right"><button class="toggle on" id="tgl-alerts" onclick="toggleSetting(this,'alerts')"></button></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Sessions actives</div><div class="sr-desc">1 session active en ce moment</div></div>
+          <div class="sr-right"><button onclick="showToast('Fonctionnalité bientôt disponible','info')" style="padding:.4rem .85rem;border-radius:8px;background:var(--card-h);border:1px solid var(--border-md);color:var(--text-2);font-size:.76rem;cursor:pointer;">Voir tout</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ COMPTES LIÉS ══ -->
+    <div class="section-panel" id="sec-comptes">
+      <div class="panel-heading">
+        <div class="panel-title">Comptes liés</div>
+        <div class="panel-desc">Connectez vos comptes sociaux pour une connexion rapide.</div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-card-header"><div class="sch-icon blue"><i class="fas fa-link"></i></div><div class="sch-title">Connexions OAuth</div></div>
+        <div class="connected-row">
+          <div class="ca-icon google">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          </div>
+          <div class="ca-info">
+            <div class="ca-name">Google</div>
+            <div class="ca-status connected" id="google-status">● Connecté</div>
+          </div>
+          <button class="ca-btn disconnect" id="google-btn" onclick="toggleOAuth('google')">Déconnecter</button>
+        </div>
+        <div class="connected-row">
+          <div class="ca-icon facebook"><i class="fab fa-facebook-f"></i></div>
+          <div class="ca-info">
+            <div class="ca-name">Facebook</div>
+            <div class="ca-status connected" id="facebook-status">● Connecté</div>
+          </div>
+          <button class="ca-btn disconnect" id="facebook-btn" onclick="toggleOAuth('facebook')">Déconnecter</button>
+        </div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-card-header"><div class="sch-icon gold"><i class="fas fa-key"></i></div><div class="sch-title">Identifiants OAuth configurés</div></div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Google Client ID</div><div class="sr-desc" style="word-break:break-all;font-size:.68rem;">945066847322-e7ghn…apps.googleusercontent.com</div></div>
+          <div class="sr-right"><span style="font-size:.7rem;background:var(--green-d);color:var(--green);border-radius:100px;padding:.18rem .55rem;font-weight:700;">✓ Actif</span></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Facebook App ID</div><div class="sr-desc">729250327126474</div></div>
+          <div class="sr-right"><span style="font-size:.7rem;background:var(--green-d);color:var(--green);border-radius:100px;padding:.18rem .55rem;font-weight:700;">✓ Actif</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ NOTIFICATIONS ══ -->
+    <div class="section-panel" id="sec-notifs">
+      <div class="panel-heading">
+        <div class="panel-title">Notifications</div>
+        <div class="panel-desc">Choisissez comment et quand vous souhaitez être notifié.</div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-card-header"><div class="sch-icon orange"><i class="fas fa-bell"></i></div><div class="sch-title">Canaux de notification</div></div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Notifications push</div><div class="sr-desc">Sur votre téléphone ou navigateur</div></div>
+          <div class="sr-right"><button class="toggle on accent-toggle" onclick="toggleSetting(this,'push')"></button></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Notifications par email</div><div class="sr-desc">Résumé hebdomadaire et alertes importantes</div></div>
+          <div class="sr-right"><button class="toggle on" onclick="toggleSetting(this,'email')"></button></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Notification sonore</div><div class="sr-desc">Son lors de la réception d'une notification</div></div>
+          <div class="sr-right"><button class="toggle" onclick="toggleSetting(this,'sound')"></button></div>
+        </div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-card-header"><div class="sch-icon gold"><i class="fas fa-list-check"></i></div><div class="sch-title">Catégories</div></div>
+        <div class="notif-category">
+          <div class="nc-left"><div class="nc-icon" style="background:var(--accent-d);color:var(--accent);"><i class="fas fa-trophy"></i></div><div class="nc-info"><div class="nc-label">Classements</div><div class="nc-desc">Nouveau top hebdomadaire</div></div></div>
+          <div class="nc-toggles">
+            <label class="nc-toggle-label"><button class="toggle on accent-toggle" onclick="toggleSetting(this)"></button>Push</label>
+            <label class="nc-toggle-label"><button class="toggle on" onclick="toggleSetting(this)"></button>Email</label>
+          </div>
+        </div>
+        <div class="notif-category">
+          <div class="nc-left"><div class="nc-icon" style="background:var(--gold-d);color:var(--gold);"><i class="fas fa-music"></i></div><div class="nc-info"><div class="nc-label">Nouvelles sorties</div><div class="nc-desc">Artistes que vous suivez</div></div></div>
+          <div class="nc-toggles">
+            <label class="nc-toggle-label"><button class="toggle on accent-toggle" onclick="toggleSetting(this)"></button>Push</label>
+            <label class="nc-toggle-label"><button class="toggle" onclick="toggleSetting(this)"></button>Email</label>
+          </div>
+        </div>
+        <div class="notif-category">
+          <div class="nc-left"><div class="nc-icon" style="background:var(--green-d);color:var(--green);"><i class="fas fa-star"></i></div><div class="nc-info"><div class="nc-label">Évaluations reçues</div><div class="nc-desc">Quand quelqu'un note vos morceaux</div></div></div>
+          <div class="nc-toggles">
+            <label class="nc-toggle-label"><button class="toggle on accent-toggle" onclick="toggleSetting(this)"></button>Push</label>
+            <label class="nc-toggle-label"><button class="toggle on" onclick="toggleSetting(this)"></button>Email</label>
+          </div>
+        </div>
+        <div class="notif-category" style="border-bottom:none;">
+          <div class="nc-left"><div class="nc-icon" style="background:var(--blue-d);color:var(--blue);"><i class="fas fa-users"></i></div><div class="nc-info"><div class="nc-label">Communauté</div><div class="nc-desc">Commentaires et interactions</div></div></div>
+          <div class="nc-toggles">
+            <label class="nc-toggle-label"><button class="toggle" onclick="toggleSetting(this)"></button>Push</label>
+            <label class="nc-toggle-label"><button class="toggle" onclick="toggleSetting(this)"></button>Email</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ APPARENCE ══ -->
+    <div class="section-panel" id="sec-apparence">
+      <div class="panel-heading">
+        <div class="panel-title">Apparence</div>
+        <div class="panel-desc">Personnalisez l'interface selon vos goûts.</div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-card-header"><div class="sch-icon gold"><i class="fas fa-palette"></i></div><div class="sch-title">Couleur d'accent</div></div>
+        <div class="theme-grid" id="themeGrid"></div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-card-header"><div class="sch-icon blue"><i class="fas fa-text-height"></i></div><div class="sch-title">Affichage</div></div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Taille de police</div></div>
+          <div class="sr-right">
+            <select class="setting-select" onchange="showToast('Taille appliquée','info')">
+              <option>Petite</option><option selected>Normale</option><option>Grande</option>
+            </select>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Mode compact</div><div class="sr-desc">Afficher plus de contenu à l'écran</div></div>
+          <div class="sr-right"><button class="toggle" onclick="toggleSetting(this,'compact')"></button></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Animations</div><div class="sr-desc">Désactiver pour de meilleures performances</div></div>
+          <div class="sr-right"><button class="toggle on" onclick="toggleSetting(this,'anim')"></button></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Flou de fond (glassmorphism)</div><div class="sr-desc">Effets de transparence sur les cards</div></div>
+          <div class="sr-right"><button class="toggle on" onclick="toggleSetting(this,'glass')"></button></div>
+        </div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-card-header"><div class="sch-icon green"><i class="fas fa-language"></i></div><div class="sch-title">Langue</div></div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Langue de l'interface</div></div>
+          <div class="sr-right">
+            <select class="setting-select" onchange="showToast('Langue mise à jour','success')">
+              <option selected>Français</option><option>English</option><option>Hausa</option><option>Zarma</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ AUDIO ══ -->
+    <div class="section-panel" id="sec-audio">
+      <div class="panel-heading">
+        <div class="panel-title">Paramètres audio</div>
+        <div class="panel-desc">Contrôlez la qualité et le comportement de lecture.</div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-card-header"><div class="sch-icon orange"><i class="fas fa-headphones"></i></div><div class="sch-title">Qualité de streaming</div></div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Qualité en Wi-Fi</div></div>
+          <div class="sr-right"><select class="setting-select"><option>128 kbps</option><option selected>256 kbps</option><option>320 kbps</option></select></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Qualité en données mobiles</div></div>
+          <div class="sr-right"><select class="setting-select"><option selected>128 kbps</option><option>256 kbps</option><option>320 kbps</option></select></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Téléchargement hors-ligne</div><div class="sr-desc">Sauvegarder les morceaux pour écoute sans internet</div></div>
+          <div class="sr-right"><button class="toggle on gold-toggle" onclick="toggleSetting(this,'offline')"></button></div>
+        </div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-card-header"><div class="sch-icon gold"><i class="fas fa-sliders"></i></div><div class="sch-title">Lecture</div></div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Lecture automatique</div><div class="sr-desc">Enchaîner automatiquement les morceaux</div></div>
+          <div class="sr-right"><button class="toggle on" onclick="toggleSetting(this,'autoplay')"></button></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Fondus enchaînés</div><div class="sr-desc">Transition douce entre les morceaux</div></div>
+          <div class="sr-right"><button class="toggle on" onclick="toggleSetting(this,'crossfade')"></button></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Normalisation du volume</div><div class="sr-desc">Volume uniforme entre tous les morceaux</div></div>
+          <div class="sr-right"><button class="toggle on" onclick="toggleSetting(this,'normalize')"></button></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Minuterie de sommeil par défaut</div></div>
+          <div class="sr-right"><select class="setting-select"><option>Désactivé</option><option>15 min</option><option selected>30 min</option><option>60 min</option></select></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ STOCKAGE ══ -->
+    <div class="section-panel" id="sec-stockage">
+      <div class="panel-heading">
+        <div class="panel-title">Stockage</div>
+        <div class="panel-desc">Gérez l'espace utilisé par l'application sur votre appareil.</div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-card-header"><div class="sch-icon blue"><i class="fas fa-hard-drive"></i></div><div class="sch-title">Espace utilisé</div></div>
+        <div class="storage-bar-wrap">
+          <div class="sb-info"><span>245 Mo utilisés</span><span style="color:var(--text-3);">sur 2 Go</span></div>
+          <div class="sb-track"><div class="sb-fill" style="width:12%"></div></div>
+          <div class="sb-legend">
+            <div class="sb-leg-item"><div class="sb-leg-dot" style="background:var(--accent);"></div> Cache (180 Mo)</div>
+            <div class="sb-leg-item"><div class="sb-leg-dot" style="background:var(--gold);"></div> Hors-ligne (65 Mo)</div>
+            <div class="sb-leg-item"><div class="sb-leg-dot" style="background:var(--border-md);"></div> Libre (1.75 Go)</div>
+          </div>
+        </div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-card-header"><div class="sch-icon orange"><i class="fas fa-broom"></i></div><div class="sch-title">Nettoyage</div></div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Vider le cache</div><div class="sr-desc">Libérer ~180 Mo d'espace</div></div>
+          <div class="sr-right"><button onclick="showToast('Cache vidé (180 Mo libérés)','success')" style="padding:.42rem .9rem;border-radius:8px;background:var(--accent-d);color:var(--accent);border:1px solid rgba(224,83,12,.2);font-size:.76rem;font-weight:700;cursor:pointer;">Vider</button></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Supprimer les téléchargements</div><div class="sr-desc">Retirer tous les morceaux hors-ligne</div></div>
+          <div class="sr-right"><button onclick="showToast('Téléchargements supprimés','info')" style="padding:.42rem .9rem;border-radius:8px;background:var(--red-d);color:var(--red);border:1px solid rgba(224,82,82,.2);font-size:.76rem;font-weight:700;cursor:pointer;">Supprimer</button></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Nettoyage automatique</div><div class="sr-desc">Vider le cache si l'espace libre est inférieur à 500 Mo</div></div>
+          <div class="sr-right"><button class="toggle on" onclick="toggleSetting(this,'autoclean')"></button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ CONFIDENTIALITÉ ══ -->
+    <div class="section-panel" id="sec-confidentialite">
+      <div class="panel-heading">
+        <div class="panel-title">Confidentialité</div>
+        <div class="panel-desc">Contrôlez l'utilisation de vos données et votre visibilité.</div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-card-header"><div class="sch-icon green"><i class="fas fa-eye-slash"></i></div><div class="sch-title">Visibilité</div></div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Masquer le statut en ligne</div><div class="sr-desc">Les autres ne verront pas si vous êtes connecté</div></div>
+          <div class="sr-right"><button class="toggle" onclick="toggleSetting(this,'hideOnline')"></button></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Masquer mes playlists</div><div class="sr-desc">Rendre toutes vos playlists privées</div></div>
+          <div class="sr-right"><button class="toggle" onclick="toggleSetting(this,'hidePl')"></button></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Ne pas apparaître dans les recherches</div><div class="sr-desc">Votre profil n'apparaîtra pas dans les résultats</div></div>
+          <div class="sr-right"><button class="toggle" onclick="toggleSetting(this,'hideSearch')"></button></div>
+        </div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-card-header"><div class="sch-icon blue"><i class="fas fa-chart-simple"></i></div><div class="sch-title">Données et analytics</div></div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Partager des données anonymes</div><div class="sr-desc">Aider à améliorer l'application (aucune donnée personnelle)</div></div>
+          <div class="sr-right"><button class="toggle on" onclick="toggleSetting(this,'analytics')"></button></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Personnalisation des recommandations</div><div class="sr-desc">Utiliser votre historique pour personnaliser les suggestions</div></div>
+          <div class="sr-right"><button class="toggle on" onclick="toggleSetting(this,'reco')"></button></div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Télécharger mes données</div><div class="sr-desc">Recevoir une copie de toutes vos données</div></div>
+          <div class="sr-right"><button onclick="showToast('Demande envoyée, vous recevrez un email','info')" style="padding:.42rem .9rem;border-radius:8px;background:var(--blue-d);color:var(--blue);border:1px solid rgba(91,141,238,.2);font-size:.76rem;font-weight:700;cursor:pointer;">Demander</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ AIDE ══ -->
+    <div class="section-panel" id="sec-aide">
+      <div class="panel-heading">
+        <div class="panel-title">Aide & Support</div>
+        <div class="panel-desc">Trouvez de l'aide ou contactez notre équipe.</div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-card-header"><div class="sch-icon blue"><i class="fas fa-circle-question"></i></div><div class="sch-title">Assistance</div></div>
+        <div class="setting-row" style="cursor:pointer;" onclick="showToast('Centre d\'aide en cours de construction','info')">
+          <div class="sr-info"><div class="sr-label">Centre d'aide</div><div class="sr-desc">FAQ et guides d'utilisation</div></div>
+          <div class="sr-right"><i class="fas fa-chevron-right" style="color:var(--text-3);font-size:.78rem;"></i></div>
+        </div>
+        <div class="setting-row" style="cursor:pointer;" onclick="showToast('Redirection vers le support…','info')">
+          <div class="sr-info"><div class="sr-label">Contacter le support</div><div class="sr-desc"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="52212722223d202612263d223f27213b2327373c3b3537207c3c37">[email&#160;protected]</a></div></div>
+          <div class="sr-right"><i class="fas fa-chevron-right" style="color:var(--text-3);font-size:.78rem;"></i></div>
+        </div>
+        <div class="setting-row" style="cursor:pointer;" onclick="showToast('Formulaire de retour ouvert','info')">
+          <div class="sr-info"><div class="sr-label">Envoyer un feedback</div><div class="sr-desc">Suggérez des améliorations</div></div>
+          <div class="sr-right"><i class="fas fa-chevron-right" style="color:var(--text-3);font-size:.78rem;"></i></div>
+        </div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-card-header"><div class="sch-icon gold"><i class="fas fa-info-circle"></i></div><div class="sch-title">À propos</div></div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Version de l'application</div></div>
+          <div class="sr-right" style="font-size:.8rem;color:var(--text-3);">v1.0.0-beta</div>
+        </div>
+        <div class="setting-row">
+          <div class="sr-info"><div class="sr-label">Dernière mise à jour</div></div>
+          <div class="sr-right" style="font-size:.8rem;color:var(--text-3);">Fév. 2026</div>
+        </div>
+        <div class="setting-row" style="cursor:pointer;" onclick="showToast('Conditions d\'utilisation','info')">
+          <div class="sr-info"><div class="sr-label">Conditions d'utilisation</div></div>
+          <div class="sr-right"><i class="fas fa-chevron-right" style="color:var(--text-3);font-size:.78rem;"></i></div>
+        </div>
+        <div class="setting-row" style="cursor:pointer;" onclick="showToast('Politique de confidentialité','info')">
+          <div class="sr-info"><div class="sr-label">Politique de confidentialité</div></div>
+          <div class="sr-right"><i class="fas fa-chevron-right" style="color:var(--text-3);font-size:.78rem;"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ DANGER ZONE ══ -->
+    <div class="section-panel" id="sec-danger">
+      <div class="panel-heading">
+        <div class="panel-title" style="color:var(--red);">Zone danger</div>
+        <div class="panel-desc">Ces actions sont irréversibles. Procédez avec précaution.</div>
+      </div>
+      <div class="setting-card" style="border-color:rgba(224,82,82,.15);">
+        <div class="setting-card-header"><div class="sch-icon red"><i class="fas fa-triangle-exclamation"></i></div><div class="sch-title" style="color:var(--red);">Actions irréversibles</div></div>
+        <div class="danger-row">
+          <div class="dr-info"><div class="dr-label">Se déconnecter</div><div class="dr-desc">Terminer la session en cours</div></div>
+          <button class="danger-btn logout" onclick="confirmLogout()"><i class="fas fa-right-from-bracket" style="margin-right:.4rem;"></i>Déconnexion</button>
+        </div>
+        <div class="danger-row">
+          <div class="dr-info"><div class="dr-label">Réinitialiser les préférences</div><div class="dr-desc">Remettre tous les paramètres à zéro</div></div>
+          <button class="danger-btn warn" onclick="confirmReset()">Réinitialiser</button>
+        </div>
+        <div class="danger-row">
+          <div class="dr-info"><div class="dr-label">Supprimer le compte</div><div class="dr-desc">Suppression définitive de toutes vos données</div></div>
+          <button class="danger-btn warn" onclick="confirmDelete()"><i class="fas fa-trash-can" style="margin-right:.4rem;"></i>Supprimer</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Bottom nav mobile -->
+<nav class="bottom-nav" id="bottomNav">
+  <div class="bn-item active" onclick="goSection('quickaccess',null)"><i class="fas fa-grid-2"></i>Pages</div>
+  <div class="bn-item" onclick="goSection('profil',null)"><i class="fas fa-user"></i>Profil</div>
+  <div class="bn-item" onclick="goSection('compte',null)"><i class="fas fa-shield-halved"></i>Sécu.</div>
+  <div class="bn-item" onclick="goSection('notifs',null)"><i class="fas fa-bell"></i>Notifs</div>
+  <div class="bn-item" onclick="goSection('apparence',null)"><i class="fas fa-palette"></i>Style</div>
+  <div class="bn-item" onclick="goSection('audio',null)"><i class="fas fa-headphones"></i>Audio</div>
+  <div class="bn-item" onclick="goSection('confidentialite',null)"><i class="fas fa-eye-slash"></i>Privé</div>
+  <div class="bn-item" onclick="goSection('danger',null)" style="color:var(--red);"><i class="fas fa-triangle-exclamation"></i>Danger</div>
+</nav>
+
+<!-- Confirm Modal -->
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal">
+    <div class="modal-icon" id="modalIcon"><i class="fas fa-trash-can"></i></div>
+    <div class="modal-title" id="modalTitle">Confirmer</div>
+    <div class="modal-desc" id="modalDesc">—</div>
+    <input class="modal-confirm-input" id="modalInput" placeholder="" style="display:none;">
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()">Annuler</button>
+      <button class="modal-confirm-btn" id="modalConfirmBtn" onclick="executeConfirm()">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"><i class="fas fa-circle-info"></i><span id="toastMsg"></span></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const $ = id => document.getElementById(id);
+let pendingAction = null;
+let hasChanges = false;
+
+/* ══ INIT ══ */
+document.addEventListener('DOMContentLoaded', () => {
+    // Afficher le bon menu rapide selon le rôle
+    if (typeof TMN !== 'undefined') {
+      if (TMN.isArtist()) {
+        document.getElementById('listenerQuickAccess').style.display = 'none';
+        document.getElementById('artistQuickAccess').style.display  = 'block';
+      }
+    }
+    // Afficher "Mes pages" par défaut au chargement
+    goSection('quickaccess', document.querySelector('[data-section="quickaccess"]'));
+
+    loadUserData();
+    buildThemeGrid();
+});
+
+function loadUserData() {
+    const u = JSON.parse(localStorage.getItem('tmn_user') || 'null');
+    if (!u) return;
+    if ($('displayName'))  $('displayName').value  = u.name  || '';
+    if ($('emailField'))   $('emailField').value   = u.email || '';
+    if ($('avatarName'))   $('avatarName').textContent  = u.name  || 'Utilisateur';
+    if ($('avatarRole'))   $('avatarRole').textContent  = (u.musicType ? 'Artiste' : 'Auditeur') + ' · TOP Musique Niger';
+    updateCount('displayName','nameCount',40);
+
+    const wrap = $('avatarDisplay');
+    if (u.picture) {
+        wrap.outerHTML = `<img class="avatar-img" id="avatarDisplay" src="${u.picture}" alt="" referrerpolicy="no-referrer">`;
+    } else {
+        wrap.textContent = (u.name || 'T')[0].toUpperCase();
+    }
+
+    // OAuth status
+    if (u.provider === 'google')   updateOAuthStatus('google',   true);
+    if (u.provider === 'facebook') updateOAuthStatus('facebook', true);
+}
+
+/* ══ SECTION NAV ══ */
+function goSection(id, el) {
+    document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+    document.querySelectorAll('.bn-item').forEach(i => i.classList.remove('active'));
+
+    const panel = $('sec-' + id);
+    if (panel) panel.classList.add('active');
+    if (el)    el.classList.add('active');
+
+    // Mobile bottom nav
+    const bnItems = document.querySelectorAll('.bn-item');
+    bnItems.forEach(i => { if (i.textContent.trim().toLowerCase().includes(id.slice(0,4))) i.classList.add('active'); });
+
+    $('mainContent').scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ══ TOGGLE ══ */
+function toggleSetting(btn, key) {
+    btn.classList.toggle('on');
+    const on = btn.classList.contains('on');
+    if (key) {
+        const s = JSON.parse(localStorage.getItem('tmn_settings') || '{}');
+        s[key] = on;
+        localStorage.setItem('tmn_settings', JSON.stringify(s));
+    }
+    onFieldChange();
+    showToast(on ? 'Activé' : 'Désactivé', 'info');
+}
+
+/* ══ SAVE ══ */
+function onFieldChange() {
+    hasChanges = true;
+    $('hdrSave').classList.add('show');
+}
+
+function saveChanges() {
+    const u = JSON.parse(localStorage.getItem('tmn_user') || '{}');
+    u.name   = $('displayName')?.value || u.name;
+    u.email  = $('emailField')?.value  || u.email;
+    u.region = $('regionField')?.value || u.region;
+    u.bio    = $('bioField')?.value    || u.bio;
+    u.genre  = $('genreField')?.value  || u.genre;
+    localStorage.setItem('tmn_user', JSON.stringify(u));
+
+    hasChanges = false;
+    $('hdrSave').classList.remove('show');
+    showToast('Modifications enregistrées ✓', 'success');
+
+    if ($('avatarName')) $('avatarName').textContent = u.name || 'Utilisateur';
+}
+
+/* ══ COUNTERS ══ */
+function updateCount(inputId, countId, max) {
+    const el = $(inputId), cnt = $(countId);
+    if (!el || !cnt) return;
+    const len = (el.value || el.textContent || '').length;
+    cnt.textContent = `${len}/${max}`;
+    cnt.style.color = len >= max * 0.9 ? 'var(--red)' : 'var(--text-3)';
+}
+
+/* ══ AVATAR ══ */
+function triggerAvatarUpload() {
+    $('avatarInput').click();
+}
+function onAvatarChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        const wrap = document.querySelector('.avatar-wrap');
+        const old  = wrap.querySelector('.avatar-placeholder, .avatar-img');
+        if (old) {
+            old.outerHTML = `<img class="avatar-img" id="avatarDisplay" src="${ev.target.result}" alt="">`;
+        }
+        const u = JSON.parse(localStorage.getItem('tmn_user') || '{}');
+        u.picture = ev.target.result;
+        localStorage.setItem('tmn_user', JSON.stringify(u));
+        onFieldChange();
+        showToast('Photo mise à jour ✓', 'success');
+    };
+    reader.readAsDataURL(file);
+}
+function removeAvatar() {
+    const wrap = document.querySelector('.avatar-wrap');
+    const old  = wrap.querySelector('.avatar-placeholder, .avatar-img');
+    const u    = JSON.parse(localStorage.getItem('tmn_user') || '{}');
+    const init = (u.name || 'T')[0].toUpperCase();
+    if (old) old.outerHTML = `<div class="avatar-placeholder" id="avatarDisplay">${init}</div>`;
+    delete u.picture;
+    localStorage.setItem('tmn_user', JSON.stringify(u));
+    onFieldChange();
+    showToast('Photo supprimée', 'info');
+}
+
+/* ══ PASSWORD STRENGTH ══ */
+function checkPwdStrength() {
+    const v   = $('newPwd').value;
+    const box = $('pwdStrength');
+    const segs= document.querySelectorAll('.pwd-seg');
+    const lbl = $('pwdStrengthLabel');
+    if (!v) { box.style.display='none'; return; }
+    box.style.display = 'block';
+    let score = 0;
+    if (v.length >= 8)  score++;
+    if (/[A-Z]/.test(v)) score++;
+    if (/[0-9]/.test(v)) score++;
+    if (/[^A-Za-z0-9]/.test(v)) score++;
+    const colors = ['var(--red)','var(--accent)','var(--gold)','var(--green)'];
+    const labels = ['Très faible','Faible','Moyen','Fort'];
+    segs.forEach((s,i) => s.style.background = i < score ? colors[score-1] : 'var(--border)');
+    lbl.textContent = labels[score-1] || '';
+    lbl.style.color = colors[score-1] || 'var(--text-3)';
+}
+
+/* ══ OAUTH STATUS ══ */
+function updateOAuthStatus(provider, connected) {
+    const status = $(`${provider}-status`);
+    const btn    = $(`${provider}-btn`);
+    if (status) { status.textContent = connected ? '● Connecté' : '○ Non connecté'; status.className = 'ca-status' + (connected ? ' connected' : ''); }
+    if (btn)    { btn.textContent = connected ? 'Déconnecter' : 'Connecter'; btn.className = 'ca-btn ' + (connected ? 'disconnect' : 'connect'); }
+}
+function toggleOAuth(provider) {
+    const status = $(`${provider}-status`);
+    const connected = status?.classList.contains('connected');
+    updateOAuthStatus(provider, !connected);
+    showToast(connected ? `${provider.charAt(0).toUpperCase()+provider.slice(1)} déconnecté` : `${provider.charAt(0).toUpperCase()+provider.slice(1)} connecté`, connected?'info':'success');
+}
+
+/* ══ THEME GRID ══ */
+const THEMES = [
+    {name:'Orange',  c:'#e0530c'},
+    {name:'Or',      c:'#c9a84c'},
+    {name:'Vert',    c:'#0c7e40'},
+    {name:'Bleu',    c:'#5b8dee'},
+    {name:'Violet',  c:'#9c27b0'},
+    {name:'Rose',    c:'#e91e63'},
+    {name:'Cyan',    c:'#00838f'},
+    {name:'Rouge',   c:'#e05252'},
+];
+function buildThemeGrid() {
+    const g = $('themeGrid'); if (!g) return;
+    THEMES.forEach((t,i) => {
+        const el = document.createElement('div');
+        el.className = 'theme-opt' + (i===0 ? ' selected' : '');
+        el.style.background = t.c;
+        el.title = t.name;
+        el.onclick = () => {
+            document.querySelectorAll('.theme-opt').forEach(x => x.classList.remove('selected'));
+            el.classList.add('selected');
+            document.documentElement.style.setProperty('--accent', t.c);
+            document.documentElement.style.setProperty('--accent-d', t.c + '20');
+            document.documentElement.style.setProperty('--accent-g', t.c + '55');
+            showToast(`Thème ${t.name} appliqué`, 'success');
+            onFieldChange();
+        };
+        g.appendChild(el);
+    });
+}
+
+/* ══ CONFIRM MODALS ══ */
+function openModal({icon, iconColor, title, desc, confirmText, confirmColor, inputPlaceholder, action}) {
+    $('modalIcon').style.background = iconColor + '20';
+    $('modalIcon').style.color = iconColor;
+    $('modalIcon').innerHTML = `<i class="${icon}"></i>`;
+    $('modalTitle').textContent = title;
+    $('modalDesc').textContent  = desc;
+    $('modalConfirmBtn').textContent = confirmText;
+    $('modalConfirmBtn').style.background = confirmColor;
+    $('modalConfirmBtn').style.boxShadow = `0 3px 12px ${iconColor}55`;
+    if (inputPlaceholder) {
+        $('modalInput').placeholder = inputPlaceholder;
+        $('modalInput').style.display = 'block';
+        $('modalInput').value = '';
+        $('modalConfirmBtn').disabled = true;
+        $('modalInput').oninput = () => {
+            $('modalConfirmBtn').disabled = $('modalInput').value.trim() !== inputPlaceholder;
+        };
+    } else {
+        $('modalInput').style.display = 'none';
+        $('modalConfirmBtn').disabled = false;
+    }
+    pendingAction = action;
+    $('modalBg').classList.add('open');
+}
+function closeModal() { $('modalBg').classList.remove('open'); pendingAction = null; }
+function executeConfirm() { if (pendingAction) pendingAction(); closeModal(); }
+
+function confirmLogout() {
+    openModal({icon:'fas fa-right-from-bracket', iconColor:'var(--accent)', title:'Se déconnecter ?', desc:'Vous serez redirigé vers la page de connexion. Vos données locales seront conservées.', confirmText:'Se déconnecter', confirmColor:'var(--accent)',
+        action:() => { localStorage.removeItem('tmn_connected'); localStorage.removeItem('tmn_token'); showToast('Déconnecté avec succès','info'); setTimeout(()=>window.location.href='login.html',1200); }
+    });
+}
+function confirmReset() {
+    openModal({icon:'fas fa-rotate-left', iconColor:'#e05252', title:'Réinitialiser les paramètres ?', desc:'Tous vos paramètres seront remis à zéro. Votre compte et vos données ne seront pas affectés.', confirmText:'Réinitialiser', confirmColor:'var(--red)',
+        action:() => { localStorage.removeItem('tmn_settings'); showToast('Paramètres réinitialisés','info'); setTimeout(()=>location.reload(),800); }
+    });
+}
+function confirmDelete() {
+    openModal({icon:'fas fa-trash-can', iconColor:'#e05252', title:'Supprimer le compte ?', desc:'Cette action est irréversible. Toutes vos données, playlists et historique seront supprimés définitivement. Tapez SUPPRIMER pour confirmer.', confirmText:'Supprimer définitivement', confirmColor:'var(--red)', inputPlaceholder:'SUPPRIMER',
+        action:() => { localStorage.clear(); showToast('Compte supprimé','error'); setTimeout(()=>window.location.href='login.html',1500); }
+    });
+}
+
+/* ══ TOAST ══ */
+function showToast(msg, type='info') {
+    const t = $('toast'); $('toastMsg').textContent = msg;
+    t.querySelector('i').className = 'fas ' + {'success':'fa-circle-check','error':'fa-circle-exclamation'}[type] || 'fa-circle-info';
+    t.querySelector('i').style.color = {'success':'#10b981','error':'#ef4444'}[type] || '';
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// Init
+TMN.init({ requireAuth: true, activeNav: 'profile' });
+</script>
+</body>
+</html>

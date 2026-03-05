@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e0530c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Créer un compte – TOP Musique Niger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --bg:#09090b;--card:#16161c;--card-h:#1e1e26;
+  --border:rgba(255,255,255,.08);--border-md:rgba(255,255,255,.14);
+  --accent:#e0530c;--accent-d:rgba(224,83,12,.12);--accent-g:rgba(224,83,12,.3);
+  --gold:#c9a84c;--gold-d:rgba(201,168,76,.12);--gold-g:rgba(201,168,76,.3);
+  --green:#0c7e40;--green-d:rgba(12,126,64,.12);
+  --blue:#5b8dee;--blue-d:rgba(91,141,238,.12);
+  --red:#e05252;--red-d:rgba(224,82,82,.12);
+  --text:#f0ece4;--text-2:#8a8790;--text-3:#4a4850;
+  --radius:12px;--radius-lg:18px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{min-height:100vh;background:var(--bg);font-family:'Instrument Sans',sans-serif;color:var(--text);
+  display:flex;align-items:center;justify-content:center;padding:1.2rem;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 20% 20%,rgba(201,168,76,.06),transparent 50%),
+  radial-gradient(ellipse at 80% 80%,rgba(224,83,12,.05),transparent 50%);}
+.wrapper{width:100%;max-width:460px;position:relative;z-index:1;animation:fadeUp .4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.logo-row{display:flex;align-items:center;gap:.75rem;justify-content:center;margin-bottom:1.8rem;}
+.logo-icon{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,var(--gold),#7a4f0a);
+  display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;
+  font-size:1.2rem;font-weight:800;color:#07070a;box-shadow:0 4px 16px var(--gold-g);}
+.logo-name{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;
+  background:linear-gradient(135deg,var(--gold),#f0e8d0);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:1.6rem 1.5rem;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.card-title{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;text-align:center;margin-bottom:.2rem;}
+.card-sub{font-size:.82rem;color:var(--text-2);text-align:center;margin-bottom:1.3rem;}
+
+/* ══ ROLE GRID ══ */
+.section-lbl{font-size:.68rem;font-weight:700;color:var(--text-3);text-transform:uppercase;
+  letter-spacing:.08em;margin-bottom:.6rem;}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:1.3rem;}
+.role-card{background:var(--card-h);border:2px solid var(--border);border-radius:var(--radius-lg);
+  padding:1rem .85rem;cursor:pointer;transition:all .22s;display:flex;flex-direction:column;align-items:center;gap:.45rem;text-align:center;}
+.role-card:hover{border-color:var(--border-md);transform:translateY(-2px);}
+.role-card.selected.listener{border-color:var(--blue);background:var(--blue-d);box-shadow:0 4px 20px rgba(91,141,238,.2);}
+.role-card.selected.artist{border-color:var(--accent);background:var(--accent-d);box-shadow:0 4px 20px var(--accent-g);}
+.rc-icon{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.role-card.listener .rc-icon{background:var(--blue-d);}
+.role-card.artist   .rc-icon{background:var(--accent-d);}
+.role-card.selected.listener .rc-icon{background:rgba(91,141,238,.2);}
+.role-card.selected.artist   .rc-icon{background:rgba(224,83,12,.18);}
+.rc-title{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:800;}
+.rc-desc{font-size:.68rem;color:var(--text-2);line-height:1.4;}
+.rc-feats{display:flex;flex-direction:column;gap:.22rem;width:100%;margin-top:.3rem;}
+.rc-feat{font-size:.64rem;color:var(--text-2);display:flex;align-items:center;gap:.28rem;text-align:left;}
+.rc-feat i{font-size:.52rem;flex-shrink:0;}
+.role-card.selected.listener .rc-feat{color:rgba(91,141,238,.9);}
+.role-card.selected.artist   .rc-feat{color:rgba(224,83,12,.9);}
+
+/* ══ FIELDS ══ */
+.field{margin-bottom:.85rem;}
+.field-label{font-size:.68rem;font-weight:700;color:var(--text-2);text-transform:uppercase;
+  letter-spacing:.06em;margin-bottom:.38rem;display:block;}
+.field-wrap{position:relative;}
+.f-ico{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);
+  color:var(--text-3);font-size:.75rem;pointer-events:none;transition:color .2s;}
+.field-wrap:focus-within .f-ico{color:var(--gold);}
+.field-input{width:100%;padding:.72rem 1rem .72rem 2.5rem;background:var(--card-h);
+  border:1.5px solid var(--border);border-radius:var(--radius);
+  color:var(--text);font-family:'Instrument Sans',sans-serif;font-size:.88rem;
+  outline:none;transition:all .22s;}
+.field-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-d);}
+.field-input::placeholder{color:var(--text-3);}
+.field-input.ok{border-color:var(--green);}
+.field-input.err{border-color:var(--red);}
+.field-error{font-size:.7rem;color:var(--red);margin-top:.28rem;display:none;}
+.field-error.show{display:block;}
+.pwd-eye{position:absolute;right:.85rem;top:50%;transform:translateY(-50%);
+  color:var(--text-3);font-size:.78rem;cursor:pointer;transition:color .2s;}
+.pwd-eye:hover{color:var(--text-2);}
+
+/* Strength */
+.strength{margin-top:.38rem;display:none;}
+.str-bars{display:flex;gap:3px;}
+.str-b{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.07);transition:background .3s;}
+.str-lbl{font-size:.66rem;margin-top:.18rem;color:var(--text-3);}
+
+/* ══ SUBMIT ══ */
+.submit-btn{width:100%;height:50px;border-radius:100px;
+  background:linear-gradient(135deg,var(--gold),#9a6c10);
+  color:#07070a;font-family:'Syne',sans-serif;font-size:.92rem;font-weight:800;
+  border:none;cursor:pointer;transition:all .25s;
+  box-shadow:0 4px 18px var(--gold-g);display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:1rem;}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 26px var(--gold-g);}
+.submit-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+.submit-btn.is-artist{background:linear-gradient(135deg,var(--accent),#b04008);
+  box-shadow:0 4px 18px var(--accent-g);}
+.submit-btn.is-artist:hover{box-shadow:0 8px 26px var(--accent-g);}
+
+/* Divider + OAuth */
+.divider{display:flex;align-items:center;gap:.7rem;margin:1rem 0;}
+.div-line{flex:1;height:1px;background:var(--border);}
+.div-txt{font-size:.7rem;color:var(--text-3);}
+.oauth-btn{width:100%;height:43px;border-radius:100px;background:var(--card-h);border:1.5px solid var(--border);
+  color:var(--text);font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:.5rem;}
+.oauth-btn:hover{border-color:var(--border-md);}
+
+.card-footer{text-align:center;margin-top:1rem;font-size:.8rem;color:var(--text-2);}
+.card-footer a{color:var(--gold);font-weight:600;cursor:pointer;}
+.card-footer a:hover{color:var(--text);}
+
+/* ══ SUCCESS ══ */
+.success-ov{position:fixed;inset:0;background:var(--bg);z-index:500;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;
+  opacity:0;pointer-events:none;transition:opacity .45s;}
+.success-ov.show{opacity:1;pointer-events:all;}
+.suc-icon{font-size:3.8rem;animation:bounce .55s cubic-bezier(.22,1,.36,1) both;}
+@keyframes bounce{from{opacity:0;transform:scale(0) rotate(-15deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+.suc-title{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;text-align:center;}
+.suc-sub{font-size:.86rem;color:var(--text-2);text-align:center;max-width:290px;line-height:1.6;}
+.suc-role{font-size:.76rem;font-weight:700;padding:.38rem 1rem;border-radius:100px;margin-top:.3rem;}
+.suc-role.artist  {background:var(--accent-d);color:var(--accent);border:1px solid rgba(224,83,12,.3);}
+.suc-role.listener{background:var(--blue-d);color:var(--blue);border:1px solid rgba(91,141,238,.3);}
+.suc-bar{width:200px;height:3px;background:var(--border);border-radius:2px;margin-top:.9rem;overflow:hidden;}
+.suc-fill{height:100%;background:var(--gold);border-radius:2px;animation:fillBar 2.4s linear forwards;}
+@keyframes fillBar{from{width:0}to{width:100%}}
+</style>
+</head>
+<body>
+<script src="app.js"></script>
+<script src="tmn-api.js"></script>
+
+<div class="wrapper">
+  <div class="logo-row">
+    <div class="logo-icon">T</div>
+    <div class="logo-name">TOP Musique Niger</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Créer votre compte</div>
+    <div class="card-sub">Rejoignez la communauté musicale nigérienne</div>
+
+    <!-- ROLE -->
+    <div class="section-lbl">Je suis un…</div>
+    <div class="role-grid">
+      <div class="role-card listener" id="roleListener" onclick="selectRole('listener')">
+        <div class="rc-icon">🎧</div>
+        <div class="rc-title">Auditeur</div>
+        <div class="rc-desc">J'écoute & découvre</div>
+        <div class="rc-feats">
+          <div class="rc-feat"><i class="fas fa-check"></i>Favoris & playlists</div>
+          <div class="rc-feat"><i class="fas fa-check"></i>Historique d'écoute</div>
+          <div class="rc-feat"><i class="fas fa-check"></i>Classements live</div>
+          <div class="rc-feat"><i class="fas fa-check"></i>Commentaires & avis</div>
+        </div>
+      </div>
+      <div class="role-card artist" id="roleArtist" onclick="selectRole('artist')">
+        <div class="rc-icon">🎤</div>
+        <div class="rc-title">Artiste</div>
+        <div class="rc-desc">Je publie ma musique</div>
+        <div class="rc-feats">
+          <div class="rc-feat"><i class="fas fa-check"></i>Publier des morceaux</div>
+          <div class="rc-feat"><i class="fas fa-check"></i>Stats & analytics</div>
+          <div class="rc-feat"><i class="fas fa-check"></i>Top & classements</div>
+          <div class="rc-feat"><i class="fas fa-check"></i>Profil artiste vérifié</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FIELDS -->
+    <div class="field">
+      <label class="field-label">Nom d'affichage</label>
+      <div class="field-wrap">
+        <i class="fas fa-user f-ico"></i>
+        <input class="field-input" id="nameInp" type="text" placeholder="Votre nom ou pseudo…" oninput="vName()">
+      </div>
+      <div class="field-error" id="nameErr">Minimum 2 caractères requis</div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Email</label>
+      <div class="field-wrap">
+        <i class="fas fa-envelope f-ico"></i>
+        <input class="field-input" id="emailInp" type="email" placeholder="vous@exemple.com" oninput="vEmail()">
+      </div>
+      <div class="field-error" id="emailErr">Adresse email invalide</div>
+    </div>
+
+    <!-- Champs artiste uniquement -->
+    <div id="artistFields" style="display:none;">
+      <div class="field">
+        <label class="field-label">Région</label>
+        <div class="field-wrap">
+          <i class="fas fa-map-marker-alt f-ico"></i>
+          <select class="field-input" id="regionInp" style="padding-left:2.5rem;">
+            <option value="">Votre région…</option>
+            <option>Niamey</option><option>Zinder</option><option>Maradi</option>
+            <option>Agadez</option><option>Tahoua</option><option>Dosso</option>
+            <option>Tillabéri</option><option>Diffa</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Genre musical</label>
+        <div class="field-wrap">
+          <i class="fas fa-music f-ico"></i>
+          <select class="field-input" id="genreInp" style="padding-left:2.5rem;">
+            <option value="">Votre style…</option>
+            <option>Afrobeat</option><option>Rap</option><option>Gospel</option>
+            <option>R&B</option><option>Zouk</option><option>Mandé</option><option>Haoussa</option><option>Autre</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Mot de passe</label>
+      <div class="field-wrap">
+        <i class="fas fa-lock f-ico"></i>
+        <input class="field-input" id="pwdInp" type="password" placeholder="Minimum 8 caractères" oninput="vPwd()">
+        <span class="pwd-eye" onclick="toggleEye('pwdInp',this)"><i class="fas fa-eye"></i></span>
+      </div>
+      <div class="strength" id="strengthWrap">
+        <div class="str-bars"><div class="str-b" id="s1"></div><div class="str-b" id="s2"></div><div class="str-b" id="s3"></div><div class="str-b" id="s4"></div></div>
+        <div class="str-lbl" id="strLbl"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Confirmer le mot de passe</label>
+      <div class="field-wrap">
+        <i class="fas fa-lock f-ico"></i>
+        <input class="field-input" id="pwd2Inp" type="password" placeholder="Répéter le mot de passe" oninput="vPwd2()">
+        <span class="pwd-eye" onclick="toggleEye('pwd2Inp',this)"><i class="fas fa-eye"></i></span>
+      </div>
+      <div class="field-error" id="pwd2Err">Les mots de passe ne correspondent pas</div>
+    </div>
+
+    <div class="divider"><div class="div-line"></div><div class="div-txt">ou s'inscrire avec</div><div class="div-line"></div></div>
+    <div class="oauth-btn" onclick="oauthReg('google')">
+      <svg width="17" height="17" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Continuer avec Google
+    </div>
+    <div class="oauth-btn" onclick="oauthReg('facebook')" style="color:#1877f2;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="#1877f2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      Continuer avec Facebook
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="doRegister()" disabled>
+      <i class="fas fa-user-plus"></i>
+      <span id="submitLbl">Créer mon compte</span>
+    </button>
+
+    <div class="card-footer">Déjà un compte ? <a onclick="location.href='login.html'">Se connecter</a></div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="success-ov" id="sucOv">
+  <div class="suc-icon" id="sucIcon">🎉</div>
+  <div class="suc-title" id="sucTitle">Compte créé !</div>
+  <div class="suc-sub" id="sucSub"></div>
+  <div class="suc-role" id="sucRole"></div>
+  <div class="suc-bar"><div class="suc-fill"></div></div>
+  <div style="font-size:.7rem;color:#3d3c43;margin-top:.4rem;">Redirection en cours…</div>
+</div>
+
+<script src="app.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+let role=null;
+
+function selectRole(r){
+  role=r;
+  $('roleListener').classList.toggle('selected', r==='listener');
+  $('roleArtist').classList.toggle('selected', r==='artist');
+  $('artistFields').style.display = r==='artist' ? 'block' : 'none';
+  $('submitBtn').classList.toggle('is-artist', r==='artist');
+  validate();
+}
+
+/* Validations */
+function vName(){
+  const v=$('nameInp').value.trim(),ok=v.length>=2;
+  $('nameInp').className='field-input '+(v?ok?'ok':'err':'');
+  $('nameErr').classList.toggle('show',v.length>0&&!ok);validate();
+}
+function vEmail(){
+  const v=$('emailInp').value.trim(),ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  $('emailInp').className='field-input '+(v?ok?'ok':'err':'');
+  $('emailErr').classList.toggle('show',v.length>0&&!ok);validate();
+}
+function vPwd(){
+  const v=$('pwdInp').value,w=$('strengthWrap');
+  w.style.display=v?'block':'none';
+  let s=0;if(v.length>=8)s++;if(/[A-Z]/.test(v))s++;if(/\d/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;
+  const C=['#e05252','#e0530c','#c9a84c','#0c7e40'],L=['Très faible','Faible','Moyen','Fort'];
+  for(let i=1;i<=4;i++) $('s'+i).style.background=i<=s?C[s-1]:'rgba(255,255,255,.07)';
+  $('strLbl').textContent=v?L[s-1]||'':'';$('strLbl').style.color=C[s-1]||'#4a4850';
+  validate();
+}
+function vPwd2(){
+  const v1=$('pwdInp').value,v2=$('pwd2Inp').value,ok=v1===v2&&v2.length>0;
+  $('pwd2Inp').className='field-input '+(v2?ok?'ok':'err':'');
+  $('pwd2Err').classList.toggle('show',v2.length>0&&!ok);validate();
+}
+function toggleEye(id,btn){
+  const i=$(id);const s=i.type==='password';i.type=s?'text':'password';
+  btn.querySelector('i').className=s?'fas fa-eye-slash':'fas fa-eye';
+}
+function validate(){
+  const name=$('nameInp').value.trim().length>=2;
+  const email=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($('emailInp').value.trim());
+  const pwd=$('pwdInp').value.length>=8;
+  const pwd2=$('pwdInp').value===$('pwd2Inp').value&&$('pwd2Inp').value.length>0;
+  $('submitBtn').disabled=!(name&&email&&pwd&&pwd2&&role);
+}
+
+async function doRegister(){
+  const name  = $('nameInp').value.trim();
+  const email = $('emailInp').value.trim();
+  const pwd   = $('pwdInp')?.value || '';
+
+  if (!name || !email) { showToastReg('Remplissez tous les champs','error'); return; }
+
+  setLoading(true);
+  try {
+    const data = await TMNAPI.auth.register({
+      name, email, password: pwd || 'demo1234',
+      role,
+      region: $('regionInp')?.value || '',
+      genre:  $('genreInp')?.value  || '',
+    });
+    const user = data.user || { name, email, role, musicType: role==='artist'?'artist':'', onboarded:true };
+    TMN.login(user);
+    showSuccess(user);
+  } catch(err) {
+    // Fallback local si API indisponible
+    const user = {
+      name, email, role, musicType: role==='artist'?'artist':'',
+      region: $('regionInp')?.value||'', genre: $('genreInp')?.value||'',
+      onboarded:true, provider:'email', createdAt:Date.now()
+    };
+    TMN.login(user);
+    showSuccess(user);
+  } finally {
+    setLoading(false);
+  }
+}
+
+function setLoading(on) {
+  const btn = $('submitBtn');
+  if (!btn) return;
+  btn.disabled = on;
+  btn.innerHTML = on
+    ? '<i class="fas fa-spinner fa-spin"></i> Création…'
+    : '<i class="fas fa-user-plus"></i> Créer mon compte';
+}
+
+function showToastReg(msg, type) {
+  // Réutilise le toast existant si disponible
+  const t = document.getElementById('toast');
+  if (t) { t.querySelector?.('span') && (t.querySelector('span').textContent = msg); t.className='show'; setTimeout(()=>t.className='',2500); }
+  else alert(msg);
+}
+
+function oauthReg(provider){
+  if(!role){alert('Choisissez d\'abord votre type de compte');return;}
+  const user={
+    name:provider==='google'?'Utilisateur Google':'Utilisateur Facebook',
+    email:`user@${provider}.com`,role,musicType:role==='artist'?'artist':'',
+    onboarded:true,provider,createdAt:Date.now()
+  };
+  TMN.login(user);showSuccess(user);
+}
+
+function showSuccess(user){
+  const isA=user.role==='artist';
+  $('sucIcon').textContent=isA?'🎤':'🎧';
+  $('sucTitle').textContent=`Bienvenue, ${user.name} !`;
+  $('sucSub').textContent=isA
+    ?'Votre espace artiste est prêt. Publiez votre première track !'
+    :'Votre espace auditeur est prêt. Explorez la musique nigérienne !';
+  $('sucRole').textContent=isA?'🎤 Compte Artiste activé':'🎧 Compte Auditeur activé';
+  $('sucRole').className='suc-role '+(isA?'artist':'listener');
+  $('sucOv').classList.add('show');
+  setTimeout(()=>{ location.href=isA?'profil-artiste.html':'home.html'; },2500);
+}
+</script>
+</body>
+</html>

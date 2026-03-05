@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e0530c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Statistiques – TOP Musique Niger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --bg:#09090b;--card:#16161c;--card-h:#1e1e26;
+  --border:rgba(255,255,255,.07);--border-md:rgba(255,255,255,.12);
+  --accent:#e0530c;--ag:rgba(224,83,12,.3);--ad:rgba(224,83,12,.12);
+  --gold:#c9a84c;--gg:rgba(201,168,76,.3);--gd:rgba(201,168,76,.12);
+  --green:#0c7e40;--grd:rgba(12,126,64,.12);
+  --blue:#5b8dee;--bd:rgba(91,141,238,.12);--red:#e05252;
+  --text:#f0ece4;--t2:#8a8790;--t3:#4a4850;
+  --nav:68px;--hdr:56px;--radius:12px;--rlg:18px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{min-height:100vh;background:var(--bg);font-family:'Instrument Sans',sans-serif;color:var(--text);
+  padding-top:var(--hdr);padding-bottom:calc(var(--nav)+1rem);}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% -10%,rgba(224,83,12,.06),transparent 55%);}
+.hdr{position:fixed;top:0;left:0;right:0;height:var(--hdr);z-index:200;
+  background:rgba(9,9,11,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 1.2rem;gap:.8rem;}
+.hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;
+  background:linear-gradient(90deg,var(--accent) 33%,#f5f0e8 33%,#f5f0e8 66%,var(--green) 66%);}
+.hdr-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;flex:1;}
+.hdr-title span{color:var(--accent);}
+.hdr-btn{width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;color:var(--t2);font-size:.82rem;cursor:pointer;transition:all .2s;}
+.hdr-btn:hover{color:var(--text);}
+.main{max-width:680px;margin:0 auto;padding:1rem 1.1rem 0;}
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin-bottom:1.1rem;}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--rlg);
+  padding:.95rem 1rem;animation:fadeUp .3s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.kpi-val{font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:800;margin-bottom:.12rem;}
+.kpi-lbl{font-size:.7rem;color:var(--t2);}
+.kpi-delta{font-size:.65rem;font-weight:700;color:var(--green);margin-top:.18rem;}
+/* CHART */
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rlg);
+  padding:1rem;margin-bottom:1rem;animation:fadeUp .3s ease both;}
+.chart-title{font-family:'Syne',sans-serif;font-size:.84rem;font-weight:800;
+  display:flex;align-items:center;gap:.4rem;margin-bottom:.9rem;}
+.chart-wrap{height:120px;display:flex;align-items:flex-end;gap:4px;padding-bottom:1.5rem;position:relative;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:.2rem;position:relative;}
+.bar{width:100%;border-radius:4px 4px 0 0;transition:height .5s cubic-bezier(.22,1,.36,1);cursor:pointer;position:relative;}
+.bar:hover::after{content:attr(data-val);position:absolute;bottom:calc(100%+4px);left:50%;transform:translateX(-50%);
+  font-size:.6rem;background:var(--card-h);padding:.1rem .35rem;border-radius:4px;white-space:nowrap;color:var(--text);}
+.bar-label{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--t3);position:absolute;bottom:-1.4rem;white-space:nowrap;}
+/* BAR LISTS */
+.bar-list{display:flex;flex-direction:column;gap:.5rem;}
+.bl-row{display:flex;align-items:center;gap:.7rem;}
+.bl-label{font-size:.76rem;font-weight:600;min-width:70px;flex-shrink:0;}
+.bl-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden;}
+.bl-bar{height:100%;border-radius:100px;transition:width .7s cubic-bezier(.22,1,.36,1);}
+.bl-cnt{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--t3);min-width:36px;text-align:right;}
+/* TOP SONGS */
+.top-songs{display:flex;flex-direction:column;gap:.38rem;margin-bottom:1rem;}
+.ts{display:flex;align-items:center;gap:.8rem;padding:.62rem .85rem;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all .18s;}
+.ts:hover{background:var(--card-h);}
+.ts-rank{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--t3);min-width:18px;text-align:center;flex-shrink:0;}
+.ts-cov{width:40px;height:40px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.1rem;overflow:hidden;position:relative;}
+.ts-cov-bg{position:absolute;inset:0;filter:blur(8px);opacity:.3;transform:scale(1.4);display:flex;align-items:center;justify-content:center;font-size:2.5rem;}
+.ts-cov-em{position:relative;z-index:1;}
+.ts-info{flex:1;min-width:0;}
+.ts-title{font-size:.84rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ts-sub{font-size:.7rem;color:var(--t2);}
+.ts-right{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--t3);flex-shrink:0;text-align:right;}
+.ts-badge{font-size:.58rem;font-weight:700;padding:.1rem .38rem;border-radius:100px;margin-top:.15rem;display:inline-block;}
+/* STATUS BADGE */
+.status-badge{font-size:.58rem;font-weight:700;padding:.1rem .4rem;border-radius:100px;}
+.status-active  {background:var(--grd);color:var(--green);}
+.status-pending {background:var(--gd);color:var(--gold);}
+.status-rejected{background:var(--ad);color:var(--accent);}
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav);
+  background:rgba(9,9,11,.97);backdrop-filter:blur(24px);border-top:1px solid var(--border);
+  display:flex;justify-content:space-around;align-items:center;padding:0 .5rem;z-index:200;}
+.bottom-nav::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--accent) 33%,rgba(245,240,232,.4) 33%,rgba(245,240,232,.4) 66%,var(--green) 66%);opacity:.6;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:.2rem;flex:1;padding:.5rem;
+  color:var(--t3);font-size:.6rem;font-weight:500;text-decoration:none;transition:all .2s;}
+.nav-item i{font-size:1.18rem;}
+.nav-item.active{color:var(--accent);}
+.nav-pub i{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),#a83800);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.98rem;color:#fff;box-shadow:0 4px 16px var(--ag);margin-bottom:.1rem;}
+.nav-pub{color:var(--t2);margin-top:-10px;}
+#toast{position:fixed;bottom:calc(var(--nav)+1rem);left:50%;transform:translateX(-50%) translateY(60px);
+  opacity:0;background:var(--card);border:1px solid var(--border-md);padding:.6rem 1.2rem;
+  border-radius:100px;font-size:.82rem;z-index:9999;display:flex;align-items:center;gap:.5rem;
+  box-shadow:0 8px 28px rgba(0,0,0,.5);transition:all .32s cubic-bezier(.22,1,.36,1);}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+#toast.warn{border-color:rgba(201,168,76,.4);color:var(--gold);}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-title">📊 <span>Statistiques</span></div>
+  <div class="hdr-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></div>
+</header>
+
+<div class="main">
+  <!-- KPIs -->
+  <div class="kpi-grid" id="kpiGrid">
+    <div class="kpi"><div class="kpi-val sk" style="height:2rem;border-radius:6px;width:70%;"> </div><div class="kpi-lbl">Écoutes totales</div></div>
+    <div class="kpi"><div class="kpi-val sk" style="height:2rem;border-radius:6px;width:70%;"> </div><div class="kpi-lbl">Cette semaine</div></div>
+    <div class="kpi"><div class="kpi-val sk" style="height:2rem;border-radius:6px;width:70%;"> </div><div class="kpi-lbl">Abonnés</div></div>
+    <div class="kpi"><div class="kpi-val sk" style="height:2rem;border-radius:6px;width:70%;"> </div><div class="kpi-lbl">Note moyenne</div></div>
+  </div>
+
+  <!-- Graphe écoutes -->
+  <div class="chart-card" id="chartCard" style="animation-delay:.1s;">
+    <div class="chart-title"><i class="fas fa-chart-bar" style="color:var(--accent);font-size:.78rem;"></i> Écoutes — 7 derniers jours</div>
+    <div class="chart-wrap" id="barChart"></div>
+  </div>
+
+  <!-- Répartition genre -->
+  <div class="chart-card" id="genreCard" style="animation-delay:.15s;">
+    <div class="chart-title"><i class="fas fa-music" style="color:var(--gold);font-size:.78rem;"></i> Écoutes par genre</div>
+    <div class="bar-list" id="genreList"></div>
+  </div>
+
+  <!-- Répartition région -->
+  <div class="chart-card" id="regionCard" style="animation-delay:.2s;">
+    <div class="chart-title"><i class="fas fa-map-marker-alt" style="color:var(--blue);font-size:.78rem;"></i> Écoutes par région</div>
+    <div class="bar-list" id="regionList"></div>
+  </div>
+
+  <!-- Top morceaux artiste -->
+  <div style="font-family:Syne,sans-serif;font-size:.84rem;font-weight:800;display:flex;align-items:center;gap:.4rem;margin-bottom:.7rem;animation-delay:.25s;" class="chart-title">
+    <i class="fas fa-fire" style="color:var(--accent);font-size:.78rem;"></i> Mes morceaux
+  </div>
+  <div class="top-songs" id="topSongs"></div>
+</div>
+
+<nav class="bottom-nav" id="bottomNav"></nav>
+<div id="toast"><i class="fas fa-circle-info"></i><span id="toastMsg"></span></div>
+
+<script src="app.js"></script>
+<script src="tmn-api.js"></script>
+<script>
+TMN.init({requireAuth: true, activeNav: 'stats' });
+const user=TMN.getUser();
+const GENRE_COLOR={Afrobeat:'#c9a84c',Rap:'#e0530c',Gospel:'#0c7e40','R&B':'#5b8dee',Zouk:'#9c27b0',Mandé:'#0c7e40',Haoussa:'#e05252'};
+
+// Nav
+const nav=document.getElementById('bottomNav');
+[{icon:'fa-house',lbl:'Accueil',url:'home.html'},
+ {icon:'fa-trophy',lbl:'Top',url:'top.html'},
+ {icon:'fa-plus',lbl:'Publier',url:'publish.html',center:true},
+ {icon:'fa-chart-line',lbl:'Stats',url:'stats.html',active:true},
+ {icon:'fa-microphone',lbl:'Profil',url:'profil-artiste.html'},
+].forEach(item=>{
+  const a=document.createElement('a');a.href=item.url;
+  a.className='nav-item'+(item.active?' active':'')+(item.center?' nav-pub':'');
+  a.innerHTML=`<i class="fas ${item.icon}"></i><span>${item.lbl}</span>`;
+  nav.appendChild(a);
+});
+
+function fmt(n){return n>=1000?(n/1000).toFixed(1)+'k':String(n);}
+
+function renderKPIs(s){
+  document.getElementById('kpiGrid').innerHTML=`
+    <div class="kpi" style="animation-delay:.05s;"><div class="kpi-val" style="color:var(--accent);">${fmt(s.totalPlays)}</div><div class="kpi-lbl">Écoutes totales</div><div class="kpi-delta">↑ +${fmt(s.dayPlays)} aujourd'hui</div></div>
+    <div class="kpi" style="animation-delay:.08s;"><div class="kpi-val" style="color:var(--gold);">${fmt(s.weekPlays)}</div><div class="kpi-lbl">Cette semaine</div><div class="kpi-delta">↑ ${s.activeSongs} morceaux actifs</div></div>
+    <div class="kpi" style="animation-delay:.11s;"><div class="kpi-val" style="color:var(--blue);">${fmt(s.followers)}</div><div class="kpi-lbl">Abonnés</div><div class="kpi-delta">↑ ${fmt(s.totalFavs)} favoris</div></div>
+    <div class="kpi" style="animation-delay:.14s;"><div class="kpi-val" style="color:var(--green);">${s.avg_rating.toFixed(1)}</div><div class="kpi-lbl">Note moyenne</div><div class="kpi-delta">↑ ${s.totalSongs} morceaux publiés</div></div>`;
+}
+
+function renderBarChart(daily){
+  const chart=document.getElementById('barChart');chart.innerHTML='';
+  if(!daily.length)return;
+  const max=Math.max(...daily.map(d=>d.plays));
+  const DAYS=['L','M','M','J','V','S','D'];
+  daily.slice(-7).forEach((d,i)=>{
+    const pct=max?Math.max(8,(d.plays/max)*100):8;
+    const dayName=new Date(d.day).toLocaleDateString('fr-FR',{weekday:'short'}).slice(0,1).toUpperCase();
+    const col=document.createElement('div');col.className='bar-col';
+    col.innerHTML=`<div class="bar" data-val="${fmt(d.plays)}" style="height:${pct}%;background:linear-gradient(180deg,var(--accent),rgba(224,83,12,.4));margin-top:auto;" title="${d.day}: ${d.plays} écoutes"></div>
+      <div class="bar-label">${dayName}</div>`;
+    chart.appendChild(col);
+  });
+}
+
+function renderBarList(containerId,data,colorFn){
+  const c=document.getElementById(containerId);c.innerHTML='';
+  const max=Math.max(...data.map(d=>d.plays));
+  data.slice(0,6).forEach((d,i)=>{
+    const key=d.genre||d.region;
+    const clr=colorFn(key);
+    const pct=max?(d.plays/max)*100:0;
+    const row=document.createElement('div');row.className='bl-row';
+    row.innerHTML=`<div class="bl-label">${key}</div>
+      <div class="bl-bar-wrap"><div class="bl-bar" style="width:0%;background:${clr};"></div></div>
+      <div class="bl-cnt">${fmt(d.plays)}</div>`;
+    c.appendChild(row);
+    setTimeout(()=>row.querySelector('.bl-bar').style.width=pct+'%',50+i*80);
+  });
+}
+
+function renderTopSongs(songs){
+  const c=document.getElementById('topSongs');c.innerHTML='';
+  songs.slice(0,8).forEach((s,i)=>{
+    const clr=GENRE_COLOR[s.genre]||'#c9a84c';
+    const d=document.createElement('div');d.className='ts';d.style.animationDelay=(i*.04)+'s';
+    const statusCls='status-'+s.status;
+    d.innerHTML=`<div class="ts-rank">${i+1}</div>
+      <div class="ts-cov" style="background:${clr}18;"><div class="ts-cov-bg">${s.emoji||'🎵'}</div><div class="ts-cov-em">${s.emoji||'🎵'}</div></div>
+      <div class="ts-info"><div class="ts-title">${s.title}</div><div class="ts-sub">${s.genre} · ${fmt(s.play_count||0)} écoutes</div></div>
+      <div class="ts-right"><div>${s.avg_rating?'★ '+s.avg_rating:'—'}</div><div class="${statusCls} status-badge">${s.status==='active'?'Actif':s.status==='pending'?'En attente':'Rejeté'}</div></div>`;
+    d.onclick=()=>{sessionStorage.setItem('tmn_current_song',JSON.stringify(s));location.href='player.html';};
+    c.appendChild(d);
+  });
+}
+
+async function init(){
+  if(!user?.id){ location.href='home.html'; return; }
+  const data=await TMNAPI.stats.artist(user.id);
+  renderKPIs(data.summary);
+  renderBarChart(data.charts.dailyPlays);
+  renderBarList('genreList',data.charts.genreBreakdown,k=>GENRE_COLOR[k]||'#c9a84c');
+  renderBarList('regionList',data.charts.regionBreakdown,()=>'#5b8dee');
+  renderTopSongs(data.topSongs||[]);
+}
+init();
+</script>
+</body>
+</html>

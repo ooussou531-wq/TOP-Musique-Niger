@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e0530c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Profil Artiste – TOP Musique Niger</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+    /* ═══════════════════════════ VARIABLES ═══════════════════════════ */
+    :root {
+        --bg:        #080809;
+        --surface:   #111113;
+        --card:      #18181c;
+        --card-h:    #202026;
+        --border:    rgba(255,255,255,.07);
+        --border-md: rgba(255,255,255,.11);
+
+        --accent:    #e0530c;
+        --accent-d:  rgba(224,83,12,.12);
+        --green:     #0c7e40;
+        --green-d:   rgba(12,126,64,.12);
+        --gold:      #c9a84c;
+        --gold-d:    rgba(201,168,76,.12);
+        --gold-glow: rgba(201,168,76,.3);
+
+        --text:      #f0ece4;
+        --text-2:    #9a9698;
+        --text-3:    #55535a;
+
+        --error:     #e05252;
+        --success:   #4caf7d;
+
+        --nav-h:     68px;
+        --header-h:  60px;
+        --radius:    14px;
+        --radius-lg: 22px;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+
+    body {
+        font-family: 'Instrument Sans', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        padding-bottom: calc(var(--nav-h) + 1rem);
+        overflow-x: hidden;
+    }
+
+    /* Grain */
+    body::after {
+        content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+        background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+        opacity:.45;
+    }
+
+    a { text-decoration:none; color:inherit; }
+    button { border:none; background:none; cursor:pointer; font-family:inherit; color:inherit; }
+
+    /* ═══════════════════════════ HEADER ═══════════════════════════ */
+    .top-header {
+        position: sticky; top:0; height: var(--header-h);
+        background: rgba(8,8,9,.85); backdrop-filter:blur(20px);
+        border-bottom: 1px solid var(--border);
+        display: flex; align-items:center; justify-content:space-between;
+        padding: 0 1.2rem; z-index:200;
+    }
+    .top-header::before {
+        content:''; position:absolute; top:0; left:0; right:0; height:2px;
+        background: linear-gradient(90deg, var(--accent) 0%, var(--accent) 33%, #f5f0e8 33%, #f5f0e8 66%, var(--green) 66%);
+    }
+    .hdr-btn {
+        width:38px; height:38px; border-radius:50%;
+        background:var(--card); border:1px solid var(--border);
+        color:var(--text-2); font-size:.9rem;
+        display:flex; align-items:center; justify-content:center;
+        transition:all .2s; cursor:pointer;
+    }
+    .hdr-btn:hover { color:var(--text); border-color:var(--border-md); }
+    .hdr-title {
+        font-family:'Syne',sans-serif; font-size:1rem; font-weight:700;
+    }
+    .edit-btn-hdr {
+        width:38px; height:38px; border-radius:50%;
+        background: linear-gradient(135deg,var(--gold),#8a6820);
+        color:#0d0d0f; font-size:.85rem;
+        display:flex; align-items:center; justify-content:center;
+        transition:all .2s; cursor:pointer;
+        box-shadow: 0 3px 12px var(--gold-glow);
+    }
+    .edit-btn-hdr:hover { transform:scale(1.08); }
+
+    /* ═══════════════════════════ HERO BANNER ═══════════════════════════ */
+    .hero-banner {
+        position: relative; overflow:hidden;
+        min-height: 320px;
+        display: flex; flex-direction:column; justify-content:flex-end;
+        padding: 0;
+    }
+    .hero-bg {
+        position:absolute; inset:0;
+        background: linear-gradient(135deg,
+            rgba(224,83,12,.25) 0%,
+            rgba(12,126,64,.1) 50%,
+            rgba(201,168,76,.15) 100%),
+            var(--surface);
+    }
+    .hero-bg::after {
+        content:''; position:absolute; inset:0;
+        background: radial-gradient(circle at 30% 50%, rgba(224,83,12,.18) 0%, transparent 55%),
+                    radial-gradient(circle at 80% 20%, rgba(201,168,76,.12) 0%, transparent 45%);
+    }
+
+    /* Ondes musicales décoratives */
+    .hero-waves {
+        position:absolute; top:1.5rem; right:1.5rem;
+        display:flex; align-items:flex-end; gap:3px; opacity:.2;
+    }
+    .wave-bar {
+        width:3px; border-radius:2px;
+        background: var(--gold);
+        animation: wavePulse 1.4s ease-in-out infinite alternate;
+    }
+    .wave-bar:nth-child(1) { height:20px; animation-delay:0s; }
+    .wave-bar:nth-child(2) { height:35px; animation-delay:.15s; }
+    .wave-bar:nth-child(3) { height:50px; animation-delay:.3s; }
+    .wave-bar:nth-child(4) { height:28px; animation-delay:.45s; }
+    .wave-bar:nth-child(5) { height:42px; animation-delay:.6s; }
+    .wave-bar:nth-child(6) { height:18px; animation-delay:.75s; }
+    @keyframes wavePulse { to { transform:scaleY(.4); } }
+
+    .hero-inner {
+        position:relative; z-index:1;
+        padding: 2rem 1.5rem 0;
+        display:flex; flex-direction:column; align-items:center;
+    }
+
+    /* Avatar */
+    .avatar-wrap {
+        position: relative; margin-bottom:1rem;
+        filter: drop-shadow(0 8px 32px rgba(0,0,0,.6));
+    }
+    .avatar-ring {
+        width: 110px; height:110px; border-radius:50%;
+        padding: 3px;
+        background: linear-gradient(135deg, var(--accent), var(--gold), var(--green));
+        position:relative;
+    }
+    .avatar-ring::before {
+        content:''; position:absolute; inset:-4px; border-radius:50%;
+        background: linear-gradient(135deg,rgba(224,83,12,.3),rgba(201,168,76,.2),rgba(12,126,64,.3));
+        z-index:-1; animation: rotateGlow 4s linear infinite;
+    }
+    @keyframes rotateGlow { to { transform:rotate(360deg); } }
+    .avatar-img {
+        width:100%; height:100%; border-radius:50%;
+        object-fit:cover; display:block;
+        background: linear-gradient(135deg,var(--accent),var(--gold));
+    }
+    .avatar-initial {
+        width:100%; height:100%; border-radius:50%;
+        background: linear-gradient(135deg,var(--accent),#a83800);
+        display:flex; align-items:center; justify-content:center;
+        font-family:'Syne',sans-serif; font-size:2.5rem; font-weight:800; color:#fff;
+    }
+    .avatar-camera {
+        position:absolute; bottom:4px; right:4px;
+        width:32px; height:32px; border-radius:50%;
+        background:var(--gold); color:#0d0d0f;
+        display:flex; align-items:center; justify-content:center;
+        font-size:.8rem; cursor:pointer; transition:transform .2s;
+        border:2px solid var(--bg);
+        box-shadow: 0 2px 10px rgba(201,168,76,.5);
+    }
+    .avatar-camera:hover { transform:scale(1.1); }
+    .avatar-camera input { display:none; }
+
+    /* Name & info */
+    .artist-name {
+        font-family:'Syne',sans-serif; font-size:1.9rem; font-weight:800;
+        text-align:center; line-height:1.1; margin-bottom:.35rem;
+    }
+    .artist-genre {
+        font-size:.88rem; color:var(--accent); font-weight:600;
+        letter-spacing:.05em; margin-bottom:.75rem;
+    }
+    .pro-badge {
+        display:inline-flex; align-items:center; gap:.4rem;
+        padding:.3rem .9rem;
+        background: linear-gradient(135deg, var(--gold), #a07828);
+        border-radius:100px; color:#0d0d0f;
+        font-size:.72rem; font-weight:700; letter-spacing:.07em;
+        box-shadow: 0 3px 14px var(--gold-glow);
+        margin-bottom:1.5rem;
+    }
+    .pro-badge i { font-size:.7rem; }
+
+    /* ═══════════════════════════ STATS BAR ═══════════════════════════ */
+    .stats-bar {
+        width:100%; margin-top:.5rem;
+        background:rgba(8,8,9,.7); backdrop-filter:blur(12px);
+        border-top:1px solid var(--border);
+        display:flex; position:relative; z-index:2;
+    }
+    .stat-col {
+        flex:1; padding:1rem .5rem; text-align:center;
+        cursor:pointer; transition:background .2s;
+        border-right:1px solid var(--border);
+        position:relative;
+    }
+    .stat-col:last-child { border-right:none; }
+    .stat-col:hover { background:rgba(255,255,255,.03); }
+    .stat-col::after {
+        content:''; position:absolute; bottom:0; left:50%; right:50%;
+        height:2px; background:var(--accent); transition:all .3s;
+    }
+    .stat-col:hover::after { left:15%; right:15%; }
+    .stat-val {
+        font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:800;
+        color:var(--text); display:block; line-height:1;
+    }
+    .stat-val.gold { color:var(--gold); }
+    .stat-val.orange { color:var(--accent); }
+    .stat-lbl { font-size:.65rem; color:var(--text-3); text-transform:uppercase; letter-spacing:.06em; margin-top:.25rem; display:block; }
+    .stat-trend-up { font-size:.66rem; color:var(--green); display:block; margin-top:.1rem; }
+
+    /* ═══════════════════════════ MAIN ═══════════════════════════ */
+    .main-content { max-width:760px; margin:0 auto; padding:1.4rem 1.2rem; }
+
+    /* Publish CTA */
+    .publish-cta {
+        width:100%; padding:.9rem 1.4rem;
+        background: linear-gradient(135deg,var(--accent),#a83800);
+        border:none; border-radius:var(--radius);
+        color:#fff; font-family:'Syne',sans-serif;
+        font-size:.92rem; font-weight:700; letter-spacing:.04em;
+        display:flex; align-items:center; justify-content:center; gap:.7rem;
+        cursor:pointer; transition:all .25s;
+        box-shadow: 0 4px 18px rgba(224,83,12,.35);
+        margin-bottom:1.6rem;
+    }
+    .publish-cta:hover { transform:translateY(-2px); box-shadow:0 7px 24px rgba(224,83,12,.5); }
+    .publish-cta:active { transform:translateY(0); }
+
+    /* ═══════════════════════════ TABS ═══════════════════════════ */
+    .tabs-row {
+        display:flex; gap:.3rem; margin-bottom:1.4rem;
+        background:var(--card); border-radius:var(--radius);
+        padding:.3rem; border:1px solid var(--border);
+    }
+    .tab-btn {
+        flex:1; padding:.6rem; border-radius:10px;
+        font-family:'Instrument Sans',sans-serif; font-size:.82rem; font-weight:600;
+        color:var(--text-3); cursor:pointer; transition:all .22s;
+        display:flex; align-items:center; justify-content:center; gap:.4rem;
+    }
+    .tab-btn i { font-size:.8rem; }
+    .tab-btn.active { background:var(--surface); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.3); }
+    .tab-btn:hover:not(.active) { color:var(--text-2); }
+
+    .tab-panel { display:none; animation:fadeUp .3s ease; }
+    .tab-panel.active { display:block; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ═══════════════════════════ SECTION TITLE ═══════════════════════════ */
+    .sec-title {
+        font-family:'Syne',sans-serif; font-size:1rem; font-weight:700;
+        margin-bottom:1rem; display:flex; align-items:center; gap:.5rem;
+    }
+    .sec-title i { color:var(--accent); font-size:.88rem; }
+
+    /* ═══════════════════════════ SONGS LIST ═══════════════════════════ */
+    .songs-list { display:flex; flex-direction:column; gap:.5rem; }
+    .song-row {
+        display:flex; align-items:center; gap:.9rem;
+        padding:.7rem .9rem; background:var(--card);
+        border:1px solid var(--border); border-radius:var(--radius);
+        cursor:pointer; transition:all .2s;
+        position:relative; overflow:hidden;
+    }
+    .song-row::before {
+        content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+        background: linear-gradient(180deg,var(--accent),var(--gold));
+        opacity:0; transition:opacity .2s;
+    }
+    .song-row:hover { background:var(--card-h); border-color:var(--border-md); }
+    .song-row:hover::before { opacity:1; }
+    .song-row.playing { border-color:rgba(224,83,12,.35); background:rgba(224,83,12,.05); }
+    .song-row.playing::before { opacity:1; }
+
+    .song-num { font-size:.8rem; color:var(--text-3); min-width:20px; text-align:center; font-weight:600; }
+    .song-row.playing .song-num { color:var(--accent); }
+    .song-cover {
+        width:44px; height:44px; border-radius:10px; flex-shrink:0;
+        background:linear-gradient(135deg,var(--accent),var(--gold));
+        display:flex; align-items:center; justify-content:center;
+        font-size:1.2rem; position:relative; overflow:hidden;
+    }
+    .song-cover-emoji { position:relative; z-index:1; }
+    .song-cover-blur {
+        position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+        filter:blur(10px); opacity:.4; font-size:2rem; transform:scale(1.5);
+    }
+    .playing-indicator {
+        position:absolute; inset:0; background:rgba(0,0,0,.5);
+        display:flex; align-items:center; justify-content:center; border-radius:10px;
+    }
+    .playing-bars { display:flex; align-items:flex-end; gap:2px; }
+    .pb { width:3px; border-radius:1px; background:var(--accent); }
+    .pb1 { height:10px; animation:barAnim 0.7s ease-in-out infinite alternate; }
+    .pb2 { height:16px; animation:barAnim 0.7s ease-in-out .15s infinite alternate; }
+    .pb3 { height:8px;  animation:barAnim 0.7s ease-in-out .3s infinite alternate; }
+    @keyframes barAnim { to { transform:scaleY(.3); } }
+
+    .song-info { flex:1; min-width:0; }
+    .song-title { font-size:.87rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .song-meta  { font-size:.72rem; color:var(--text-2); margin-top:.1rem; display:flex; gap:.6rem; flex-wrap:wrap; }
+    .song-meta span { display:flex; align-items:center; gap:.25rem; }
+    .song-plays { font-size:.72rem; color:var(--text-3); white-space:nowrap; }
+    .song-duration { font-size:.75rem; color:var(--text-3); }
+    .song-actions { display:flex; gap:.4rem; }
+    .song-act-btn {
+        width:30px; height:30px; border-radius:50%;
+        background:rgba(255,255,255,.06); color:var(--text-2);
+        display:flex; align-items:center; justify-content:center;
+        font-size:.75rem; cursor:pointer; transition:all .18s;
+    }
+    .song-act-btn:hover { background:rgba(255,255,255,.12); color:var(--text); }
+    .song-act-btn.liked { color:var(--error); }
+
+    /* Add song card */
+    .add-song-card {
+        display:flex; align-items:center; gap:.9rem;
+        padding:.9rem; background:rgba(224,83,12,.05);
+        border:1.5px dashed rgba(224,83,12,.25); border-radius:var(--radius);
+        cursor:pointer; transition:all .2s; color:var(--accent); margin-top:.5rem;
+    }
+    .add-song-card:hover { background:rgba(224,83,12,.1); border-color:rgba(224,83,12,.45); }
+    .add-song-card i { font-size:1.2rem; }
+    .add-song-card span { font-size:.88rem; font-weight:600; }
+
+    /* ═══════════════════════════ MINI PLAYER ═══════════════════════════ */
+    .mini-player {
+        position:fixed; bottom:calc(var(--nav-h) + .5rem); left:1rem; right:1rem;
+        background:rgba(17,17,19,.97); backdrop-filter:blur(20px);
+        border:1px solid var(--border-md); border-radius:var(--radius);
+        padding:.7rem 1rem; z-index:150;
+        transform:translateY(calc(100% + var(--nav-h) + 2rem));
+        transition:transform .3s cubic-bezier(.22,1,.36,1);
+        box-shadow: 0 -4px 30px rgba(0,0,0,.5);
+    }
+    .mini-player.show { transform:translateY(0); }
+    .mini-player::before {
+        content:''; position:absolute; top:0; left:0; right:0; height:2px; border-radius:2px;
+        background:linear-gradient(90deg,var(--accent),var(--gold));
+    }
+    .mp-inner { display:flex; align-items:center; gap:.9rem; }
+    .mp-thumb {
+        width:40px; height:40px; border-radius:9px; flex-shrink:0;
+        background:linear-gradient(135deg,var(--accent),var(--gold));
+        display:flex; align-items:center; justify-content:center; font-size:1rem;
+    }
+    .mp-info { flex:1; min-width:0; }
+    .mp-title  { font-size:.85rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .mp-artist { font-size:.73rem; color:var(--text-2); }
+    .mp-controls { display:flex; align-items:center; gap:.5rem; }
+    .mp-btn {
+        width:32px; height:32px; border-radius:50%;
+        background:rgba(255,255,255,.08); color:var(--text-2);
+        display:flex; align-items:center; justify-content:center;
+        font-size:.8rem; cursor:pointer; transition:all .18s;
+    }
+    .mp-btn:hover { color:var(--text); }
+    .mp-play {
+        width:38px; height:38px; border-radius:50%;
+        background:var(--accent); color:#fff;
+        display:flex; align-items:center; justify-content:center;
+        font-size:.9rem; cursor:pointer; transition:all .2s;
+        box-shadow:0 3px 12px rgba(224,83,12,.4);
+    }
+    .mp-play:hover { transform:scale(1.08); }
+    .mp-prog {
+        height:2px; background:var(--border); border-radius:1px;
+        margin-top:.6rem; cursor:pointer; position:relative;
+    }
+    .mp-prog-fill { height:100%; background:var(--accent); border-radius:1px; width:0%; transition:width .5s linear; }
+
+    /* ═══════════════════════════ VOTES ═══════════════════════════ */
+    .votes-list { display:flex; flex-direction:column; gap:.5rem; margin-bottom:1rem; }
+    .vote-card {
+        display:flex; align-items:center; gap:.9rem;
+        padding:.8rem .9rem; background:var(--card);
+        border:1px solid var(--border); border-radius:var(--radius);
+        transition:background .18s;
+    }
+    .vote-card:hover { background:var(--card-h); }
+    .vote-avatar {
+        width:42px; height:42px; border-radius:50%; flex-shrink:0;
+        display:flex; align-items:center; justify-content:center;
+        font-family:'Syne',sans-serif; font-weight:700; font-size:.95rem; color:#fff;
+    }
+    .vote-info { flex:1; min-width:0; }
+    .vote-user  { font-size:.87rem; font-weight:600; }
+    .vote-song  { font-size:.74rem; color:var(--text-2); margin-top:.1rem; }
+    .vote-time  { font-size:.7rem; color:var(--text-3); }
+    .vote-stars { display:flex; gap:2px; }
+    .vote-stars i { font-size:.75rem; color:var(--gold); }
+    .vote-stars i.empty { color:var(--text-3); }
+    .vote-comment {
+        font-size:.76rem; color:var(--text-2); margin-top:.35rem;
+        padding:.4rem .6rem; background:rgba(255,255,255,.04);
+        border-radius:8px; border-left:2px solid var(--gold); font-style:italic;
+    }
+
+    /* Vote summary */
+    .vote-summary {
+        display:flex; gap:.8rem; margin-bottom:1.2rem; flex-wrap:wrap;
+    }
+    .vs-card {
+        flex:1; min-width:100px; padding:.9rem;
+        background:var(--card); border:1px solid var(--border);
+        border-radius:var(--radius); text-align:center;
+    }
+    .vs-val { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; color:var(--gold); }
+    .vs-lbl { font-size:.68rem; color:var(--text-3); text-transform:uppercase; letter-spacing:.06em; margin-top:.2rem; }
+
+    /* ═══════════════════════════ REVENUS ═══════════════════════════ */
+    .revenue-grid { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; margin-bottom:1.4rem; }
+    .rev-card {
+        padding:1.1rem; background:var(--card);
+        border:1px solid var(--border); border-radius:var(--radius);
+        position:relative; overflow:hidden;
+    }
+    .rev-card::before {
+        content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    }
+    .rev-card.orange::before { background:var(--accent); }
+    .rev-card.gold::before   { background:var(--gold); }
+    .rev-card.green::before  { background:var(--green); }
+    .rev-card.blue::before   { background:#4285f4; }
+    .rev-label  { font-size:.73rem; color:var(--text-2); margin-bottom:.35rem; }
+    .rev-amount {
+        font-family:'Syne',sans-serif; font-size:1.4rem; font-weight:800;
+        color:var(--text); line-height:1;
+    }
+    .rev-currency { font-size:.72rem; color:var(--text-3); margin-left:.2rem; }
+    .rev-trend  { font-size:.7rem; margin-top:.35rem; }
+    .rev-trend.up   { color:var(--green); }
+    .rev-trend.down { color:var(--error); }
+
+    /* Chart bar */
+    .chart-section { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:1.1rem; margin-bottom:1.4rem; }
+    .chart-title { font-size:.82rem; font-weight:600; margin-bottom:1rem; color:var(--text-2); }
+    .bar-chart { display:flex; align-items:flex-end; gap:.5rem; height:80px; }
+    .bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:.3rem; }
+    .bar {
+        width:100%; border-radius:4px 4px 0 0;
+        background:linear-gradient(180deg,var(--accent),rgba(224,83,12,.4));
+        transition:height .8s cubic-bezier(.22,1,.36,1);
+        min-height:4px;
+    }
+    .bar-month { font-size:.6rem; color:var(--text-3); text-transform:uppercase; }
+
+    /* Withdraw CTA */
+    .withdraw-btn {
+        width:100%; padding:.85rem;
+        background: linear-gradient(135deg,var(--green),#065225);
+        border:none; border-radius:var(--radius);
+        color:#fff; font-family:'Syne',sans-serif; font-size:.9rem; font-weight:700;
+        display:flex; align-items:center; justify-content:center; gap:.6rem;
+        cursor:pointer; transition:all .25s;
+        box-shadow: 0 4px 18px rgba(12,126,64,.3);
+    }
+    .withdraw-btn:hover { transform:translateY(-2px); box-shadow:0 7px 22px rgba(12,126,64,.45); }
+
+    /* ═══════════════════════════ ACTIONS ═══════════════════════════ */
+    .action-list { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+    .action-row {
+        display:flex; align-items:center; gap:.9rem;
+        padding:.95rem 1rem; border-bottom:1px solid var(--border);
+        cursor:pointer; transition:background .15s;
+    }
+    .action-row:last-child { border-bottom:none; }
+    .action-row:hover { background:var(--card-h); }
+    .action-row:active { background:rgba(255,255,255,.04); }
+    .action-icon {
+        width:36px; height:36px; border-radius:10px; flex-shrink:0;
+        display:flex; align-items:center; justify-content:center; font-size:.9rem;
+    }
+    .action-icon.orange { background:var(--accent-d); color:var(--accent); }
+    .action-icon.gold   { background:var(--gold-d);   color:var(--gold);   }
+    .action-icon.green  { background:var(--green-d);  color:var(--green);  }
+    .action-icon.blue   { background:rgba(66,133,244,.1); color:#4285f4; }
+    .action-icon.red    { background:rgba(224,82,82,.1);  color:var(--error); }
+    .action-label { flex:1; font-size:.9rem; font-weight:500; }
+    .action-sub   { font-size:.73rem; color:var(--text-3); margin-top:.1rem; }
+    .action-arrow { color:var(--text-3); font-size:.8rem; }
+    .action-row.danger .action-label { color:var(--error); }
+
+    /* ═══════════════════════════ TOAST ═══════════════════════════ */
+    #toast {
+        position:fixed; bottom:calc(var(--nav-h) + 1rem); left:50%;
+        transform:translateX(-50%) translateY(60px);
+        background:var(--card); border:1px solid var(--border-md);
+        color:var(--text); padding:.75rem 1.4rem; border-radius:100px;
+        font-size:.85rem; display:flex; align-items:center; gap:.55rem;
+        box-shadow:0 8px 28px rgba(0,0,0,.5); z-index:9999;
+        transition:transform .35s cubic-bezier(.22,1,.36,1),opacity .3s;
+        opacity:0; white-space:nowrap;
+    }
+    #toast.show   { transform:translateX(-50%) translateY(0); opacity:1; }
+    #toast.success i { color:var(--success); }
+    #toast.error i   { color:var(--error);   }
+    #toast.info i    { color:var(--gold);    }
+
+    /* ═══════════════════════════ BOTTOM NAV ═══════════════════════════ */
+    .bottom-nav {
+        position:fixed; bottom:0; left:0; right:0; height:var(--nav-h);
+        background:rgba(11,11,13,.97); backdrop-filter:blur(20px);
+        border-top:1px solid var(--border);
+        display:flex; justify-content:space-around; align-items:center;
+        padding:0 .5rem; z-index:200;
+    }
+    .bottom-nav::before {
+        content:''; position:absolute; top:0; left:0; right:0; height:1px;
+        background:linear-gradient(90deg,var(--accent) 0%,var(--accent) 33%,rgba(245,240,232,.4) 33%,rgba(245,240,232,.4) 66%,var(--green) 66%);
+        opacity:.5;
+    }
+    .nav-item {
+        display:flex; flex-direction:column; align-items:center;
+        gap:.2rem; flex:1; padding:.5rem;
+        color:var(--text-3); font-size:.6rem; font-weight:500;
+        text-decoration:none; border-radius:10px; transition:all .2s;
+    }
+    .nav-item i { font-size:1.15rem; transition:all .2s; }
+    .nav-item span { letter-spacing:.02em; }
+    .nav-item:hover { color:var(--text-2); }
+    .nav-item.active { color:var(--accent); }
+    .nav-item.active i { filter:drop-shadow(0 0 6px rgba(224,83,12,.6)); }
+    .nav-item.pub i {
+        width:42px; height:42px; background:linear-gradient(135deg,var(--accent),#a83800);
+        border-radius:50%; display:flex; align-items:center; justify-content:center;
+        font-size:.95rem; color:#fff; box-shadow:0 4px 14px rgba(224,83,12,.4); margin-bottom:.1rem;
+    }
+    .nav-item.pub { color:var(--text-2); margin-top:-8px; }
+
+    /* ═══════════════════════════ RESPONSIVE ═══════════════════════════ */
+    @media(max-width:480px) {
+        .artist-name { font-size:1.5rem; }
+        .stat-val { font-size:1.1rem; }
+        .revenue-grid { grid-template-columns:1fr; }
+        .mini-player { left:.7rem; right:.7rem; bottom:calc(var(--nav-h) + .4rem); }
+    }
+
+    /* ═══════════════════════════ UTILITIES ═══════════════════════════ */
+    .stagger { animation:fadeUp .4s ease both; }
+    .stagger:nth-child(1){animation-delay:.05s}
+    .stagger:nth-child(2){animation-delay:.1s}
+    .stagger:nth-child(3){animation-delay:.15s}
+    .stagger:nth-child(4){animation-delay:.2s}
+    .stagger:nth-child(5){animation-delay:.25s}
+    </style>
+</head>
+<body>
+<script src="app.js"></script>
+<script src="tmn-api.js"></script>
+
+<!-- ═══════ HEADER ═══════ -->
+<header class="top-header">
+    <div class="hdr-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></div>
+    <span class="hdr-title">Mon Profil Artiste</span>
+    <div class="edit-btn-hdr" onclick="openEditMode()" title="Modifier le profil"><i class="fas fa-pen"></i></div>
+</header>
+
+<!-- ═══════ HERO BANNER ═══════ -->
+<div class="hero-banner">
+    <div class="hero-bg"></div>
+    <div class="hero-waves">
+        <div class="wave-bar"></div><div class="wave-bar"></div>
+        <div class="wave-bar"></div><div class="wave-bar"></div>
+        <div class="wave-bar"></div><div class="wave-bar"></div>
+    </div>
+
+    <div class="hero-inner">
+        <!-- Avatar -->
+        <div class="avatar-wrap">
+            <div class="avatar-ring" id="avatarRing">
+                <label style="cursor:pointer;display:block;width:100%;height:100%;border-radius:50%;">
+                    <div class="avatar-initial" id="avatarInitial">A</div>
+                    <input type="file" accept="image/*" id="avatarInput" style="display:none">
+                </label>
+            </div>
+            <div class="avatar-camera" onclick="document.getElementById('avatarInput').click()">
+                <i class="fas fa-camera"></i>
+            </div>
+        </div>
+
+        <!-- Infos -->
+        <h1 class="artist-name" id="artistName">Alradik</h1>
+        <p class="artist-genre" id="artistGenre">Rap · Fusion</p>
+        <div class="pro-badge"><i class="fas fa-crown"></i> COMPTE PRO</div>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="stats-bar">
+        <div class="stat-col" onclick="setTab('songs')">
+            <span class="stat-val orange" id="sPublications">12</span>
+            <span class="stat-lbl">Morceaux</span>
+        </div>
+        <div class="stat-col" onclick="setTab('revenus')">
+            <span class="stat-val gold" id="sRevenue">450k</span>
+            <span class="stat-lbl">Revenus F CFA</span>
+            <span class="stat-trend-up">↑ +12%</span>
+        </div>
+        <div class="stat-col" onclick="setTab('votes')">
+            <span class="stat-val" id="sVotes">89</span>
+            <span class="stat-lbl">Votes</span>
+        </div>
+        <div class="stat-col">
+            <span class="stat-val" id="sFollowers">1.2k</span>
+            <span class="stat-lbl">Abonnés</span>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════ MAIN ═══════ -->
+<main class="main-content">
+
+    <!-- CTA Publier -->
+    <button class="publish-cta" onclick="window.location.href='publish.html'">
+        <i class="fas fa-cloud-arrow-up"></i>
+        Publier une nouvelle musique
+    </button>
+
+    <!-- TABS -->
+    <div class="tabs-row">
+        <button class="tab-btn active" data-tab="songs" onclick="setTab('songs')">
+            <i class="fas fa-music"></i> Morceaux
+        </button>
+        <button class="tab-btn" data-tab="votes" onclick="setTab('votes')">
+            <i class="fas fa-star"></i> Votes
+        </button>
+        <button class="tab-btn" data-tab="revenus" onclick="setTab('revenus')">
+            <i class="fas fa-coins"></i> Revenus
+        </button>
+        <button class="tab-btn" data-tab="parametres" onclick="setTab('parametres')">
+            <i class="fas fa-cog"></i> Compte
+        </button>
+    </div>
+
+    <!-- ─── TAB : MORCEAUX ─── -->
+    <div class="tab-panel active" id="tab-songs">
+        <div class="sec-title"><i class="fas fa-music"></i> Mes morceaux</div>
+        <div class="songs-list" id="songsList"></div>
+        <div class="add-song-card" onclick="window.location.href='publish.html'">
+            <i class="fas fa-plus-circle"></i>
+            <span>Ajouter un nouveau morceau</span>
+        </div>
+    </div>
+
+    <!-- ─── TAB : VOTES ─── -->
+    <div class="tab-panel" id="tab-votes">
+        <!-- Résumé -->
+        <div class="vote-summary">
+            <div class="vs-card stagger">
+                <div class="vs-val" id="avgRating">4.7</div>
+                <div class="vs-lbl">Note moyenne</div>
+            </div>
+            <div class="vs-card stagger">
+                <div class="vs-val" style="color:var(--accent);" id="totalVotes2">89</div>
+                <div class="vs-lbl">Total votes</div>
+            </div>
+            <div class="vs-card stagger">
+                <div class="vs-val" style="color:var(--success);">96%</div>
+                <div class="vs-lbl">Positifs</div>
+            </div>
+        </div>
+        <div class="sec-title"><i class="fas fa-star"></i> Votes récents</div>
+        <div class="votes-list" id="votesList"></div>
+        <a href="votes.html" style="display:block;text-align:center;color:var(--gold);font-size:.85rem;padding:.6rem;font-weight:600;">
+            Voir tous les votes <i class="fas fa-arrow-right" style="font-size:.75rem;"></i>
+        </a>
+    </div>
+
+    <!-- ─── TAB : REVENUS ─── -->
+    <div class="tab-panel" id="tab-revenus">
+        <div class="revenue-grid">
+            <div class="rev-card orange stagger">
+                <div class="rev-label">Ce mois-ci</div>
+                <div class="rev-amount" id="monthRevenue">150<span class="rev-currency">k F CFA</span></div>
+                <div class="rev-trend up">↑ +12% vs mois dernier</div>
+            </div>
+            <div class="rev-card gold stagger">
+                <div class="rev-label">Total cumulé</div>
+                <div class="rev-amount">450<span class="rev-currency">k F CFA</span></div>
+                <div class="rev-trend up">↑ depuis inscription</div>
+            </div>
+            <div class="rev-card green stagger">
+                <div class="rev-label">Écoutes ce mois</div>
+                <div class="rev-amount">8.4<span class="rev-currency">k</span></div>
+                <div class="rev-trend up">↑ +23%</div>
+            </div>
+            <div class="rev-card blue stagger">
+                <div class="rev-label">Morceau le plus écouté</div>
+                <div class="rev-amount" style="font-size:1rem;">SARAOUNA</div>
+                <div class="rev-trend up">3.2k écoutes</div>
+            </div>
+        </div>
+
+        <!-- Mini graphique -->
+        <div class="chart-section">
+            <div class="chart-title">Revenus mensuels (F CFA)</div>
+            <div class="bar-chart" id="barChart"></div>
+        </div>
+
+        <button class="withdraw-btn" onclick="requestWithdraw()">
+            <i class="fas fa-money-bill-wave"></i>
+            Demander un retrait
+        </button>
+    </div>
+
+    <!-- ─── TAB : COMPTE ─── -->
+    <div class="tab-panel" id="tab-parametres">
+        <div class="action-list">
+            <div class="action-row stagger" onclick="openEditMode()">
+                <div class="action-icon orange"><i class="fas fa-user-pen"></i></div>
+                <div>
+                    <div class="action-label">Modifier le profil</div>
+                    <div class="action-sub">Nom, genre musical, photo…</div>
+                </div>
+                <i class="fas fa-chevron-right action-arrow"></i>
+            </div>
+            <div class="action-row stagger" onclick="window.location.href='stats.html'">
+                <div class="action-icon gold"><i class="fas fa-chart-pie"></i></div>
+                <div>
+                    <div class="action-label">Statistiques détaillées</div>
+                    <div class="action-sub">Analytiques avancées</div>
+                </div>
+                <i class="fas fa-chevron-right action-arrow"></i>
+            </div>
+            <div class="action-row stagger" onclick="window.location.href='mes-publications.html'">
+                <div class="action-icon orange"><i class="fas fa-list-music"></i></div>
+                <div>
+                    <div class="action-label">Mes publications</div>
+                    <div class="action-sub">Gérer mes morceaux</div>
+                </div>
+                <i class="fas fa-chevron-right action-arrow"></i>
+            </div>
+            <div class="action-row stagger" onclick="window.location.href='settings.html'">
+                <div class="action-icon blue"><i class="fas fa-shield-check"></i></div>
+                <div>
+                    <div class="action-label">Sécurité & Confidentialité</div>
+                    <div class="action-sub">Mot de passe, 2FA…</div>
+                </div>
+                <i class="fas fa-chevron-right action-arrow"></i>
+            </div>
+            <div class="action-row stagger" onclick="window.location.href='aide.html'">
+                <div class="action-icon green"><i class="fas fa-circle-question"></i></div>
+                <div>
+                    <div class="action-label">Aide & Support</div>
+                    <div class="action-sub">FAQ, contacter l'équipe</div>
+                </div>
+                <i class="fas fa-chevron-right action-arrow"></i>
+            </div>
+            <div class="action-row danger stagger" onclick="logout()">
+                <div class="action-icon red"><i class="fas fa-arrow-right-from-bracket"></i></div>
+                <div>
+                    <div class="action-label">Déconnexion</div>
+                </div>
+                <i class="fas fa-chevron-right action-arrow"></i>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- ═══════ MINI PLAYER ═══════ -->
+<div class="mini-player" id="miniPlayer">
+    <div class="mp-inner">
+        <div class="mp-thumb" id="mpThumb">🎵</div>
+        <div class="mp-info">
+            <div class="mp-title" id="mpTitle">—</div>
+            <div class="mp-artist" id="mpArtist">—</div>
+        </div>
+        <div class="mp-controls">
+            <div class="mp-btn" onclick="playerPrev()"><i class="fas fa-backward-step"></i></div>
+            <div class="mp-play" id="mpPlayBtn" onclick="togglePlay()"><i class="fas fa-play"></i></div>
+            <div class="mp-btn" onclick="playerNext()"><i class="fas fa-forward-step"></i></div>
+        </div>
+    </div>
+    <div class="mp-prog" onclick="seekPlayer(event)">
+        <div class="mp-prog-fill" id="mpFill"></div>
+    </div>
+</div>
+
+<!-- ═══════ BOTTOM NAV ═══════ -->
+<nav class="bottom-nav">
+    <a class="nav-item" href="home.html"><i class="fas fa-house"></i><span>Accueil</span></a>
+    <a class="nav-item" href="top.html"><i class="fas fa-trophy"></i><span>Top</span></a>
+    <a class="nav-item pub" href="publish.html"><i class="fas fa-plus"></i><span>Publier</span></a>
+    <a class="nav-item" href="stats.html"><i class="fas fa-chart-line"></i><span>Mes Stats</span></a>
+    <a class="nav-item active" href="profil-artiste.html"><i class="fas fa-microphone"></i><span>Profil</span></a>
+</nav>
+
+<!-- Toast -->
+<div id="toast"><i class="fas fa-circle-info"></i><span id="toastMsg"></span></div>
+
+<script>
+/* ════════════════════════════════════════
+   DONNÉES
+════════════════════════════════════════ */
+const SONGS = [
+    { id:1, title:'SARAOUNA',  genre:'Afrobeat', duration:'3:45', plays:'3.2k', emoji:'🎵', liked:false },
+    { id:2, title:'STREET VIBES', genre:'Rap',  duration:'4:12', plays:'2.1k', emoji:'🎤', liked:true  },
+    { id:3, title:'NIGHT FLOW',   genre:'R&B',  duration:'3:30', plays:'1.8k', emoji:'🎸', liked:false },
+    { id:4, title:'NIAMEY NIGHTS',genre:'Fusion',duration:'4:00', plays:'980',  emoji:'🎹', liked:false },
+    { id:5, title:'RAP FUSION #3',genre:'Rap',  duration:'3:55', plays:'760',  emoji:'🎶', liked:true  },
+];
+
+const VOTES = [
+    { id:1, user:'Fatima B.',   avatar:'F', color:'#e0530c', song:'SARAOUNA',    rating:5, time:'il y a 2h',  comment:'Incroyable, j\'adore ce titre !' },
+    { id:2, user:'Moussa K.',   avatar:'M', color:'#0c7e40', song:'STREET VIBES',rating:4, time:'il y a 5h',  comment:null },
+    { id:3, user:'Aminata D.',  avatar:'A', color:'#c9a84c', song:'SARAOUNA',    rating:5, time:'hier',       comment:'Le flow est excellent !' },
+    { id:4, user:'Ibrahim S.',  avatar:'I', color:'#4285f4', song:'NIGHT FLOW',  rating:4, time:'il y a 2j',  comment:null },
+    { id:5, user:'Rahila M.',   avatar:'R', color:'#9c27b0', song:'RAP FUSION #3',rating:5,time:'il y a 3j',  comment:'Du vrai talent nigérien !' },
+];
+
+const CHART_DATA = [
+    { month:'Juil', value:60  },
+    { month:'Août', value:85  },
+    { month:'Sep',  value:70  },
+    { month:'Oct',  value:110 },
+    { month:'Nov',  value:95  },
+    { month:'Déc',  value:150 },
+];
+
+/* ════════════════════════════════════════
+   ÉTAT
+════════════════════════════════════════ */
+const $ = id => document.getElementById(id);
+let currentSong  = null;
+let isPlaying    = false;
+let progress     = 0;
+let progressTimer = null;
+let currentTab   = 'songs';
+
+/* ════════════════════════════════════════
+   INIT
+════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', async () => {
+    // Charger le profil depuis sessionStorage ou localStorage (propre artiste)
+    const stored = JSON.parse(localStorage.getItem('tmn_user') || 'null');
+    const profileId = new URLSearchParams(location.search).get('id') || stored?.id;
+
+    let profileData = null;
+    let statsData   = null;
+    let songsData   = SONGS; // fallback mock
+
+    if (profileId) {
+        try {
+            [profileData, statsData] = await Promise.all([
+                TMNAPI.users.get(profileId),
+                TMNAPI.stats.artist(profileId),
+            ]);
+            const songsResp = await TMNAPI.users.songs(profileId, { limit: 20 });
+            if (songsResp.data?.length) {
+                songsData = songsResp.data.map(s => ({
+                    id: s.id, title: s.title, emoji: s.emoji || '🎵',
+                    genre: s.genre, region: s.region, plays: s.play_count || 0,
+                    rating: s.avg_rating || 0, ratingCount: s.rating_count || 0,
+                    likes: s.like_count || 0, status: s.status,
+                    year: new Date().getFullYear(), duration: s.duration_sec || 210,
+                }));
+                SONGS.length = 0;
+                songsData.forEach(s => SONGS.push(s));
+            }
+        } catch(e) {}
+    }
+
+    loadUser(profileData || stored);
+    loadStats(statsData);
+    renderSongs();
+    renderVotes();
+    renderChart(statsData);
+    bindAvatar();
+    animateStats(statsData);
+});
+
+function loadUser(stored) {
+    if (!stored) stored = JSON.parse(localStorage.getItem('tmn_user') || 'null');
+    if (!stored) return;
+    const name = stored.name || 'Artiste';
+    $('artistName').textContent = name;
+    $('artistGenre').textContent = stored.genre || stored.musicType || 'Artiste · Niger';
+    const bioEl = document.getElementById('artistBio');
+    if (bioEl && stored.bio) bioEl.textContent = stored.bio;
+    $('avatarInitial').textContent = name[0].toUpperCase();
+    if (stored.avatar_url) {
+        $('avatarInitial').style.backgroundImage = `url(${stored.avatar_url})`;
+        $('avatarInitial').style.backgroundSize = 'cover';
+        $('avatarInitial').textContent = '';
+    } else if (stored.picture) {
+        $('avatarInitial').style.backgroundImage = `url(${stored.picture})`;
+        $('avatarInitial').style.backgroundSize = 'cover';
+        $('avatarInitial').textContent = '';
+    }
+    if (stored.is_verified) {
+        const badge = document.createElement('span');
+        badge.style.cssText = 'font-size:.75rem;color:#c9a84c;margin-left:.35rem;';
+        badge.textContent = '✓';
+        $('artistName').appendChild(badge);
+    }
+}
+
+function loadStats(stats) {
+    if (!stats) return;
+    const s = stats.summary || {};
+    const followEl = document.getElementById('sFollowers');
+    const playsEl  = document.getElementById('sPlays');
+    if (followEl) followEl.textContent = (s.followers || 0).toLocaleString('fr-FR');
+    if (playsEl)  playsEl.textContent  = (s.totalPlays || 0).toLocaleString('fr-FR');
+}
+
+function animateStats(stats) {
+    const s = stats?.summary || {};
+    const counters = [
+        { id:'sPublications', target: s.activeSongs || s.totalSongs || 12, suffix:'' },
+        { id:'sVotes',        target: s.avg_rating ? Math.round(s.avg_rating * 20) : 89, suffix:'' },
+    ];
+    counters.forEach(c => {
+        const el = $(c.id);
+        if (!el) return;
+        let n = 0, step = Math.ceil(c.target / 25);
+        const iv = setInterval(() => {
+            n = Math.min(n + step, c.target);
+            el.textContent = n + c.suffix;
+            if (n >= c.target) clearInterval(iv);
+        }, 40);
+    });
+}
+
+/* ════════════════════════════════════════
+   TABS
+════════════════════════════════════════ */
+function setTab(name) {
+    currentTab = name;
+    document.querySelectorAll('.tab-btn').forEach(b =>
+        b.classList.toggle('active', b.dataset.tab === name));
+    document.querySelectorAll('.tab-panel').forEach(p =>
+        p.classList.toggle('active', p.id === 'tab-' + name));
+    window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ════════════════════════════════════════
+   RENDU — MORCEAUX
+════════════════════════════════════════ */
+function renderSongs() {
+    const container = $('songsList');
+    container.innerHTML = '';
+    SONGS.forEach((song, i) => {
+        const isPlaying_ = currentSong?.id === song.id && isPlaying;
+        const row = document.createElement('div');
+        row.className = `song-row stagger${isPlaying_ ? ' playing' : ''}`;
+        row.id = `song-row-${song.id}`;
+        row.innerHTML = `
+            <span class="song-num">${isPlaying_ ? '▶' : i+1}</span>
+            <div class="song-cover">
+                <div class="song-cover-blur">${song.emoji}</div>
+                <span class="song-cover-emoji">${song.emoji}</span>
+                ${isPlaying_ ? `<div class="playing-indicator"><div class="playing-bars"><div class="pb pb1"></div><div class="pb pb2"></div><div class="pb pb3"></div></div></div>` : ''}
+            </div>
+            <div class="song-info">
+                <div class="song-title">${song.title}</div>
+                <div class="song-meta">
+                    <span><i class="fas fa-music" style="font-size:.6rem;"></i>${song.genre}</span>
+                    <span><i class="fas fa-headphones" style="font-size:.6rem;"></i>${song.plays} écoutes</span>
+                </div>
+            </div>
+            <span class="song-duration">${song.duration}</span>
+            <div class="song-actions">
+                <div class="song-act-btn ${song.liked?'liked':''}" onclick="toggleLike(${song.id},event)" title="J'aime">
+                    <i class="fa${song.liked?'s':'r'} fa-heart"></i>
+                </div>
+                <div class="song-act-btn" onclick="shareSong(${song.id},event)" title="Partager">
+                    <i class="fas fa-share-nodes"></i>
+                </div>
+            </div>`;
+        row.addEventListener('click', e => {
+            if (!e.target.closest('.song-actions')) playSong(song);
+        });
+        container.appendChild(row);
+    });
+}
+
+function toggleLike(id, e) {
+    e.stopPropagation();
+    const song = SONGS.find(s => s.id === id);
+    if (!song) return;
+    song.liked = !song.liked;
+    renderSongs();
+    showToast(song.liked ? 'Ajouté aux favoris' : 'Retiré des favoris', song.liked ? 'success' : 'info');
+}
+
+function shareSong(id, e) {
+    e.stopPropagation();
+    const song = SONGS.find(s => s.id === id);
+    if (navigator.share) {
+        navigator.share({ title:song.title, text:`Écoutez ${song.title} sur TOP Musique Niger` });
+    } else {
+        navigator.clipboard.writeText(`${song.title} – TOP Musique Niger`);
+        showToast('Lien copié !', 'success');
+    }
+}
+
+/* ════════════════════════════════════════
+   RENDU — VOTES
+════════════════════════════════════════ */
+function renderVotes() {
+    const avg = (VOTES.reduce((a,v) => a+v.rating, 0) / VOTES.length).toFixed(1);
+    if ($('avgRating')) $('avgRating').textContent = avg;
+    if ($('totalVotes2')) $('totalVotes2').textContent = VOTES.length * 17; // simulation total
+
+    const container = $('votesList');
+    container.innerHTML = '';
+    VOTES.forEach(v => {
+        const stars = Array.from({length:5}, (_,i) =>
+            `<i class="fas fa-star${i < v.rating ? '' : ' empty'}"></i>`).join('');
+        const el = document.createElement('div');
+        el.className = 'vote-card stagger';
+        el.innerHTML = `
+            <div class="vote-avatar" style="background:${v.color};">${v.avatar}</div>
+            <div class="vote-info" style="flex:1;min-width:0;">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap;">
+                    <div class="vote-user">${v.user}</div>
+                    <div class="vote-stars">${stars}</div>
+                </div>
+                <div class="vote-song"><i class="fas fa-music" style="font-size:.65rem;margin-right:.25rem;"></i>${v.song}</div>
+                <div class="vote-time">${v.time}</div>
+                ${v.comment ? `<div class="vote-comment">${v.comment}</div>` : ''}
+            </div>`;
+        container.appendChild(el);
+    });
+}
+
+/* ════════════════════════════════════════
+   RENDU — CHART REVENUS
+════════════════════════════════════════ */
+function renderChart() {
+    const chart = $('barChart');
+    if (!chart) return;
+    const max = Math.max(...CHART_DATA.map(d => d.value));
+    chart.innerHTML = '';
+    CHART_DATA.forEach((d, i) => {
+        const pct = (d.value / max) * 100;
+        const col = document.createElement('div');
+        col.className = 'bar-col';
+        col.innerHTML = `
+            <div class="bar" style="height:0%;transition-delay:${i*0.08}s;" data-h="${pct}"></div>
+            <span class="bar-month">${d.month}</span>`;
+        chart.appendChild(col);
+    });
+    // Animate bars in
+    setTimeout(() => {
+        chart.querySelectorAll('.bar').forEach(b => {
+            b.style.height = b.dataset.h + '%';
+        });
+    }, 100);
+}
+
+/* ════════════════════════════════════════
+   PLAYER
+════════════════════════════════════════ */
+function playSong(song) {
+    currentSong = song;
+    isPlaying   = true;
+    progress    = 0;
+
+    $('mpThumb').textContent   = song.emoji;
+    $('mpTitle').textContent   = song.title;
+    $('mpArtist').textContent  = $('artistName').textContent;
+    $('mpPlayBtn').innerHTML   = '<i class="fas fa-pause"></i>';
+    $('miniPlayer').classList.add('show');
+    $('mpFill').style.width    = '0%';
+
+    renderSongs();
+    clearInterval(progressTimer);
+    startProgress();
+}
+
+function startProgress() {
+    if (!currentSong || !isPlaying) return;
+    const [m,s] = currentSong.duration.split(':').map(Number);
+    const total = m*60+s;
+    progressTimer = setInterval(() => {
+        if (!isPlaying) return;
+        progress++;
+        $('mpFill').style.width = ((progress/total)*100)+'%';
+        if (progress >= total) { playerNext(); }
+    }, 1000);
+}
+
+function togglePlay() {
+    if (!currentSong) { if (SONGS.length) playSong(SONGS[0]); return; }
+    isPlaying = !isPlaying;
+    $('mpPlayBtn').innerHTML = isPlaying ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+    if (isPlaying) startProgress();
+    else clearInterval(progressTimer);
+    renderSongs();
+}
+
+function playerPrev() {
+    if (!currentSong) return;
+    const i = SONGS.findIndex(s => s.id === currentSong.id);
+    playSong(SONGS[(i-1+SONGS.length)%SONGS.length]);
+}
+function playerNext() {
+    clearInterval(progressTimer);
+    if (!currentSong) { playSong(SONGS[0]); return; }
+    const i = SONGS.findIndex(s => s.id === currentSong.id);
+    playSong(SONGS[(i+1)%SONGS.length]);
+}
+function seekPlayer(e) {
+    const bar = e.currentTarget;
+    const pct = (e.clientX - bar.getBoundingClientRect().left) / bar.offsetWidth;
+    if (!currentSong) return;
+    const [m,s] = currentSong.duration.split(':').map(Number);
+    progress = Math.floor((m*60+s)*pct);
+    $('mpFill').style.width = (pct*100)+'%';
+}
+
+/* ════════════════════════════════════════
+   AVATAR
+════════════════════════════════════════ */
+function bindAvatar() {
+    $('avatarInput').addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+            const el = $('avatarInitial');
+            el.style.backgroundImage = `url(${ev.target.result})`;
+            el.style.backgroundSize = 'cover';
+            el.style.backgroundPosition = 'center';
+            el.textContent = '';
+            // Sauvegarder dans localStorage
+            const u = JSON.parse(localStorage.getItem('tmn_user') || '{}');
+            u.picture = ev.target.result;
+            localStorage.setItem('tmn_user', JSON.stringify(u));
+            showToast('Photo de profil mise à jour', 'success');
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+/* ════════════════════════════════════════
+   ÉDITION PROFIL (modal inline)
+════════════════════════════════════════ */
+function openEditMode() {
+    const name  = $('artistName').textContent;
+    const genre = $('artistGenre').textContent;
+    const newName  = prompt('Votre nom d\'artiste :', name);
+    if (newName === null) return;
+    const newGenre = prompt('Genre(s) musical(aux) :', genre);
+    if (newGenre === null) return;
+
+    $('artistName').textContent  = newName.trim() || name;
+    $('artistGenre').textContent = newGenre.trim() || genre;
+    $('avatarInitial').textContent = (newName.trim() || name)[0].toUpperCase();
+
+    const u = JSON.parse(localStorage.getItem('tmn_user') || '{}');
+    u.name = newName.trim(); u.musicType = newGenre.trim();
+    localStorage.setItem('tmn_user', JSON.stringify(u));
+    showToast('Profil mis à jour', 'success');
+}
+
+/* ════════════════════════════════════════
+   RETRAIT
+════════════════════════════════════════ */
+function requestWithdraw() {
+    showToast('Demande de retrait envoyée — traitement sous 48h', 'info');
+}
+
+/* ════════════════════════════════════════
+   DÉCONNEXION
+════════════════════════════════════════ */
+function logout() {
+    if (!confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) return;
+    localStorage.removeItem('tmn_user');
+    localStorage.removeItem('tmn_connected');
+    localStorage.removeItem('tmn_token');
+    showToast('Déconnexion…', 'info');
+    setTimeout(() => window.location.href = 'login.html', 1200);
+}
+
+/* ════════════════════════════════════════
+   TOAST
+════════════════════════════════════════ */
+function showToast(msg, type = 'info') {
+    const t = $('toast');
+    $('toastMsg').textContent = msg;
+    const ico = t.querySelector('i');
+    ico.className = type === 'success' ? 'fas fa-circle-check'
+                  : type === 'error'   ? 'fas fa-circle-xmark'
+                  :                      'fas fa-circle-info';
+    t.className = `show ${type}`;
+    clearTimeout(t._t);
+    t._t = setTimeout(() => t.className = '', 3500);
+}
+TMN.init({ requireAuth: true, activeNav: 'profile' });
+</script>
+</body>
+</html>
