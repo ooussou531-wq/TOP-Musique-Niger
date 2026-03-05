@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e0530c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Historique – TOP Musique Niger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --bg:#09090b;--card:#16161c;--card-h:#1e1e26;
+  --border:rgba(255,255,255,.07);--border-md:rgba(255,255,255,.13);
+  --accent:#e0530c;--ag:rgba(224,83,12,.3);
+  --gold:#c9a84c;--gd:rgba(201,168,76,.12);
+  --green:#0c7e40;--blue:#5b8dee;--red:#e05252;
+  --text:#f0ece4;--t2:#8a8790;--t3:#4a4850;
+  --nav:68px;--hdr:56px;--radius:12px;--rlg:18px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{min-height:100vh;background:var(--bg);font-family:'Instrument Sans',sans-serif;color:var(--text);
+  padding-top:var(--hdr);padding-bottom:calc(var(--nav)+1rem);}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% -10%,rgba(201,168,76,.05),transparent 55%);}
+.hdr{position:fixed;top:0;left:0;right:0;height:var(--hdr);z-index:200;
+  background:rgba(9,9,11,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 1.2rem;gap:.8rem;}
+.hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;
+  background:linear-gradient(90deg,var(--accent) 33%,#f5f0e8 33%,#f5f0e8 66%,var(--green) 66%);}
+.hdr-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;flex:1;}
+.hdr-title span{color:var(--gold);}
+.hdr-btn{width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;color:var(--t2);font-size:.82rem;cursor:pointer;transition:all .2s;}
+.hdr-btn:hover{color:var(--text);}
+.main{max-width:680px;margin:0 auto;padding:1rem 1.1rem 0;}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem;margin-bottom:1rem;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rlg);
+  padding:.8rem .75rem;text-align:center;animation:fadeUp .3s ease both;}
+.sc-val{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;}
+.sc-lbl{font-size:.65rem;color:var(--t2);margin-top:.1rem;}
+.day-section{margin-bottom:1.1rem;}
+.day-label{font-size:.72rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;
+  padding:.4rem .85rem;margin-bottom:.35rem;display:flex;align-items:center;gap:.4rem;}
+.tl{display:flex;flex-direction:column;gap:.35rem;}
+.ti{display:flex;align-items:center;gap:.8rem;padding:.6rem .85rem;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  cursor:pointer;transition:all .18s;animation:fadeUp .25s ease both;}
+.ti:hover{background:var(--card-h);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.ti-time{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--t3);min-width:38px;text-align:center;flex-shrink:0;}
+.ti-cov{width:42px;height:42px;border-radius:10px;flex-shrink:0;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
+.ti-cov-bg{position:absolute;inset:0;filter:blur(8px);opacity:.35;transform:scale(1.4);display:flex;align-items:center;justify-content:center;font-size:2.8rem;}
+.ti-cov-em{position:relative;z-index:1;font-size:1.1rem;}
+.ti-info{flex:1;min-width:0;}
+.ti-title{font-size:.86rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ti-sub{font-size:.7rem;color:var(--t2);}
+.ti-dur{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--t3);flex-shrink:0;}
+.fav-btn{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;cursor:pointer;flex-shrink:0;background:none;border:1.5px solid var(--border);color:var(--t3);transition:all .2s;}
+.fav-btn:hover{border-color:rgba(224,82,82,.4);color:var(--red);}
+.fav-btn.active{background:rgba(224,82,82,.12);border-color:rgba(224,82,82,.4);color:var(--red);}
+.sk{background:linear-gradient(90deg,var(--card) 0%,var(--card-h) 50%,var(--card) 100%);
+  background-size:200%;animation:shimmer 1.4s ease-in-out infinite;border-radius:8px;}
+@keyframes shimmer{0%{background-position:200%}100%{background-position:-200%}}
+.empty{text-align:center;padding:3rem 1rem;}
+.empty-icon{font-size:3rem;margin-bottom:.8rem;display:block;}
+.empty-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;margin-bottom:.4rem;}
+.empty-sub{font-size:.82rem;color:var(--t2);}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav);
+  background:rgba(9,9,11,.97);backdrop-filter:blur(24px);border-top:1px solid var(--border);
+  display:flex;justify-content:space-around;align-items:center;padding:0 .5rem;z-index:200;}
+.bottom-nav::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--accent) 33%,rgba(245,240,232,.4) 33%,rgba(245,240,232,.4) 66%,var(--green) 66%);opacity:.6;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:.2rem;flex:1;padding:.5rem;
+  color:var(--t3);font-size:.6rem;font-weight:500;text-decoration:none;transition:all .2s;}
+.nav-item i{font-size:1.18rem;}
+.nav-item.active{color:var(--gold);}
+.nav-exp i{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),#a83800);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.98rem;color:#fff;box-shadow:0 4px 16px var(--ag);margin-bottom:.1rem;}
+.nav-exp{color:var(--t2);margin-top:-10px;}
+#toast{position:fixed;bottom:calc(var(--nav)+1rem);left:50%;transform:translateX(-50%) translateY(60px);
+  opacity:0;background:var(--card);border:1px solid var(--border-md);padding:.6rem 1.2rem;
+  border-radius:100px;font-size:.82rem;z-index:9999;display:flex;align-items:center;gap:.5rem;
+  box-shadow:0 8px 28px rgba(0,0,0,.5);transition:all .32s cubic-bezier(.22,1,.36,1);}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-title">🕐 <span>Historique</span> d'écoute</div>
+  <div class="hdr-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></div>
+</header>
+
+<div class="main">
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card"><div class="sc-val sk" style="height:1.6rem;border-radius:6px;width:60%;margin:0 auto;"> </div><div class="sc-lbl">Morceaux</div></div>
+    <div class="stat-card"><div class="sc-val sk" style="height:1.6rem;border-radius:6px;width:60%;margin:0 auto;"> </div><div class="sc-lbl">Temps écouté</div></div>
+    <div class="stat-card"><div class="sc-val sk" style="height:1.6rem;border-radius:6px;width:60%;margin:0 auto;"> </div><div class="sc-lbl">Genres</div></div>
+  </div>
+  <div id="historyWrap"></div>
+  <div id="emptyState" style="display:none;" class="empty">
+    <span class="empty-icon">🎵</span>
+    <div class="empty-title">Aucun historique</div>
+    <div class="empty-sub">Commencez à écouter de la musique !</div>
+  </div>
+</div>
+
+<nav class="bottom-nav" id="bottomNav"></nav>
+<div id="toast"><i class="fas fa-circle-info"></i><span id="toastMsg"></span></div>
+
+<script src="app.js"></script>
+<script src="tmn-api.js"></script>
+<script>
+TMN.init({requireAuth: true, activeNav: 'profile' });
+const GENRE_COLOR={Afrobeat:'#c9a84c',Rap:'#e0530c',Gospel:'#0c7e40','R&B':'#5b8dee',Zouk:'#9c27b0',Mandé:'#0c7e40',Haoussa:'#e05252'};
+
+// Build nav
+const nav=document.getElementById('bottomNav');
+[{icon:'fa-house',lbl:'Accueil',url:'home.html'},
+ {icon:'fa-trophy',lbl:'Top',url:'top.html'},
+ {icon:'fa-compass',lbl:'Explorer',url:'explore.html',center:true},
+ {icon:'fa-heart',lbl:'Favoris',url:'favorites.html'},
+ {icon:'fa-user',lbl:'Profil',url:'profil-auditeur.html'},
+].forEach(item=>{
+  const a=document.createElement('a');a.href=item.url;
+  a.className='nav-item'+(item.center?' nav-exp':'');
+  a.innerHTML=`<i class="fas ${item.icon}"></i><span>${item.lbl}</span>`;
+  nav.appendChild(a);
+});
+
+function fmtTime(played_at){
+  return new Date(played_at*1000).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+}
+function fmtDur(sec){
+  const m=Math.floor((sec||180)/60),s=(sec||180)%60;
+  return `${m}:${String(s).padStart(2,'0')}`;
+}
+function dayLabel(played_at){
+  const d=new Date(played_at*1000);
+  const today=new Date();const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+  if(d.toDateString()===today.toDateString())return'Aujourd\'hui';
+  if(d.toDateString()===yesterday.toDateString())return'Hier';
+  return d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+}
+
+function groupByDay(plays){
+  const groups={};
+  plays.forEach(p=>{
+    const label=dayLabel(p.played_at);
+    if(!groups[label])groups[label]=[];
+    groups[label].push(p);
+  });
+  return groups;
+}
+
+function renderHistory(plays){
+  const wrap=document.getElementById('historyWrap');wrap.innerHTML='';
+  document.getElementById('emptyState').style.display=plays.length?'none':'block';
+  const groups=groupByDay(plays);
+  Object.entries(groups).forEach(([day,items],gi)=>{
+    const sec=document.createElement('div');sec.className='day-section';
+    sec.innerHTML=`<div class="day-label"><i class="fas fa-calendar-day"></i>${day}</div>`;
+    const tl=document.createElement('div');tl.className='tl';
+    items.forEach((p,i)=>{
+      const clr=GENRE_COLOR[p.genre]||'#c9a84c';
+      const isFav=TMNAPI.songs.isFavorited(p.song_id||'');
+      const d=document.createElement('div');d.className='ti';d.style.animationDelay=((gi*0.05)+(i*.03))+'s';
+      d.innerHTML=`
+        <div class="ti-time">${fmtTime(p.played_at)}</div>
+        <div class="ti-cov" style="background:${clr}18;"><div class="ti-cov-bg">${p.emoji||'🎵'}</div><div class="ti-cov-em">${p.emoji||'🎵'}</div></div>
+        <div class="ti-info"><div class="ti-title">${p.title}</div><div class="ti-sub">${p.artist_name||'—'} · ${p.genre||''}</div></div>
+        <div class="ti-dur">${fmtDur(p.duration)}</div>
+        <div class="fav-btn${isFav?' active':''}" onclick="toggleFav(this,'${p.song_id}',event)"><i class="fas fa-heart"></i></div>`;
+      d.addEventListener('click',e=>{if(!e.target.closest('.fav-btn')){sessionStorage.setItem('tmn_current_song',JSON.stringify(p));location.href='player.html';}});
+      tl.appendChild(d);
+    });
+    sec.appendChild(tl);
+    wrap.appendChild(sec);
+  });
+
+  // Stats header
+  const totalMin=Math.round(plays.reduce((s,p)=>s+(p.duration||180),0)/60);
+  const genres=new Set(plays.map(p=>p.genre).filter(Boolean)).size;
+  document.getElementById('statsRow').innerHTML=`
+    <div class="stat-card" style="animation-delay:.05s;"><div class="sc-val" style="color:var(--gold);">${plays.length}</div><div class="sc-lbl">Morceaux</div></div>
+    <div class="stat-card" style="animation-delay:.1s;"><div class="sc-val" style="color:var(--accent);">${totalMin}m</div><div class="sc-lbl">Temps écouté</div></div>
+    <div class="stat-card" style="animation-delay:.15s;"><div class="sc-val" style="color:var(--green);">${genres}</div><div class="sc-lbl">Genres</div></div>`;
+}
+
+async function toggleFav(btn,id,e){
+  e.stopPropagation();
+  const data=await TMNAPI.songs.toggleFavorite(id);
+  btn.classList.toggle('active',data.favorited);
+  showToast(data.favorited?'❤️ Ajouté aux favoris':'💔 Retiré des favoris');
+}
+
+function showSkeleton(){
+  const wrap=document.getElementById('historyWrap');wrap.innerHTML='';
+  for(let i=0;i<8;i++){
+    const d=document.createElement('div');
+    d.style.cssText='display:flex;align-items:center;gap:.8rem;padding:.6rem .85rem;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:.35rem;';
+    d.innerHTML=`<div class="sk" style="width:38px;height:12px;border-radius:4px;flex-shrink:0;"></div>
+      <div class="sk" style="width:42px;height:42px;border-radius:10px;flex-shrink:0;"></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:.35rem;">
+        <div class="sk" style="height:11px;width:${45+Math.random()*30}%;border-radius:4px;"></div>
+        <div class="sk" style="height:9px;width:${25+Math.random()*20}%;border-radius:4px;"></div>
+      </div>`;
+    wrap.appendChild(d);
+  }
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;
+  t.className='show';clearTimeout(t._t);t._t=setTimeout(()=>t.className='',2500);
+}
+
+async function init(){
+  showSkeleton();
+  const data=await TMNAPI.stats.history({ limit:50 });
+  renderHistory(data.data||[]);
+}
+init();
+</script>
+</body>
+</html>

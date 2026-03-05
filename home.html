@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e0530c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Accueil – TOP Musique Niger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --bg:#09090b;--card:#16161c;--card-h:#1e1e26;
+  --border:rgba(255,255,255,.07);--border-md:rgba(255,255,255,.12);
+  --accent:#e0530c;--ag:rgba(224,83,12,.3);--ad:rgba(224,83,12,.12);
+  --gold:#c9a84c;--gg:rgba(201,168,76,.3);--gd:rgba(201,168,76,.12);
+  --green:#0c7e40;--blue:#5b8dee;--bd:rgba(91,141,238,.12);
+  --text:#f0ece4;--t2:#8a8790;--t3:#4a4850;
+  --nav:68px;--hdr:62px;--radius:12px;--rlg:18px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{min-height:100vh;background:var(--bg);font-family:'Instrument Sans',sans-serif;color:var(--text);
+  padding-top:var(--hdr);padding-bottom:calc(var(--nav)+1rem);overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse at 50% -10%,rgba(201,168,76,.07),transparent 55%);}
+a{text-decoration:none;color:inherit;}
+/* HEADER */
+.hdr{position:fixed;top:0;left:0;right:0;height:var(--hdr);z-index:200;
+  background:rgba(9,9,11,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 1.2rem;gap:.8rem;}
+.hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;
+  background:linear-gradient(90deg,var(--accent) 33%,#f5f0e8 33%,#f5f0e8 66%,var(--green) 66%);}
+.hdr-logo{display:flex;align-items:center;gap:.55rem;flex:1;}
+.hdr-logo-icon{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--gold),#7a4f0a);
+  display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:#07070a;}
+.hdr-logo-name{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:800;
+  background:linear-gradient(135deg,var(--gold),#f0e8d0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hdr-right{display:flex;gap:.45rem;}
+.hdr-btn{width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;color:var(--t2);font-size:.82rem;cursor:pointer;transition:all .2s;position:relative;}
+.hdr-btn:hover{color:var(--text);border-color:var(--border-md);}
+.hdr-pip{position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:var(--accent);border:1.5px solid var(--bg);}
+/* BANNER */
+.banner{margin:1.2rem 1.1rem .8rem;border-radius:var(--rlg);padding:1rem 1.2rem;
+  display:flex;align-items:center;gap:.9rem;animation:fadeUp .35s ease;}
+.banner.artist {background:var(--ad);border:1px solid rgba(224,83,12,.2);}
+.banner.listener{background:var(--bd);border:1px solid rgba(91,141,238,.2);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.ban-ava{width:46px;height:46px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;}
+.ban-info{flex:1;min-width:0;}
+.ban-greet{font-size:.72rem;color:var(--t2);}
+.ban-name{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;}
+.ban-badge{display:inline-flex;align-items:center;gap:.28rem;font-size:.62rem;font-weight:700;
+  padding:.16rem .5rem;border-radius:100px;margin-top:.18rem;}
+.banner.artist  .ban-badge{background:rgba(224,83,12,.2);color:var(--accent);}
+.banner.listener .ban-badge{background:rgba(91,141,238,.2);color:var(--blue);}
+.ban-cta{padding:.45rem .9rem;border-radius:9px;font-size:.74rem;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0;}
+.banner.artist   .ban-cta{background:var(--accent);color:#fff;box-shadow:0 3px 12px var(--ag);}
+.banner.listener .ban-cta{background:var(--blue);color:#fff;box-shadow:0 3px 12px rgba(91,141,238,.3);}
+.ban-cta:hover{transform:translateY(-1px);opacity:.9;}
+/* MAIN */
+.main{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 1.1rem;}
+/* QUICK */
+.qg{display:grid;gap:.6rem;margin-bottom:1.3rem;}
+.qg.artist  {grid-template-columns:repeat(2,1fr);}
+.qg.listener{grid-template-columns:repeat(4,1fr);}
+.qc{background:var(--card);border:1px solid var(--border);border-radius:var(--rlg);
+  padding:.9rem .75rem;display:flex;flex-direction:column;align-items:center;gap:.4rem;
+  cursor:pointer;transition:all .22s;text-align:center;animation:fadeUp .3s ease both;}
+.qc:hover{background:var(--card-h);border-color:var(--border-md);transform:translateY(-2px);}
+.qc-ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;}
+.qc-lbl{font-size:.74rem;font-weight:600;color:var(--t2);}
+.qg.artist .qc{padding:1rem;}
+.qg.artist .qc-ico{width:50px;height:50px;font-size:1.3rem;}
+.qg.artist .qc-lbl{font-size:.82rem;font-weight:700;color:var(--text);}
+.qg.artist .qc-desc{font-size:.64rem;color:var(--t3);}
+/* SECTION */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem;}
+.sec-title{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:800;display:flex;align-items:center;gap:.4rem;}
+.sec-more{font-size:.74rem;color:var(--t3);cursor:pointer;transition:color .2s;}
+.sec-more:hover{color:var(--t2);}
+/* STATS */
+.ast-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1.3rem;}
+.ast-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rlg);
+  padding:.85rem .9rem;text-align:center;animation:fadeUp .3s ease both;}
+.ast-val{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;}
+.ast-lbl{font-size:.68rem;color:var(--t2);margin-top:.1rem;}
+.ast-delta{font-size:.62rem;font-weight:700;color:var(--green);margin-top:.12rem;}
+/* TRACKS */
+.tl{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1.3rem;}
+.ti{display:flex;align-items:center;gap:.85rem;padding:.65rem .85rem;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  cursor:pointer;transition:all .18s;animation:fadeUp .3s ease both;}
+.ti:hover{background:var(--card-h);border-color:var(--border-md);}
+.ti-rank{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:800;color:var(--t3);min-width:18px;text-align:center;flex-shrink:0;}
+.ti-rank.g{color:var(--gold);}
+.ti-cov{width:44px;height:44px;border-radius:10px;flex-shrink:0;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
+.ti-cov-bg{position:absolute;inset:0;filter:blur(8px);opacity:.35;transform:scale(1.4);display:flex;align-items:center;justify-content:center;font-size:2.8rem;}
+.ti-cov-em{position:relative;z-index:1;font-size:1.15rem;}
+.ti-info{flex:1;min-width:0;}
+.ti-title{font-size:.88rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ti-sub{font-size:.72rem;color:var(--t2);}
+.ti-right{display:flex;flex-direction:column;align-items:flex-end;gap:.15rem;flex-shrink:0;}
+.ti-plays{font-size:.68rem;color:var(--t3);}
+.ti-star{font-size:.64rem;color:var(--gold);}
+/* NOTIF STRIP */
+.ns{background:var(--card);border:1px solid var(--border);border-radius:var(--rlg);
+  padding:.85rem 1rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;
+  transition:all .2s;margin-bottom:1.3rem;animation:fadeUp .3s ease both;}
+.ns:hover{border-color:var(--border-md);}
+.ns-ico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.ns-txt{flex:1;font-size:.82rem;color:var(--t2);}
+.ns-txt strong{color:var(--text);}
+.ns-cnt{font-size:.65rem;font-weight:800;background:var(--accent);color:#fff;border-radius:100px;padding:.15rem .5rem;flex-shrink:0;}
+/* SKELETON */
+.sk{background:linear-gradient(90deg,var(--card) 0%,var(--card-h) 50%,var(--card) 100%);
+  background-size:200%;animation:shimmer 1.4s ease-in-out infinite;border-radius:8px;}
+@keyframes shimmer{0%{background-position:200%}100%{background-position:-200%}}
+.sk-row{display:flex;align-items:center;gap:.85rem;padding:.65rem .85rem;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:.38rem;}
+.sk-cov{width:44px;height:44px;border-radius:10px;flex-shrink:0;}
+.sk-lines{flex:1;display:flex;flex-direction:column;gap:.4rem;}
+/* NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav);
+  background:rgba(9,9,11,.97);backdrop-filter:blur(24px);border-top:1px solid var(--border);
+  display:flex;justify-content:space-around;align-items:center;padding:0 .5rem;z-index:200;}
+.bottom-nav::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--accent) 33%,rgba(245,240,232,.4) 33%,rgba(245,240,232,.4) 66%,var(--green) 66%);opacity:.6;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:.2rem;flex:1;padding:.5rem;
+  color:var(--t3);font-size:.6rem;font-weight:500;text-decoration:none;transition:all .2s;position:relative;}
+.nav-item i{font-size:1.18rem;}
+.nav-item.active{color:var(--accent);}
+.nav-pub i{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),#a83800);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.98rem;color:#fff;box-shadow:0 4px 16px var(--ag);margin-bottom:.1rem;}
+.nav-pub{color:var(--t2);margin-top:-10px;}
+.nav-pip{position:absolute;top:.38rem;right:calc(50% - 14px);width:7px;height:7px;border-radius:50%;background:var(--accent);border:1.5px solid var(--bg);}
+/* TOAST */
+#toast{position:fixed;bottom:calc(var(--nav)+1rem);left:50%;transform:translateX(-50%) translateY(60px);
+  opacity:0;background:var(--card);border:1px solid var(--border-md);padding:.6rem 1.2rem;
+  border-radius:100px;font-size:.82rem;z-index:9999;display:flex;align-items:center;gap:.5rem;
+  box-shadow:0 8px 28px rgba(0,0,0,.5);transition:all .32s cubic-bezier(.22,1,.36,1);white-space:nowrap;}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+#toast.warn{border-color:rgba(201,168,76,.4);color:var(--gold);}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-logo"><div class="hdr-logo-icon">T</div><div class="hdr-logo-name">TOP Musique Niger</div></div>
+  <div class="hdr-right">
+    <div class="hdr-btn" id="notifBtn" onclick="location.href='notifications.html'">
+      <i class="fas fa-bell"></i><div class="hdr-pip" id="notifPip" style="display:none;"></div>
+    </div>
+    <div class="hdr-btn" onclick="location.href='settings.html'"><i class="fas fa-gear"></i></div>
+    <div class="hdr-btn" onclick="TMN.logout()" title="Déconnexion"><i class="fas fa-right-from-bracket"></i></div>
+  </div>
+</header>
+
+<div id="bannerWrap"></div>
+
+<main class="main">
+  <div id="quickWrap"></div>
+  <div id="artistStatsWrap"></div>
+  <div class="ns" onclick="location.href='notifications.html'" id="notifStrip" style="display:none;">
+    <div class="ns-ico" style="background:var(--ad);">🔔</div>
+    <div class="ns-txt" id="notifStripTxt">Chargement…</div>
+    <div class="ns-cnt" id="notifStripCnt"></div>
+  </div>
+  <div class="sec-hdr">
+    <div class="sec-title" style="color:var(--gold);"><i class="fas fa-fire"></i><span id="topLabel">Top Niger</span></div>
+    <div class="sec-more" onclick="location.href='top.html'">Voir tout →</div>
+  </div>
+  <div id="trackList"></div>
+</main>
+
+<nav class="bottom-nav"></nav>
+<div id="toast"><i class="fas fa-circle-info"></i><span id="toastMsg"></span></div>
+
+<script src="app.js"></script>
+<script src="tmn-api.js"></script>
+<script>
+TMN.init({ requireAuth:true, activeNav:'home' });
+const user = TMN.getUser();
+const isA  = TMN.isArtist();
+const GENRE_COLOR = {Afrobeat:'#c9a84c',Rap:'#e0530c',Gospel:'#0c7e40','R&B':'#5b8dee',Zouk:'#9c27b0',Mandé:'#0c7e40',Haoussa:'#e05252'};
+
+/* ── BANNER ── */
+const bw = document.getElementById('bannerWrap');
+const ban = document.createElement('div');
+ban.className='banner '+(isA?'artist':'listener');
+ban.innerHTML=`
+  <div class="ban-ava">${isA?'🎤':'🎧'}</div>
+  <div class="ban-info">
+    <div class="ban-greet">Bonjour,</div>
+    <div class="ban-name">${user?.name||'Utilisateur'}</div>
+    <div class="ban-badge">${isA?'🎤 Compte Artiste':'🎧 Compte Auditeur'}</div>
+  </div>
+  <div class="ban-cta" onclick="location.href='${isA?'profil-artiste.html':'profil-auditeur.html'}'">
+    ${isA?'Mon profil':'Mon profil'}
+  </div>`;
+bw.appendChild(ban);
+
+/* ── QUICK ACCESS ── */
+const QA = isA ? [
+  {icon:'fa-upload',    lbl:'Publier',    desc:'Nouveau morceau',clr:'#e0530c',bg:'rgba(224,83,12,.15)',  url:'publish.html'},
+  {icon:'fa-chart-line',lbl:'Mes stats',  desc:'Analytics',      clr:'#c9a84c',bg:'rgba(201,168,76,.15)',url:'stats.html'},
+  {icon:'fa-trophy',    lbl:'Classements',desc:'Top Niger live',  clr:'#0c7e40',bg:'rgba(12,126,64,.15)', url:'top.html'},
+  {icon:'fa-microphone',lbl:'Mon profil', desc:'Profil artiste',  clr:'#5b8dee',bg:'rgba(91,141,238,.15)',url:'profil-artiste.html'},
+] : [
+  {icon:'fa-compass',   lbl:'Explorer',  clr:'#e0530c',bg:'rgba(224,83,12,.15)',  url:'explore.html'},
+  {icon:'fa-heart',     lbl:'Favoris',   clr:'#e05252',bg:'rgba(224,82,82,.15)',  url:'favorites.html'},
+  {icon:'fa-clock',     lbl:'Historique',clr:'#c9a84c',bg:'rgba(201,168,76,.15)',url:'historique.html'},
+  {icon:'fa-list',      lbl:'Playlists', clr:'#5b8dee',bg:'rgba(91,141,238,.15)',url:'playlist.html'},
+];
+const qg = document.createElement('div');
+qg.className='qg '+(isA?'artist':'listener');
+QA.forEach((item,i)=>{
+  const d=document.createElement('div');d.className='qc';d.style.animationDelay=(i*.05)+'s';
+  d.onclick=()=>location.href=item.url;
+  d.innerHTML=`<div class="qc-ico" style="background:${item.bg};color:${item.clr};"><i class="fas ${item.icon}"></i></div>
+    <div class="qc-lbl">${item.lbl}</div>${isA?`<div class="qc-desc">${item.desc}</div>`:''}`;
+  qg.appendChild(d);
+});
+document.getElementById('quickWrap').appendChild(qg);
+
+/* ── TITLE ── */
+document.getElementById('topLabel').textContent = isA ? 'Ma musique dans le Top' : 'Top Niger';
+
+/* ── SKELETON TRACKS ── */
+function showSkeletonTracks(){
+  const tl=document.getElementById('trackList'); tl.innerHTML='';
+  for(let i=0;i<5;i++){
+    const d=document.createElement('div');d.className='sk-row';
+    d.innerHTML=`<div class="sk-cov sk"></div><div class="sk-lines">
+      <div class="sk" style="height:11px;width:${40+Math.random()*30}%;border-radius:4px;"></div>
+      <div class="sk" style="height:9px;width:${20+Math.random()*20}%;border-radius:4px;margin-top:.3rem;"></div>
+    </div>`;
+    tl.appendChild(d);
+  }
+}
+
+/* ── RENDER TRACKS ── */
+function renderTracks(songs){
+  const tl=document.getElementById('trackList');tl.innerHTML='';
+  songs.slice(0,8).forEach((s,i)=>{
+    const clr=GENRE_COLOR[s.genre]||'#c9a84c';
+    const d=document.createElement('div');d.className='ti';d.style.animationDelay=(i*.04)+'s';
+    d.onclick=()=>{ sessionStorage.setItem('tmn_current_song',JSON.stringify(s));location.href='player.html'; };
+    d.innerHTML=`<div class="ti-rank${i===0?' g':''}">${s.position||i+1}</div>
+      <div class="ti-cov" style="background:${clr}20;"><div class="ti-cov-bg">${s.emoji||'🎵'}</div><div class="ti-cov-em">${s.emoji||'🎵'}</div></div>
+      <div class="ti-info"><div class="ti-title">${s.title}</div><div class="ti-sub">${s.artist_name||s.artist||'Artiste'} · ${s.genre}</div></div>
+      <div class="ti-right">
+        <div class="ti-plays">${TMNAPI.fmt(s.play_count||0)} écoutes</div>
+        <div class="ti-star">★ ${s.avg_rating||'—'}</div>
+      </div>`;
+    tl.appendChild(d);
+  });
+}
+
+/* ── LOAD DATA ── */
+async function loadAll(){
+  showSkeletonTracks();
+
+  // Top songs
+  const topData = await TMNAPI.top.weekly();
+  renderTracks(topData.data || []);
+
+  // Notifs
+  const nc = await TMNAPI.notifications.count();
+  if(nc>0){
+    document.getElementById('notifPip').style.display='block';
+    document.getElementById('notifStrip').style.display='flex';
+    document.getElementById('notifStripTxt').innerHTML='Vous avez <strong>'+nc+' notification'+(nc>1?'s':'')+' non lue'+(nc>1?'s':'')+'</strong>';
+    document.getElementById('notifStripCnt').textContent=nc;
+  }
+
+  // Stats artiste
+  if(isA && user?.id){
+    const s=await TMNAPI.stats.artist(user.id);
+    const sw=document.getElementById('artistStatsWrap');
+    sw.innerHTML=`
+      <div class="sec-hdr"><div class="sec-title" style="color:var(--accent);"><i class="fas fa-chart-line"></i> Mes statistiques</div><div class="sec-more" onclick="location.href='stats.html'">Tout voir →</div></div>
+      <div class="ast-row">
+        <div class="ast-card" style="animation-delay:.05s;"><div class="ast-val" style="color:var(--accent);">${TMNAPI.fmt(s.summary.totalPlays)}</div><div class="ast-lbl">Écoutes</div><div class="ast-delta">↑ +${TMNAPI.fmt(s.summary.weekPlays)} cette sem.</div></div>
+        <div class="ast-card" style="animation-delay:.1s;"><div class="ast-val" style="color:var(--gold);">#${s.topSongs?.[0]?'1':'—'}</div><div class="ast-lbl">Position Top</div><div class="ast-delta">↑ ${s.summary.activeSongs} actifs</div></div>
+        <div class="ast-card" style="animation-delay:.15s;"><div class="ast-val" style="color:var(--green);">${s.summary.avg_rating.toFixed(1)}</div><div class="ast-lbl">Note moy.</div><div class="ast-delta">↑ ${TMNAPI.fmt(s.summary.followers)} abonnés</div></div>
+      </div>`;
+  }
+}
+
+loadAll();
+</script>
+</body>
+</html>

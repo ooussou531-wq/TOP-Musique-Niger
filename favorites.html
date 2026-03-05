@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e0530c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Favoris – TOP Musique Niger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --bg:#09090b;--card:#16161c;--card-h:#1e1e26;
+  --border:rgba(255,255,255,.07);--border-md:rgba(255,255,255,.13);
+  --accent:#e0530c;--ag:rgba(224,83,12,.3);
+  --gold:#c9a84c;--gg:rgba(201,168,76,.3);--gd:rgba(201,168,76,.12);
+  --green:#0c7e40;--red:#e05252;--rd:rgba(224,82,82,.15);--blue:#5b8dee;
+  --text:#f0ece4;--t2:#8a8790;--t3:#4a4850;
+  --nav:68px;--hdr:56px;--radius:12px;--rlg:18px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{min-height:100vh;background:var(--bg);font-family:'Instrument Sans',sans-serif;color:var(--text);
+  padding-top:var(--hdr);padding-bottom:calc(var(--nav)+1rem);}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% -10%,rgba(224,82,82,.05),transparent 55%);}
+.hdr{position:fixed;top:0;left:0;right:0;height:var(--hdr);z-index:200;
+  background:rgba(9,9,11,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 1.2rem;gap:.8rem;}
+.hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;
+  background:linear-gradient(90deg,var(--accent) 33%,#f5f0e8 33%,#f5f0e8 66%,var(--green) 66%);}
+.hdr-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;flex:1;}
+.hdr-title span{color:var(--red);}
+.hdr-btn{width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;color:var(--t2);font-size:.82rem;cursor:pointer;transition:all .2s;}
+.hdr-btn:hover{color:var(--text);}
+.main{max-width:680px;margin:0 auto;padding:1rem 1.1rem 0;}
+/* Hero stats */
+.hero{background:var(--card);border:1px solid var(--border);border-radius:var(--rlg);
+  padding:1.1rem 1.2rem;display:flex;align-items:center;gap:1rem;margin-bottom:1rem;}
+.hero-ico{width:50px;height:50px;border-radius:14px;background:var(--rd);
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+.hero-info{flex:1;}
+.hero-cnt{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--red);}
+.hero-lbl{font-size:.78rem;color:var(--t2);}
+.hero-sort{display:flex;gap:.4rem;}
+.sort-btn{padding:.35rem .75rem;border-radius:100px;font-size:.72rem;font-weight:600;cursor:pointer;
+  border:1.5px solid var(--border);background:var(--card-h);color:var(--t2);transition:all .2s;}
+.sort-btn.active{background:var(--rd);border-color:rgba(224,82,82,.35);color:var(--red);}
+/* Search */
+.search-wrap{position:relative;margin-bottom:.9rem;}
+.search-ico{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);color:var(--t3);font-size:.78rem;}
+.search-inp{width:100%;padding:.68rem .9rem .68rem 2.4rem;background:var(--card);
+  border:1.5px solid var(--border);border-radius:100px;color:var(--text);font-size:.85rem;outline:none;transition:all .2s;}
+.search-inp:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--rd);}
+.search-inp::placeholder{color:var(--t3);}
+/* Track list */
+.tl{display:flex;flex-direction:column;gap:.38rem;}
+.ti{display:flex;align-items:center;gap:.8rem;padding:.65rem .85rem;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  cursor:pointer;transition:all .18s;animation:fadeUp .25s ease both;}
+.ti:hover{background:var(--card-h);border-color:var(--border-md);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.ti-cov{width:46px;height:46px;border-radius:12px;flex-shrink:0;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
+.ti-cov-bg{position:absolute;inset:0;filter:blur(8px);opacity:.35;transform:scale(1.4);display:flex;align-items:center;justify-content:center;font-size:2.8rem;}
+.ti-cov-em{position:relative;z-index:1;font-size:1.2rem;}
+.ti-info{flex:1;min-width:0;}
+.ti-title{font-size:.9rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ti-sub{font-size:.72rem;color:var(--t2);}
+.ti-date{font-size:.64rem;color:var(--t3);}
+.ti-right{display:flex;flex-direction:column;align-items:flex-end;gap:.2rem;flex-shrink:0;}
+.ti-plays{font-size:.68rem;color:var(--t3);}
+.ti-star{font-size:.65rem;color:var(--gold);}
+.fav-btn{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.78rem;cursor:pointer;flex-shrink:0;background:var(--rd);color:var(--red);
+  border:1.5px solid rgba(224,82,82,.35);transition:all .2s;}
+.fav-btn:hover{transform:scale(1.15);}
+.sk{background:linear-gradient(90deg,var(--card) 0%,var(--card-h) 50%,var(--card) 100%);
+  background-size:200%;animation:shimmer 1.4s ease-in-out infinite;border-radius:8px;}
+@keyframes shimmer{0%{background-position:200%}100%{background-position:-200%}}
+.empty{text-align:center;padding:3rem 1rem;}
+.empty-icon{font-size:3.2rem;margin-bottom:.8rem;display:block;}
+.empty-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:.5rem;}
+.empty-sub{font-size:.82rem;color:var(--t2);margin-bottom:1rem;}
+.empty-cta{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;
+  border-radius:100px;background:var(--accent);color:#fff;font-size:.82rem;font-weight:700;cursor:pointer;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav);
+  background:rgba(9,9,11,.97);backdrop-filter:blur(24px);border-top:1px solid var(--border);
+  display:flex;justify-content:space-around;align-items:center;padding:0 .5rem;z-index:200;}
+.bottom-nav::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--accent) 33%,rgba(245,240,232,.4) 33%,rgba(245,240,232,.4) 66%,var(--green) 66%);opacity:.6;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:.2rem;flex:1;padding:.5rem;
+  color:var(--t3);font-size:.6rem;font-weight:500;text-decoration:none;transition:all .2s;}
+.nav-item i{font-size:1.18rem;}
+.nav-item.active{color:var(--red);}
+.nav-exp i{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),#a83800);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.98rem;color:#fff;box-shadow:0 4px 16px var(--ag);margin-bottom:.1rem;}
+.nav-exp{color:var(--t2);margin-top:-10px;}
+#toast{position:fixed;bottom:calc(var(--nav)+1rem);left:50%;transform:translateX(-50%) translateY(60px);
+  opacity:0;background:var(--card);border:1px solid var(--border-md);padding:.6rem 1.2rem;
+  border-radius:100px;font-size:.82rem;z-index:9999;display:flex;align-items:center;gap:.5rem;
+  box-shadow:0 8px 28px rgba(0,0,0,.5);transition:all .32s cubic-bezier(.22,1,.36,1);}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-title">❤️ <span>Favoris</span></div>
+  <div class="hdr-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></div>
+</header>
+
+<div class="main">
+  <div class="hero">
+    <div class="hero-ico">❤️</div>
+    <div class="hero-info">
+      <div class="hero-cnt" id="heroCnt">—</div>
+      <div class="hero-lbl">morceaux favoris</div>
+    </div>
+    <div class="hero-sort">
+      <div class="sort-btn active" id="sort-recent" onclick="setSort('recent')">Récents</div>
+      <div class="sort-btn" id="sort-plays"  onclick="setSort('plays')">Populaires</div>
+    </div>
+  </div>
+
+  <div class="search-wrap">
+    <i class="fas fa-magnifying-glass search-ico"></i>
+    <input class="search-inp" id="searchInp" placeholder="Filtrer mes favoris…" oninput="filterList()">
+  </div>
+
+  <div class="tl" id="trackList"></div>
+  <div id="emptyState" style="display:none;" class="empty">
+    <span class="empty-icon">💔</span>
+    <div class="empty-title">Aucun favori</div>
+    <div class="empty-sub">Explorez la musique nigérienne et ajoutez vos morceaux préférés !</div>
+    <div class="empty-cta" onclick="location.href='explore.html'"><i class="fas fa-compass"></i> Explorer</div>
+  </div>
+</div>
+
+<nav class="bottom-nav" id="bottomNav"></nav>
+<div id="toast"><i class="fas fa-heart"></i><span id="toastMsg"></span></div>
+
+<script src="app.js"></script>
+<script src="tmn-api.js"></script>
+<script>
+TMN.init({requireAuth: true, activeNav: 'profile' });
+const user=TMN.getUser();
+const GENRE_COLOR={Afrobeat:'#c9a84c',Rap:'#e0530c',Gospel:'#0c7e40','R&B':'#5b8dee',Zouk:'#9c27b0',Mandé:'#0c7e40',Haoussa:'#e05252'};
+
+// Build nav
+const nav=document.getElementById('bottomNav');
+[{icon:'fa-house',lbl:'Accueil',url:'home.html'},
+ {icon:'fa-trophy',lbl:'Top',url:'top.html'},
+ {icon:'fa-compass',lbl:'Explorer',url:'explore.html',center:true},
+ {icon:'fa-heart',lbl:'Favoris',url:'favorites.html',active:true},
+ {icon:'fa-user',lbl:'Profil',url:'profil-auditeur.html'},
+].forEach(item=>{
+  const a=document.createElement('a');a.href=item.url;
+  a.className='nav-item'+(item.active?' active':'')+(item.center?' nav-exp':'');
+  a.innerHTML=`<i class="fas ${item.icon}"></i><span>${item.lbl}</span>`;
+  nav.appendChild(a);
+});
+
+let allFavs=[];
+let sortMode='recent';
+let searchQ='';
+
+function setSort(mode){
+  sortMode=mode;
+  document.getElementById('sort-recent').classList.toggle('active',mode==='recent');
+  document.getElementById('sort-plays') .classList.toggle('active',mode==='plays');
+  renderList();
+}
+function filterList(){ searchQ=document.getElementById('searchInp').value.toLowerCase(); renderList(); }
+
+function renderList(){
+  let data=[...allFavs];
+  if(searchQ) data=data.filter(s=>(s.title||'').toLowerCase().includes(searchQ)||(s.artist_name||'').toLowerCase().includes(searchQ));
+  if(sortMode==='plays') data.sort((a,b)=>(b.play_count||0)-(a.play_count||0));
+  document.getElementById('heroCnt').textContent=allFavs.length;
+  const tl=document.getElementById('trackList');tl.innerHTML='';
+  document.getElementById('emptyState').style.display=data.length?'none':'block';
+  data.forEach((s,i)=>{
+    const clr=GENRE_COLOR[s.genre]||'#c9a84c';
+    const d=document.createElement('div');d.className='ti';d.style.animationDelay=(i*.03)+'s';
+    d.innerHTML=`
+      <div class="ti-cov" style="background:${clr}18;"><div class="ti-cov-bg">${s.emoji||'🎵'}</div><div class="ti-cov-em">${s.emoji||'🎵'}</div></div>
+      <div class="ti-info">
+        <div class="ti-title">${s.title}</div>
+        <div class="ti-sub">${s.artist_name||'—'} · ${s.genre||''}</div>
+        <div class="ti-date">${s.favorited_at?'Ajouté '+TMNAPI.timeAgo(s.favorited_at):''}</div>
+      </div>
+      <div class="ti-right">
+        <div class="ti-plays">${TMNAPI.fmt(s.play_count||0)} écoutes</div>
+        <div class="ti-star">★ ${s.avg_rating||'—'}</div>
+      </div>
+      <div class="fav-btn" onclick="removeFav('${s.id}',event)"><i class="fas fa-heart"></i></div>`;
+    d.addEventListener('click',e=>{if(!e.target.closest('.fav-btn')){sessionStorage.setItem('tmn_current_song',JSON.stringify(s));location.href='player.html';}});
+    tl.appendChild(d);
+  });
+}
+
+async function removeFav(id,e){
+  e.stopPropagation();
+  await TMNAPI.songs.toggleFavorite(id);
+  allFavs=allFavs.filter(s=>s.id!==id);
+  renderList();
+  showToast('💔 Retiré des favoris');
+}
+
+function showSkeleton(){
+  const tl=document.getElementById('trackList');tl.innerHTML='';
+  for(let i=0;i<7;i++){
+    const d=document.createElement('div');
+    d.style.cssText='display:flex;align-items:center;gap:.8rem;padding:.65rem .85rem;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:.38rem;';
+    d.innerHTML=`<div class="sk" style="width:46px;height:46px;border-radius:12px;flex-shrink:0;"></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:.35rem;">
+        <div class="sk" style="height:11px;width:${45+Math.random()*30}%;border-radius:4px;"></div>
+        <div class="sk" style="height:9px;width:${25+Math.random()*20}%;border-radius:4px;"></div>
+      </div>`;
+    tl.appendChild(d);
+  }
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;
+  t.className='show';clearTimeout(t._t);t._t=setTimeout(()=>t.className='',2500);
+}
+
+async function init(){
+  showSkeleton();
+  if(user?.id){
+    const data=await TMNAPI.users.favorites(user.id);
+    allFavs=data.data||[];
+  }
+  renderList();
+}
+init();
+</script>
+</body>
+</html>

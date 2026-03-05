@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e0530c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>TOP Musique Niger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;background:#07070a;font-family:'Syne',sans-serif;display:flex;align-items:center;justify-content:center;}
+.splash{display:flex;flex-direction:column;align-items:center;gap:1rem;animation:appear .5s ease;}
+@keyframes appear{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+.icon{width:76px;height:76px;border-radius:20px;background:linear-gradient(135deg,#c9a84c,#7a4f0a);
+  display:flex;align-items:center;justify-content:center;font-size:2.2rem;font-weight:800;color:#07070a;
+  box-shadow:0 0 36px rgba(201,168,76,.4);}
+.name{font-size:1.2rem;font-weight:800;background:linear-gradient(135deg,#c9a84c,#f0e8d0);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.dots{display:flex;gap:.4rem;margin-top:.3rem;}
+.dots span{width:6px;height:6px;border-radius:50%;background:#c9a84c;opacity:.3;
+  animation:blink .9s ease-in-out infinite;}
+.dots span:nth-child(2){animation-delay:.15s;}.dots span:nth-child(3){animation-delay:.3s;}
+@keyframes blink{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+</style>
+</head>
+<body>
+<div class="splash">
+  <div class="icon">T</div>
+  <div class="name">TOP Musique Niger</div>
+  <div class="dots"><span></span><span></span><span></span></div>
+</div>
+<script src="app.js"></script>
+<script>
+setTimeout(() => {
+  const user  = TMN.getUser();
+  const token = TMN.getToken();
+  if (!user || !user.onboarded) { window.location.href = 'onboarding.html'; return; }
+  if (!token) { window.location.href = 'login.html'; return; }
+  window.location.href = 'home.html';
+}, 800);
+</script>
+</body>
+</html>
